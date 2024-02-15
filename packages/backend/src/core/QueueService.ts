@@ -374,7 +374,13 @@ export class QueueService {
 
 	@bindThis
 	public createReportAbuseJob(report: MiAbuseUserReport) {
-		return this.dbQueue.add('reportAbuse', report);
+		return this.dbQueue.add('reportAbuse',
+			report,
+			{
+				removeOnComplete: true,
+				removeOnFail: true,
+			},
+		);
 	}
 
 	@bindThis
