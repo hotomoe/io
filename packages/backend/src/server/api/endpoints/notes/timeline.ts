@@ -113,7 +113,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				alwaysIncludeMyNotes: true,
 				excludePureRenotes: !ps.withRenotes,
 				noteFilter: note => {
-					if (note.reply && note.reply.visibility === 'followers') {
+					if (note.reply && (me.id !== note.reply.userId) && (note.reply.visibility === 'followers')) {
 						if (!Object.hasOwn(followings, note.reply.userId)) return false;
 					}
 
