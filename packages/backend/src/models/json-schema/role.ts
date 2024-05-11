@@ -308,6 +308,10 @@ export const packedRolePoliciesSchema = {
 			type: 'integer',
 			optional: false, nullable: false,
 		},
+		canUseAccountRemoval: {
+			type: 'boolean',
+			optional: false, nullable: false,
+		},
 	},
 } as const;
 

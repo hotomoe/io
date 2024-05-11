@@ -68,6 +68,7 @@ export type RolePolicies = {
 	userEachUserListsLimit: number;
 	rateLimitFactor: number;
 	avatarDecorationLimit: number;
+	canUseAccountRemoval: boolean;
 };
 
 export const DEFAULT_POLICIES: RolePolicies = {
@@ -106,6 +107,7 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	userEachUserListsLimit: 50,
 	rateLimitFactor: 1,
 	avatarDecorationLimit: 1,
+	canUseAccountRemoval: true,
 };
 
 @Injectable()
@@ -389,6 +391,7 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 			canCreateContent: calc('canCreateContent', vs => vs.some(v => v === true)),
 			canUpdateContent: calc('canUpdateContent', vs => vs.some(v => v === true)),
 			canDeleteContent: calc('canDeleteContent', vs => vs.some(v => v === true)),
+			canUseAccountRemoval: calc('canUseAccountRemoval', vs => vs.some(v => v === true)),
 			canPurgeAccount: calc('canPurgeAccount', vs => vs.some(v => v === true)),
 			canUpdateAvatar: calc('canUpdateAvatar', vs => vs.some(v => v === true)),
 			canUpdateBanner: calc('canUpdateBanner', vs => vs.some(v => v === true)),

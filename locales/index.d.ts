@@ -6745,6 +6745,10 @@ export interface Locale extends ILocale {
              */
             "canDeleteContent": string;
             /**
+             * アカウントの削除
+             */
+            "canUseAccountRemoval": string;
+            /**
              * 完全なアカウントの削除
              */
             "canPurgeAccount": string;
@@ -7049,6 +7053,10 @@ export interface Locale extends ILocale {
          * 削除が進行中
          */
         "inProgress": string;
+        /**
+         * 現在、アカウントの削除はできません。
+         */
+        "youCantUseThisTime": string;
     };
     "_ad": {
         /**

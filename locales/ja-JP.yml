@@ -1741,6 +1741,7 @@ _role:
     canCreateContent: "コンテンツの作成"
     canUpdateContent: "コンテンツの編集"
     canDeleteContent: "コンテンツの削除"
+    canUseAccountRemoval: "アカウントの削除"
     canPurgeAccount: "完全なアカウントの削除"
     canUpdateAvatar: "アイコンの変更"
     canUpdateBanner: "バナーの変更"
@@ -1825,6 +1826,7 @@ _accountDelete:
   requestAccountDelete: "アカウント削除をリクエスト"
   started: "削除処理が開始されました。"
   inProgress: "削除が進行中"
+  youCantUseThisTime: "現在、アカウントの削除はできません。"
 
 _ad:
   back: "戻る"

@@ -1719,6 +1719,7 @@ _role:
     canCreateContent: "컨텐츠 생성 허용"
     canUpdateContent: "컨텐츠 수정 허용"
     canDeleteContent: "컨텐츠 삭제 허용"
+    canUseAccountRemoval: "계정 삭제 허용"
     canPurgeAccount: "완전한 계정 삭제 허용"
     canUpdateAvatar: "아바타 변경 허용"
     canUpdateBanner: "배너 변경 허용"
@@ -1790,6 +1791,7 @@ _accountDelete:
   requestAccountDelete: "계정 삭제 요청"
   started: "삭제 작업이 시작되었습니다."
   inProgress: "삭제 진행 중"
+  youCantUseThisTime: "지금은 계정 삭제를 진행할 수 없습니다."
 _ad:
   back: "뒤로"
   reduceFrequencyOfThisAd: "이 광고의 표시 빈도 낮추기"

@@ -40,11 +40,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #icon><i class="ti ti-alert-triangle"></i></template>
 				<template #label>{{ i18n.ts.closeAccount }}</template>
 
-				<div class="_gaps_m">
+				<div v-if="$i.policies.canUseAccountRemoval" class="_gaps_m">
 					<FormInfo warn>{{ i18n.ts._accountDelete.mayTakeTime }}</FormInfo>
 					<FormInfo>{{ i18n.ts._accountDelete.sendEmail }}</FormInfo>
 					<MkButton v-if="!$i.isDeleted" danger @click="deleteAccount">{{ i18n.ts._accountDelete.requestAccountDelete }}</MkButton>
 					<MkButton v-else disabled>{{ i18n.ts._accountDelete.inProgress }}</MkButton>
+				</div>
+				<div v-else class="_gaps_m">
+					<FormInfo warn>{{ i18n.ts._accountDelete.youCantUseThisTime }}</FormInfo>
 				</div>
 			</MkFolder>
 
@@ -105,7 +108,7 @@ import FormSection from '@/components/form/section.vue';
 
 const $i = signinRequired();
 
-const reportError = computed(defaultStore.makeGetterSetter('reportError'));
+// const reportError = computed(defaultStore.makeGetterSetter('reportError'));
 const enableCondensedLineForAcct = computed(defaultStore.makeGetterSetter('enableCondensedLineForAcct'));
 const devMode = computed(defaultStore.makeGetterSetter('devMode'));
 const defaultWithReplies = computed(defaultStore.makeGetterSetter('defaultWithReplies'));

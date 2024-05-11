@@ -4925,6 +4925,7 @@ export type components = {
       userEachUserListsLimit: number;
       rateLimitFactor: number;
       avatarDecorationLimit: number;
+      canUseAccountRemoval: boolean;
     };
     ReversiGameLite: {
       /** Format: id */
