@@ -114,7 +114,7 @@ export class SearchService {
 	@bindThis
 	public async indexNote(note: MiNote): Promise<void> {
 		if (note.text == null && note.cw == null) return;
-		if (!['home', 'public'].includes(note.visibility)) return;
+		//		if (!['home', 'public'].includes(note.visibility)) return;
 
 		if (this.meilisearch) {
 			switch (this.meilisearchIndexScope) {
