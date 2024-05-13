@@ -12,7 +12,7 @@ import { GlobalEventService } from '@/core/GlobalEventService.js';
 import * as Acct from '@/misc/acct.js';
 import type { Packed } from '@/misc/json-schema.js';
 import { DI } from '@/di-symbols.js';
-import type { AntennasRepository, UserListMembershipsRepository } from '@/models/_.js';
+import type { AntennasRepository, FollowingsRepository, UserListMembershipsRepository } from '@/models/_.js';
 import { UtilityService } from '@/core/UtilityService.js';
 import { bindThis } from '@/decorators.js';
 import type { GlobalEvents } from '@/core/GlobalEventService.js';
@@ -34,6 +34,9 @@ export class AntennaService implements OnApplicationShutdown {
 
 		@Inject(DI.antennasRepository)
 		private antennasRepository: AntennasRepository,
+
+		@Inject(DI.followingsRepository)
+		private followingsRepository: FollowingsRepository,
 
 		@Inject(DI.userListMembershipsRepository)
 		private userListMembershipsRepository: UserListMembershipsRepository,
@@ -123,7 +126,12 @@ export class AntennaService implements OnApplicationShutdown {
 	@bindThis
 	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
 		if (note.visibility === 'specified') return false;
-		if (note.visibility === 'followers') return false;
+		if (note.visibility === 'followers') {
+			if (!antenna.user) return false;
+
+			const followingAuthor = await this.followingsRepository.findOneBy({ followeeId: noteUser.id, followerId: antenna.user.id });
+			if (!followingAuthor) return false;
+		}
 
 		if (antenna.excludeBots && noteUser.isBot) return false;
 
