@@ -469,6 +469,7 @@ export class UserEntityService implements OnModuleInit {
 		const policies = isDetailed ? await this.roleService.getUserPolicies(user.id) : null;
 		const isModerator = (isMe || iAmModerator) && isDetailed ? this.roleService.isModerator(user) : null;
 		const isAdmin = (isMe || iAmModerator) && isDetailed ? this.roleService.isAdministrator(user) : null;
+		const isRoot = isMe && isDetailed ? user.isRoot : null;
 		const unreadAnnouncements = isMe && isDetailed ? await this.announcementService.getUnreadAnnouncements(user) : null;
 
 		const notificationsInfo = isMe && isDetailed ? await this.getNotificationsInfo(user.id) : null;
@@ -509,7 +510,7 @@ export class UserEntityService implements OnModuleInit {
 			}))) : undefined,
 
 			...(isDetailed ? {
-				url: profile!.url,
+				url: profile?.url,
 				uri: user.uri,
 				movedTo: user.movedToUri ? this.apPersonService.resolvePerson(user.movedToUri).then(user => user.id).catch(() => null) : null,
 				alsoKnownAs: user.alsoKnownAs
@@ -525,12 +526,12 @@ export class UserEntityService implements OnModuleInit {
 				isSilenced: !policies?.canPublicNote,
 				isLimited: !(policies?.canCreateContent && policies.canUpdateContent && policies.canDeleteContent && policies.canInitiateConversation),
 				isSuspended: user.isSuspended,
-				description: profile!.description,
-				location: profile!.location,
-				birthday: profile!.birthday,
-				lang: profile!.lang,
-				fields: profile!.fields,
-				verifiedLinks: profile!.verifiedLinks,
+				description: profile?.description,
+				location: profile?.location,
+				birthday: profile?.birthday,
+				lang: profile?.lang,
+				fields: profile?.fields,
+				verifiedLinks: profile?.verifiedLinks,
 				followersCount: followersCount ?? 0,
 				followingCount: followingCount ?? 0,
 				notesCount: user.notesCount,
@@ -538,14 +539,14 @@ export class UserEntityService implements OnModuleInit {
 				pinnedNotes: this.noteEntityService.packMany(pins.map(pin => pin.note!), me, {
 					detail: true,
 				}),
-				pinnedPageId: profile!.pinnedPageId,
-				pinnedPage: profile!.pinnedPageId ? this.pageEntityService.pack(profile!.pinnedPageId, me) : null,
-				publicReactions: this.isLocalUser(user) ? profile!.publicReactions : false, // https://github.com/misskey-dev/misskey/issues/12964
-				followersVisibility: profile!.followersVisibility,
-				followingVisibility: profile!.followingVisibility,
-				twoFactorEnabled: profile!.twoFactorEnabled,
-				usePasswordLessLogin: profile!.usePasswordLessLogin,
-				securityKeys: profile!.twoFactorEnabled
+				pinnedPageId: profile?.pinnedPageId,
+				pinnedPage: profile?.pinnedPageId ? this.pageEntityService.pack(profile.pinnedPageId, me) : null,
+				publicReactions: this.isLocalUser(user) ? profile?.publicReactions : false, // https://github.com/misskey-dev/misskey/issues/12964
+				followersVisibility: profile?.followersVisibility,
+				followingVisibility: profile?.followingVisibility,
+				twoFactorEnabled: profile?.twoFactorEnabled,
+				usePasswordLessLogin: profile?.usePasswordLessLogin,
+				securityKeys: profile?.twoFactorEnabled
 					? this.userSecurityKeysRepository.countBy({ userId: user.id }).then(result => result >= 1)
 					: false,
 				roles: this.roleService.getUserRoles(user.id).then(roles => roles
@@ -563,7 +564,7 @@ export class UserEntityService implements OnModuleInit {
 					}))
 				),
 				memo: memo,
-				moderationNote: iAmModerator ? (profile!.moderationNote ?? '') : undefined,
+				moderationNote: iAmModerator ? (profile?.moderationNote ?? '') : undefined,
 			} : {}),
 
 			...(isDetailed && (isMe || iAmModerator) ? {
@@ -571,14 +572,15 @@ export class UserEntityService implements OnModuleInit {
 				bannerId: user.bannerId,
 				isModerator: isModerator,
 				isAdmin: isAdmin,
-				injectFeaturedNote: profile!.injectFeaturedNote,
-				receiveAnnouncementEmail: profile!.receiveAnnouncementEmail,
-				alwaysMarkNsfw: profile!.alwaysMarkNsfw,
-				autoSensitive: profile!.autoSensitive,
-				carefulBot: profile!.carefulBot,
-				autoAcceptFollowed: profile!.autoAcceptFollowed,
-				noCrawle: profile!.noCrawle,
-				preventAiLearning: profile!.preventAiLearning,
+				isRoot: isRoot,
+				injectFeaturedNote: profile?.injectFeaturedNote,
+				receiveAnnouncementEmail: profile?.receiveAnnouncementEmail,
+				alwaysMarkNsfw: profile?.alwaysMarkNsfw,
+				autoSensitive: profile?.autoSensitive,
+				carefulBot: profile?.carefulBot,
+				autoAcceptFollowed: profile?.autoAcceptFollowed,
+				noCrawle: profile?.noCrawle,
+				preventAiLearning: profile?.preventAiLearning,
 				isExplorable: user.isExplorable,
 				isDeleted: user.isDeleted,
 				twoFactorBackupCodesStock: profile?.twoFactorBackupSecret?.length === 20 ? 'full' : (profile?.twoFactorBackupSecret?.length ?? 0) > 0 ? 'partial' : 'none',
@@ -601,17 +603,17 @@ export class UserEntityService implements OnModuleInit {
 				mutedWords: profile!.mutedWords,
 				mutedInstances: profile!.mutedInstances,
 				mutingNotificationTypes: [], // 後方互換性のため
-				notificationRecieveConfig: profile!.notificationRecieveConfig,
-				emailNotificationTypes: profile!.emailNotificationTypes,
-				achievements: profile!.achievements,
-				loggedInDays: profile!.loggedInDates.length,
+				notificationRecieveConfig: profile?.notificationRecieveConfig,
+				emailNotificationTypes: profile?.emailNotificationTypes,
+				achievements: profile?.achievements,
+				loggedInDays: profile?.loggedInDates.length,
 				policies: policies,
 			} : {}),
 
 			...(opts.includeSecrets ? {
-				email: profile!.email,
-				emailVerified: profile!.emailVerified,
-				securityKeysList: profile!.twoFactorEnabled
+				email: profile?.email,
+				emailVerified: profile?.emailVerified,
+				securityKeysList: profile?.twoFactorEnabled
 					? this.userSecurityKeysRepository.find({
 						where: {
 							userId: user.id,

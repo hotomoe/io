@@ -453,6 +453,10 @@ export const packedMeDetailedOnlySchema = {
 			type: 'boolean',
 			nullable: true, optional: false,
 		},
+		isRoot: {
+			type: 'boolean',
+			nullable: true, optional: false,
+		},
 		injectFeaturedNote: {
 			type: 'boolean',
 			nullable: false, optional: false,

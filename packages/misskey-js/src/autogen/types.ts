@@ -3852,6 +3852,7 @@ export type components = {
       bannerId: string | null;
       isModerator: boolean | null;
       isAdmin: boolean | null;
+      isRoot: boolean | null;
       injectFeaturedNote: boolean;
       receiveAnnouncementEmail: boolean;
       alwaysMarkNsfw: boolean;
