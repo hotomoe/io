@@ -5,14 +5,14 @@ on:
     branches:
       - host
     tags:
-      - '**-host.*'
+      - '**-hotomoe.**'
   workflow_dispatch:
 
 jobs:
   push_to_registry:
     name: Push Docker image to GitHub Container Registry
     runs-on: ubuntu-22.04
-    if: github.repository == 'MisskeyIO/misskey'
+    if: github.repository == 'hotomoe/io'
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -47,5 +47,5 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/misskeyio/misskey:host-buildcache
           cache-to: type=registry,ref=ghcr.io/misskeyio/misskey:host-buildcache,mode=max
           tags: |
-            ghcr.io/misskeyio/misskey:host
-            ghcr.io/misskeyio/misskey:${{ env.FORMATTED_BRANCH_NAME }}
+            ghcr.io/hotomoe/hotomoe:host
+            ghcr.io/hotomoe/hotomoe:${{ env.FORMATTED_BRANCH_NAME }}
