@@ -16,6 +16,7 @@ import { isUserRelated } from '@/misc/is-user-related.js';
 import { CacheService } from '@/core/CacheService.js';
 import { QueryService } from '@/core/QueryService.js';
 import { IdService } from '@/core/IdService.js';
+import { UserEntityService } from './entities/UserEntityService.js';
 import type { Index, MeiliSearch } from 'meilisearch';
 
 type K = string;
@@ -76,6 +77,7 @@ export class SearchService {
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,
 
+		private userEntityService: UserEntityService,
 		private cacheService: CacheService,
 		private queryService: QueryService,
 		private idService: IdService,
@@ -149,11 +151,33 @@ export class SearchService {
 
 	@bindThis
 	public async unindexNote(note: MiNote): Promise<void> {
-		if (!['home', 'public'].includes(note.visibility)) return;
+		// if (!['home', 'public'].includes(note.visibility)) return;
 
 		if (this.meilisearch) {
 			this.meilisearchNoteIndex!.deleteDocument(note.id);
 		}
+	}
+
+	@bindThis
+	private async filter(me: MiUser | null, note: MiNote): Promise<boolean> {
+		const [
+			userIdsWhoMeMuting,
+			userIdsWhoBlockingMe,
+		] = me ? await Promise.all([
+			this.cacheService.userMutingsCache.fetch(me.id),
+			this.cacheService.userBlockedCache.fetch(me.id),
+		]) : [new Set<string>(), new Set<string>()];
+		if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
+		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
+		if (['followers', 'specified'].includes(note.visibility)) {
+			if (!me) return false;
+			if (note.visibility === 'followers') {
+				const relationship = await this.userEntityService.getRelation(me.id, note.userId);
+				if (relationship.isFollowing) return true;
+			}
+			if (!note.visibleUserIds.includes(me.id) && !note.mentions.includes(me.id)) return false;
+		}
+		return true;
 	}
 
 	@bindThis
@@ -190,20 +214,10 @@ export class SearchService {
 				limit: pagination.limit,
 			});
 			if (res.hits.length === 0) return [];
-			const [
-				userIdsWhoMeMuting,
-				userIdsWhoBlockingMe,
-			] = me ? await Promise.all([
-				this.cacheService.userMutingsCache.fetch(me.id),
-				this.cacheService.userBlockedCache.fetch(me.id),
-			]) : [new Set<string>(), new Set<string>()];
+
 			const notes = (await this.notesRepository.findBy({
 				id: In(res.hits.map(x => x.id)),
-			})).filter(note => {
-				if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
-				if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
-				return true;
-			});
+			})).filter(async note => (await this.filter(me, note)));
 			return notes.sort((a, b) => a.id > b.id ? -1 : 1);
 		} else {
 			const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
