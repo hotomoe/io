@@ -18,6 +18,7 @@ import { QueryService } from '@/core/QueryService.js';
 import { IdService } from '@/core/IdService.js';
 import { UserEntityService } from './entities/UserEntityService.js';
 import type { Index, MeiliSearch } from 'meilisearch';
+import { nonMaxSuppressionV3Impl } from '@tensorflow/tfjs-core/dist/backends/non_max_suppression_impl.js';
 
 type K = string;
 type V = string | number | boolean;
@@ -215,10 +216,14 @@ export class SearchService {
 			});
 			if (res.hits.length === 0) return [];
 
-			const notes = (await this.notesRepository.findBy({
+			const notes = await this.notesRepository.findBy({
 				id: In(res.hits.map(x => x.id)),
-			})).filter(async note => (await this.filter(me, note)));
-			return notes.sort((a, b) => a.id > b.id ? -1 : 1);
+			});
+			const promises = notes.map(async note => ({ note: note, result: (await this.filter(me, note)) }));
+			const data = await Promise.all(promises);
+			const dataFilter = data.filter(d => d.result);
+			const filteredNotes = dataFilter.map(d => d.note);
+			return filteredNotes.sort((a, b) => a.id > b.id ? -1 : 1);
 		} else {
 			const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
 
