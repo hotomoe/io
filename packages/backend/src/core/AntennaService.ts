@@ -129,6 +129,8 @@ export class AntennaService implements OnApplicationShutdown {
 	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
 		if (note.visibility === 'specified') return false;
 		if (note.visibility === 'followers') {
+			if (antenna.userId === note.userId) return true;
+
 			const relationship = await this.userEntityService.getRelation(antenna.userId, noteUser.id);
 			if (!relationship.isFollowing) return false;
 		}
