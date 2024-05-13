@@ -47,5 +47,5 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/hotomoe/hotomoe:host-buildcache
           cache-to: type=registry,ref=ghcr.io/hotomoe/hotomoe:host-buildcache,mode=max
           tags: |
-            ghcr.io/hotomoe/hotomoe:host
+            ghcr.io/hotomoe/hotomoe:latest
             ghcr.io/hotomoe/hotomoe:${{ env.FORMATTED_BRANCH_NAME }}
