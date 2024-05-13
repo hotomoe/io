@@ -142,7 +142,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				} else {
 					const q: FindOptionsWhere<MiUser> = ps.userId != null
 						? { id: ps.userId }
-						: { usernameLower: ps.username!.toLowerCase(), host: IsNull() };
+						: { usernameLower: ps.username?.toLowerCase(), host: IsNull() };
 
 					user = await this.usersRepository.findOneBy(q);
 				}

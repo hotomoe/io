@@ -18,6 +18,7 @@ import { bindThis } from '@/decorators.js';
 import type { GlobalEvents } from '@/core/GlobalEventService.js';
 import { FanoutTimelineService } from '@/core/FanoutTimelineService.js';
 import { RolePolicies, RoleService } from '@/core/RoleService.js';
+import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import type { OnApplicationShutdown } from '@nestjs/common';
 
 @Injectable()
@@ -41,6 +42,7 @@ export class AntennaService implements OnApplicationShutdown {
 		@Inject(DI.userListMembershipsRepository)
 		private userListMembershipsRepository: UserListMembershipsRepository,
 
+		private userEntityService: UserEntityService,
 		private utilityService: UtilityService,
 		private globalEventService: GlobalEventService,
 		private fanoutTimelineService: FanoutTimelineService,
@@ -127,10 +129,8 @@ export class AntennaService implements OnApplicationShutdown {
 	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
 		if (note.visibility === 'specified') return false;
 		if (note.visibility === 'followers') {
-			if (!antenna.user) return false;
-
-			const followingAuthor = await this.followingsRepository.findOneBy({ followeeId: noteUser.id, followerId: antenna.user.id });
-			if (!followingAuthor) return false;
+			const relationship = await this.userEntityService.getRelation(antenna.userId, noteUser.id);
+			if (!relationship.isFollowing) return false;
 		}
 
 		if (antenna.excludeBots && noteUser.isBot) return false;
