@@ -18,7 +18,7 @@ import { QueryService } from '@/core/QueryService.js';
 import { IdService } from '@/core/IdService.js';
 import { UserEntityService } from './entities/UserEntityService.js';
 import type { Index, MeiliSearch } from 'meilisearch';
-import { nonMaxSuppressionV3Impl } from '@tensorflow/tfjs-core/dist/backends/non_max_suppression_impl.js';
+// import { nonMaxSuppressionV3Impl } from '@tensorflow/tfjs-core/dist/backends/non_max_suppression_impl.js';
 
 type K = string;
 type V = string | number | boolean;

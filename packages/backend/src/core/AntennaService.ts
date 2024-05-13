@@ -11,9 +11,11 @@ import type { MiUser } from '@/models/User.js';
 import { GlobalEventService } from '@/core/GlobalEventService.js';
 import * as Acct from '@/misc/acct.js';
 import type { Packed } from '@/misc/json-schema.js';
+import { isUserRelated } from '@/misc/is-user-related.js';
 import { DI } from '@/di-symbols.js';
 import type { AntennasRepository, FollowingsRepository, UserListMembershipsRepository } from '@/models/_.js';
 import { UtilityService } from '@/core/UtilityService.js';
+import { CacheService } from '@/core/CacheService.js';
 import { bindThis } from '@/decorators.js';
 import type { GlobalEvents } from '@/core/GlobalEventService.js';
 import { FanoutTimelineService } from '@/core/FanoutTimelineService.js';
@@ -42,6 +44,7 @@ export class AntennaService implements OnApplicationShutdown {
 		@Inject(DI.userListMembershipsRepository)
 		private userListMembershipsRepository: UserListMembershipsRepository,
 
+		private cacheService: CacheService,
 		private userEntityService: UserEntityService,
 		private utilityService: UtilityService,
 		private globalEventService: GlobalEventService,
@@ -126,14 +129,31 @@ export class AntennaService implements OnApplicationShutdown {
 	// NOTE: フォローしているユーザーのノート、リストのユーザーのノート、グループのユーザーのノート指定はパフォーマンス上の理由で無効になっている
 
 	@bindThis
-	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
-		/* if (note.visibility === 'specified') return false;
-		if (note.visibility === 'followers') {
-			if (antenna.userId === note.userId) return true;
+	private async filter(me: MiUser | null, note: (MiNote | Packed<'Note'>)): Promise<boolean> {
+		const [
+			userIdsWhoMeMuting,
+			userIdsWhoBlockingMe,
+		] = me ? await Promise.all([
+			this.cacheService.userMutingsCache.fetch(me.id),
+			this.cacheService.userBlockedCache.fetch(me.id),
+		]) : [new Set<string>(), new Set<string>()];
+		if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
+		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
+		if (['followers', 'specified'].includes(note.visibility)) {
+			if (!me) return false;
+			if (note.visibility === 'followers') {
+				const relationship = await this.userEntityService.getRelation(me.id, note.userId);
+				if (relationship.isFollowing) return true;
+			}
+			if (!note.visibleUserIds?.includes(me.id) && !note.mentions?.includes(me.id)) return false;
+		}
+		return true;
+	}
 
-			const relationship = await this.userEntityService.getRelation(antenna.userId, noteUser.id);
-			if (!relationship.isFollowing) return false;
-		} */
+	@bindThis
+	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
+		const result = await this.filter(antenna.user, note);
+		if (!result) return false;
 
 		if (antenna.excludeBots && noteUser.isBot) return false;
 
