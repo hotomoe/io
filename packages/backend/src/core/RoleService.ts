@@ -447,11 +447,13 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 	public async getModeratorIds(includeAdmins = true): Promise<MiUser['id'][]> {
 		const roles = await this.rolesCache.fetch(() => this.rolesRepository.findBy({}));
 		const moderatorRoles = includeAdmins ? roles.filter(r => r.isModerator || r.isAdministrator) : roles.filter(r => r.isModerator);
+		const root = await this.usersRepository.findOneByOrFail({ isRoot: true });
 		const assigns = moderatorRoles.length > 0 ? await this.roleAssignmentsRepository.findBy({
 			roleId: In(moderatorRoles.map(r => r.id)),
 		}) : [];
-		// TODO: isRootなアカウントも含める
-		return assigns.map(a => a.userId);
+		const result = assigns.map(a => a.userId);
+		if (includeAdmins) result.push(root.id);
+		return result;
 	}
 
 	@bindThis
@@ -467,11 +469,13 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 	public async getAdministratorIds(): Promise<MiUser['id'][]> {
 		const roles = await this.rolesCache.fetch(() => this.rolesRepository.findBy({}));
 		const administratorRoles = roles.filter(r => r.isAdministrator);
+		const root = await this.usersRepository.findOneByOrFail({ isRoot: true });
 		const assigns = administratorRoles.length > 0 ? await this.roleAssignmentsRepository.findBy({
 			roleId: In(administratorRoles.map(r => r.id)),
 		}) : [];
-		// TODO: isRootなアカウントも含める
-		return assigns.map(a => a.userId);
+		const result = assigns.map(a => a.userId);
+		result.push(root.id);
+		return result;
 	}
 
 	@bindThis
