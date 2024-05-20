@@ -39,6 +39,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div :class="$style.divider"></div>
 			<MkA v-if="$i.isAdmin || $i.isModerator" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
 				<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
+				<span v-if="unresolvedReportAvailable" :class="$style.itemIndicator">
+					<i class="_indicatorCircle"></i>
+				</span>
 			</MkA>
 			<button class="_button" :class="$style.item" @click="more">
 				<i :class="$style.itemIcon" class="ti ti-grid-dots ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.more }}</span>
@@ -70,8 +73,10 @@ import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import { miLocalStorage } from '@/local-storage.js';
+import { misskeyApi } from '@/scripts/misskey-api.js';
 
-const iconOnly = ref(false);
+const iconOnly = ref<boolean>(false);
+const unresolvedReportAvailable = ref<boolean>(false);
 
 const menu = computed(() => defaultStore.state.menu);
 const otherMenuItemIndicated = computed(() => {
@@ -93,6 +98,15 @@ window.addEventListener('resize', calcViewState);
 watch(defaultStore.reactiveState.menuDisplay, () => {
 	calcViewState();
 });
+
+if ($i?.isAdmin || $i?.isModerator) {
+	misskeyApi('admin/abuse-user-reports', {
+		state: 'unresolved',
+		limit: 1,
+	}).then(reports => {
+		if (reports.length > 0) unresolvedReportAvailable.value = true;
+	});
+}
 
 function openAccountMenu(ev: MouseEvent) {
 	openAccountMenu_({

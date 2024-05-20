@@ -3801,6 +3801,10 @@ export interface Locale extends ILocale {
      */
     "thereIsUnresolvedAbuseReportWarning": string;
     /**
+     * まだ未解決の報告が{left}件あります。コントロールパネルでご確認ください。
+     */
+    "thereIsUnresolvedAbuseReport": ParameterizedString<"left">;
+    /**
      * 推奨
      */
     "recommended": string;
