@@ -76,7 +76,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			const usersChart = await this.usersChart.getChart('hour', 1, null);
 			const usersCount = usersChart.local.total[0] + usersChart.remote.total[0];
-			const originalUsersCount = usersChart.local.total[0];
+			const originalUsersCount = usersChart.local.total[0] - 2;
 
 			const [
 				reactionsCount,
