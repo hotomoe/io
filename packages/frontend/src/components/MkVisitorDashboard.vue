@@ -85,7 +85,7 @@ import { instance } from '@/instance.js';
 import { miLocalStorage } from '@/local-storage.js';
 import MkNumber from '@/components/MkNumber.vue';
 import XActiveUsersChart from '@/components/MkVisitorDashboard.ActiveUsersChart.vue';
-import { openInstanceMenu } from '@/ui/_common_/common';
+import { openInstanceMenu } from '@/ui/_common_/common.js';
 
 const stats = ref<Misskey.entities.StatsResponse | null>(null);
 
