@@ -366,6 +366,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false,
 	},
+	showTranslateButtonInNoteFooter: {
+		where: 'device',
+		default: false,
+	},
 	reactionsDisplaySize: {
 		where: 'device',
 		default: 'medium' as 'small' | 'medium' | 'large',

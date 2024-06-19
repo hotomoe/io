@@ -37,7 +37,7 @@ export async function getNoteClipMenu(props: {
 	const isRenote = (
 		props.note.renote != null &&
 		props.note.text == null &&
-		props.note.fileIds.length === 0 &&
+		props.note.fileIds?.length === 0 &&
 		props.note.poll == null
 	);
 
@@ -165,7 +165,7 @@ export function getNoteMenu(props: {
 	const isRenote = (
 		props.note.renote != null &&
 		props.note.text == null &&
-		props.note.fileIds.length === 0 &&
+		props.note.fileIds?.length === 0 &&
 		props.note.poll == null
 	);
 
@@ -321,7 +321,7 @@ export function getNoteMenu(props: {
 				text: i18n.ts.share,
 				action: share,
 			}] : []),
-			$i && $i.policies.canUseTranslator && instance.translatorAvailable ? {
+			$i && $i.policies.canUseTranslator && instance.translatorAvailable && !defaultStore.state.showTranslateButtonInNoteFooter? {
 				icon: 'ti ti-language-hiragana',
 				text: i18n.ts.translate,
 				action: translate,

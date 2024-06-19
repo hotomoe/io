@@ -136,6 +136,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" class="_button" :class="$style.noteFooterButton" @mousedown="clip()">
 				<i class="ti ti-paperclip"></i>
 			</button>
+			<button v-if="defaultStore.state.showTranslateButtonInNoteFooter" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
+				<i class="ti ti-language-hiragana"></i>
+			</button>
 			<button ref="menuButton" class="_button" :class="$style.noteFooterButton" @mousedown="showMenu()">
 				<i class="ti ti-dots"></i>
 			</button>
@@ -233,6 +236,7 @@ import MkPagination, { type Paging } from '@/components/MkPagination.vue';
 import MkReactionIcon from '@/components/MkReactionIcon.vue';
 import MkButton from '@/components/MkButton.vue';
 import { isEnabledUrlPreview } from '@/instance.js';
+import {miLocalStorage} from "@/local-storage.js";
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
@@ -478,8 +482,19 @@ function showMenu(viaKeyboard = false): void {
 	}).then(focus).finally(cleanup);
 }
 
-async function clip() {
+async function clip(): Promise<void> {
 	os.popupMenu(await getNoteClipMenu({ note: note.value, isDeleted }), clipButton.value).then(focus);
+}
+
+async function translate(): Promise<void> {
+	if (translation.value != null) return;
+	translating.value = true;
+	const res = await misskeyApi('notes/translate', {
+		noteId: appearNote.value.id,
+		targetLang: miLocalStorage.getItem('lang') ?? navigator.language,
+	});
+	translating.value = false;
+	translation.value = res;
 }
 
 function showRenoteMenu(viaKeyboard = false): void {

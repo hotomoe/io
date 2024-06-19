@@ -128,6 +128,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" :class="$style.footerButton" class="_button" @mousedown="clip()">
 					<i class="ti ti-paperclip"></i>
 				</button>
+				<button v-if="defaultStore.state.showTranslateButtonInNoteFooter" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
+					<i class="ti ti-language-hiragana"></i>
+				</button>
 				<button ref="menuButton" :class="$style.footerButton" class="_button" @mousedown="showMenu()">
 					<i class="ti ti-dots"></i>
 				</button>
@@ -193,6 +196,7 @@ import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { shouldCollapsed } from '@/scripts/collapsed.js';
 import { isEnabledUrlPreview } from '@/instance.js';
+import {miLocalStorage} from "@/local-storage.js";
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
@@ -250,6 +254,7 @@ const renoteButton = shallowRef<HTMLElement>();
 const renoteTime = shallowRef<HTMLElement>();
 const reactButton = shallowRef<HTMLElement>();
 const clipButton = shallowRef<HTMLElement>();
+const translateButton = shallowRef<HTMLElement>();
 const appearNote = computed(() => isRenote ? note.value.renote as Misskey.entities.Note : note.value);
 const isMyRenote = $i && ($i.id === note.value.userId);
 const showContent = ref(false);
@@ -481,12 +486,23 @@ function showMenu(viaKeyboard = false): void {
 	}).then(focus).finally(cleanup);
 }
 
-async function clip() {
+async function clip(): Promise<void> {
 	if (props.mock) {
 		return;
 	}
 
 	os.popupMenu(await getNoteClipMenu({ note: note.value, isDeleted, currentClip: currentClip?.value }), clipButton.value).then(focus);
+}
+
+async function translate(): Promise<void> {
+	if (translation.value != null) return;
+	translating.value = true;
+	const res = await misskeyApi('notes/translate', {
+		noteId: appearNote.value.id,
+		targetLang: miLocalStorage.getItem('lang') ?? navigator.language,
+	});
+	translating.value = false;
+	translation.value = res;
 }
 
 function showRenoteMenu(viaKeyboard = false): void {
