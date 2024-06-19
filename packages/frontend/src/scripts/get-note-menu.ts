@@ -321,7 +321,7 @@ export function getNoteMenu(props: {
 				text: i18n.ts.share,
 				action: share,
 			}] : []),
-			$i && $i.policies.canUseTranslator && instance.translatorAvailable && !defaultStore.state.showTranslateButtonInNoteFooter? {
+			$i && $i.policies.canUseTranslator && instance.translatorAvailable && !defaultStore.state.showTranslateButtonInNoteFooter ? {
 				icon: 'ti ti-language-hiragana',
 				text: i18n.ts.translate,
 				action: translate,
