@@ -3,9 +3,7 @@ name: Test (frontend)
 on:
   push:
     branches:
-      - beta
-      - io
-      - host
+      - hotomoe
     paths:
       - packages/frontend/**
       # for permissions

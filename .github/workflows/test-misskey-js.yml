@@ -6,9 +6,7 @@ name: Test (misskey.js)
 on:
   push:
     branches:
-      - beta
-      - io
-      - host
+      - hotomoe
     paths:
       - packages/misskey-js/**
   pull_request:
