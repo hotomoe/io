@@ -1,10 +1,10 @@
 {
 	"name": "misskey",
-	"version": "2024.5.0-io.1a",
-	"codename": "nasubi",
+	"version": "2024.5.0-hotomoe.0",
+	"codename": "hajimete",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/MisskeyIO/misskey.git"
+		"url": "https://github.com/hotomoe/hotomoe.git"
 	},
 	"packageManager": "pnpm@9.1.2",
 	"workspaces": [
