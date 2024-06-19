@@ -48,6 +48,7 @@ describe('ユーザー', () => {
 			// BUG isAdmin/isModeratorはUserLiteではなくMeDetailedOnlyに含まれる。
 			isAdmin: undefined,
 			isModerator: undefined,
+			isRoot: undefined,
 		});
 	};
 
@@ -117,6 +118,7 @@ describe('ユーザー', () => {
 			bannerId: user.bannerId,
 			isModerator: user.isModerator,
 			isAdmin: user.isAdmin,
+			isRoot: user.isRoot,
 			injectFeaturedNote: user.injectFeaturedNote,
 			receiveAnnouncementEmail: user.receiveAnnouncementEmail,
 			alwaysMarkNsfw: user.alwaysMarkNsfw,
