@@ -212,7 +212,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	highlightSensitiveMedia: {
 		where: 'device',
-		default: false,
+		default: true,
 	},
 	animation: {
 		where: 'device',
@@ -220,7 +220,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	animatedMfm: {
 		where: 'device',
-		default: false,
+		default: true,
 	},
 	advancedMfm: {
 		where: 'device',
@@ -236,7 +236,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	showReactionsCount: {
 		where: 'device',
-		default: false,
+		default: true,
 	},
 	enableQuickAddMfmFunction: {
 		where: 'device',
