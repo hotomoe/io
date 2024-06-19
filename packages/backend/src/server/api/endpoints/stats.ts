@@ -71,12 +71,12 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	) {
 		super(meta, paramDef, async () => {
 			const notesChart = await this.notesChart.getChart('hour', 1, null);
-			const notesCount = notesChart.local.total[0] + notesChart.remote.total[0];
 			const originalNotesCount = notesChart.local.total[0];
+			const notesCount = originalNotesCount + notesChart.remote.total[0];
 
 			const usersChart = await this.usersChart.getChart('hour', 1, null);
-			const usersCount = usersChart.local.total[0] + usersChart.remote.total[0];
-			const originalUsersCount = usersChart.local.total[0] - 2;
+			const originalUsersCount = usersChart.local.total[0];
+			const usersCount = originalUsersCount + usersChart.remote.total[0];
 
 			const [
 				reactionsCount,

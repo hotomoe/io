@@ -4,7 +4,7 @@
  */
 
 import { Injectable, Inject } from '@nestjs/common';
-import { Not, IsNull, DataSource } from 'typeorm';
+import { Not, IsNull, Like, DataSource } from 'typeorm';
 import type { MiUser } from '@/models/User.js';
 import { AppLockService } from '@/core/AppLockService.js';
 import { DI } from '@/di-symbols.js';
@@ -37,7 +37,7 @@ export default class UsersChart extends Chart<typeof schema> { // eslint-disable
 
 	protected async tickMajor(): Promise<Partial<KVs<typeof schema>>> {
 		const [localCount, remoteCount] = await Promise.all([
-			this.usersRepository.countBy({ host: IsNull() }),
+			this.usersRepository.countBy({ host: IsNull(), usernameLower: Like("%.%") }),
 			this.usersRepository.countBy({ host: Not(IsNull()) }),
 		]);
 
