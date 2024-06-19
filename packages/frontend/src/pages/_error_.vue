@@ -81,7 +81,7 @@ definePageMetadata(() => ({
 
 .img {
 	vertical-align: bottom;
-	height: 128px;
+	height: 300px;
 	margin-bottom: 24px;
 	border-radius: 16px;
 }

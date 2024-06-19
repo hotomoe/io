@@ -131,7 +131,7 @@ definePageMetadata(() => ({
 .root {
 	padding: 32px;
 	text-align: center;
-  align-items: center;
+  align-items: center;0
 }
 
 .text {
@@ -140,8 +140,7 @@ definePageMetadata(() => ({
 
 .img {
 	vertical-align: bottom;
-  width: 128px;
-	height: 128px;
+	height: 30px;
 	margin-bottom: 16px;
 	border-radius: 16px;
 }
