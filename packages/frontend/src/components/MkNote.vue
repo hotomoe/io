@@ -196,7 +196,7 @@ import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { shouldCollapsed } from '@/scripts/collapsed.js';
 import { isEnabledUrlPreview } from '@/instance.js';
-import {miLocalStorage} from "@/local-storage.js";
+import { miLocalStorage } from "@/local-storage.js";
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
