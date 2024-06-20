@@ -37,7 +37,7 @@ export default class UsersChart extends Chart<typeof schema> { // eslint-disable
 
 	protected async tickMajor(): Promise<Partial<KVs<typeof schema>>> {
 		const [localCount, remoteCount] = await Promise.all([
-			this.usersRepository.countBy({ host: IsNull(), usernameLower: Like("%.%") }),
+			this.usersRepository.countBy({ host: IsNull(), usernameLower: Not(Like('%.%')) }),
 			this.usersRepository.countBy({ host: Not(IsNull()) }),
 		]);
 
