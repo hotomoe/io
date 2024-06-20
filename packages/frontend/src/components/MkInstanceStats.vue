@@ -137,6 +137,7 @@ function createDoughnut(chartEl, tooltip, data) {
 					bottom: 16,
 				},
 			},
+			/*
 			onClick: (ev) => {
 				if (ev.native == null) return;
 				const hit = chartInstance.getElementsAtEventForMode(ev.native, 'nearest', { intersect: true }, false)[0];
@@ -144,6 +145,7 @@ function createDoughnut(chartEl, tooltip, data) {
 					data[hit.index].onClick();
 				}
 			},
+			*/
 			plugins: {
 				legend: {
 					display: false,

@@ -143,9 +143,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkSpacer v-else-if="tab === 'emojis'" :contentMax="1000" :marginMin="20">
 			<XEmojis/>
 		</MkSpacer>
+		<!--
 		<MkSpacer v-else-if="tab === 'federation'" :contentMax="1000" :marginMin="20">
 			<XFederation/>
 		</MkSpacer>
+		-->
 		<MkSpacer v-else-if="tab === 'charts'" :contentMax="1000" :marginMin="20">
 			<MkInstanceStats/>
 		</MkSpacer>
@@ -205,11 +207,11 @@ const headerTabs = computed(() => [{
 	key: 'emojis',
 	title: i18n.ts.customEmojis,
 	icon: 'ti ti-icons',
-}, {
+}, /* {
 	key: 'federation',
 	title: i18n.ts.federation,
 	icon: 'ti ti-whirl',
-}, {
+}, */ {
 	key: 'charts',
 	title: i18n.ts.charts,
 	icon: 'ti ti-chart-line',
