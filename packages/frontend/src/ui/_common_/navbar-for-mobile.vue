@@ -8,7 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.top">
 		<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }"></div>
 		<button class="_button" :class="$style.instance" @click="openInstanceMenu">
-			<img :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
+			<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/about-icon.png" alt="" :class="$style.instanceIconAlt"/>
+			<img v-else :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
 		</button>
 	</div>
 	<div :class="$style.middle">
@@ -57,6 +58,7 @@ import { $i, openAccountMenu as openAccountMenu_ } from '@/account.js';
 import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
+import {miLocalStorage} from "@/local-storage.js";
 
 const menu = toRef(defaultStore.state, 'menu');
 const otherMenuItemIndicated = computed(() => {
