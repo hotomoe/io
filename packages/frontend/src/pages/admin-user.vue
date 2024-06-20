@@ -10,10 +10,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<FormSuspense :p="init">
 			<div v-if="tab === 'overview'" class="_gaps_m">
 				<div class="aeakzknw">
-					<MkAvatar class="avatar" :user="user" indicator link preview/>
+					<MkAvatar class="avatar" :user="user!" indicator link preview/>
 					<div class="body">
-						<span class="name"><MkUserName class="name" :user="user"/></span>
-						<span class="sub"><span class="acct _monospace">@{{ acct(user) }}</span></span>
+						<span class="name"><MkUserName class="name" :user="user!"/></span>
+						<span class="sub"><span class="acct _monospace">@{{ acct(user!) }}</span></span>
 						<span class="state">
 							<span v-if="admin" class="admin">Admin</span>
 							<span v-if="moderator" class="moderator">Moderator</span>
@@ -25,18 +25,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</div>
 				</div>
 
-				<MkInfo v-if="user.username.includes('.')">{{ i18n.ts.isSystemAccount }}</MkInfo>
+				<MkInfo v-if="user?.username.includes('.')">{{ i18n.ts.isSystemAccount }}</MkInfo>
 
-				<FormLink v-if="user.host" :to="`/instance-info/${user.host}`">{{ i18n.ts.instanceInfo }}</FormLink>
+				<FormLink v-if="user?.host" :to="`/instance-info/${user?.host}`">{{ i18n.ts.instanceInfo }}</FormLink>
 
 				<div style="display: flex; flex-direction: column; gap: 1em;">
-					<MkKeyValue :copy="user.id" oneline>
+					<MkKeyValue :copy="user?.id" oneline>
 						<template #key>ID</template>
-						<template #value><span class="_monospace">{{ user.id }}</span></template>
+						<template #value><span class="_monospace">{{ user?.id }}</span></template>
 					</MkKeyValue>
 					<MkKeyValue oneline>
 						<template #key>{{ i18n.ts.createdAt }}</template>
-						<template #value><span class="_monospace"><MkTime :time="user.createdAt" :mode="'detail'"/></span></template>
+						<template #value><span class="_monospace"><MkTime :time="user?.createdAt" :mode="'detail'"/></span></template>
 					</MkKeyValue>
 					<MkKeyValue v-if="info" oneline>
 						<template #key>{{ i18n.ts.lastActiveDate }}</template>
@@ -46,9 +46,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<template #key>{{ i18n.ts.email }}</template>
 						<template #value><span class="_monospace">{{ info.email }}</span></template>
 					</MkKeyValue>
-					<MkKeyValue v-if="ips.length > 0" :copy="ips[0].ip" oneline>
+					<MkKeyValue v-if="iAmAdmin && ips ? ips.length : 0 > 0" :copy="ips ? ips[0].ip : null" oneline>
 						<template #key>IP (recent)</template>
-						<template #value><span class="_monospace">{{ ips[0].ip }}</span></template>
+						<template #value><span class="_monospace">{{ ips ? ips[0].ip : 'N/A' }}</span></template>
 					</MkKeyValue>
 				</div>
 
@@ -63,7 +63,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<template #label>{{ i18n.ts.moderation }}</template>
 							<div class="_gaps">
 								<MkSwitch v-model="suspended" @update:modelValue="toggleSuspend">{{ i18n.ts.suspend }}</MkSwitch>
-								<MkButton v-if="user.host == null" @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
+								<MkButton v-if="user?.host == null" @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
 								<MkButton inline danger @click="unsetUserAvatar"><i class="ti ti-user-circle"></i> {{ i18n.ts.unsetUserAvatar }}</MkButton>
 								<MkButton inline danger @click="unsetUserBanner"><i class="ti ti-photo"></i> {{ i18n.ts.unsetUserBanner }}</MkButton>
 							</div>
@@ -92,7 +92,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</template>
 						</MkFolder>
 
-						<MkFolder v-if="$i.isAdmin">
+						<MkFolder v-if="iAmAdmin">
 							<template #icon><i class="ti ti-user-x"></i></template>
 							<template #label>{{ i18n.ts.deleteAccount }}</template>
 							<div class="_gaps">
