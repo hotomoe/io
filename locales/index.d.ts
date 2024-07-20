@@ -5091,6 +5091,14 @@ export interface Locale extends ILocale {
      * こちら
      */
     "here": string;
+    /**
+     * 민감한 정보 숨기기
+     */
+    "hideSensitiveInformation": string;
+    /**
+     * 이 노트는 ''에 의해 숨겨졌습니다.
+     */
+    "youAreHidingSensitiveInformation": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -10372,6 +10380,48 @@ export interface Locale extends ILocale {
          * 取引実績 {n}件
          */
         "nRequests": ParameterizedString<"n">;
+    };
+    "_hideSensitiveInformation": {
+        /**
+         *
+         */
+        "use": string;
+        /**
+         *
+         */
+        "about": string;
+        /**
+         * 숨겨짐
+         */
+        "itsHidden": string;
+        /**
+         * 표시됨
+         */
+        "itsNotHidden": string;
+        /**
+         *
+         */
+        "directMessages": string;
+        /**
+         *
+         */
+        "directMessagesUse": string;
+        /**
+         *
+         */
+        "directMessagesDescription": string;
+        /**
+         *
+         */
+        "moderationLog": string;
+        /**
+         *
+         */
+        "moderationLogUse": string;
+        /**
+         *
+         */
+        "moderationLogDescription": string;
     };
 }
 declare const locales: {

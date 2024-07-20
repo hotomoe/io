@@ -128,7 +128,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" :class="$style.footerButton" class="_button" @mousedown="clip()">
 					<i class="ti ti-paperclip"></i>
 				</button>
-				<button v-if="defaultStore.state.showTranslateButtonInNoteFooter" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
+				<button v-if="defaultStore.state.showTranslateButtonInNoteFooter && $i?.policies.canUseTranslator" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
 					<i class="ti ti-language-hiragana"></i>
 				</button>
 				<button ref="menuButton" :class="$style.footerButton" class="_button" @mousedown="showMenu()">
@@ -196,7 +196,7 @@ import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { shouldCollapsed } from '@/scripts/collapsed.js';
 import { isEnabledUrlPreview } from '@/instance.js';
-import { miLocalStorage } from "@/local-storage.js";
+import { miLocalStorage } from '@/local-storage.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
@@ -246,6 +246,11 @@ const isRenote = (
 	note.value.cw == null &&
 	note.value.fileIds && note.value.fileIds.length === 0 &&
 	note.value.poll == null
+);
+const isRedacted = (
+	defaultStore.state.hideDirectMessages &&
+	defaultStore.state.hideSensitiveInformation &&
+	note.value.visibility === 'specified'
 );
 
 const rootEl = shallowRef<HTMLElement>();

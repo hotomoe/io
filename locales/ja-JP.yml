@@ -1268,6 +1268,8 @@ reportComplete: "通報完了"
 blockThisUser: "このユーザーをブロックする"
 muteThisUser: "このユーザーをミュートする"
 here: "こちら"
+hideSensitiveInformation: "민감한 정보 숨기기"
+youAreHidingSensitiveInformation: "이 노트는 ''에 의해 숨겨졌습니다."
 
 _bubbleGame:
   howToPlay: "遊び方"
@@ -2759,3 +2761,15 @@ _skebStatus:
   yenX: "{x}円"
   nWorks: "納品実績 {n}件"
   nRequests: "取引実績 {n}件"
+
+_hideSensitiveInformation:
+  use: ""
+  about: ""
+  itsHidden: "숨겨짐"
+  itsNotHidden: "표시됨"
+  directMessages: ""
+  directMessagesUse: ""
+  directMessagesDescription: ""
+  moderationLog: ""
+  moderationLogUse: ""
+  moderationLogDescription: ""

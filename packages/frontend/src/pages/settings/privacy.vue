@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<FormSection>
 		<div class="_gaps_m">
-			<MkSwitch v-model="rememberNoteVisibility" @update:modelValue="save()">{{ i18n.ts.rememberNoteVisibility }}</MkSwitch>
+			<MkSwitch v-model="rememberNoteVisibility">{{ i18n.ts.rememberNoteVisibility }}</MkSwitch>
 			<MkFolder v-if="!rememberNoteVisibility">
 				<template #label>{{ i18n.ts.defaultNoteVisibility }}</template>
 				<template v-if="defaultNoteVisibility === 'public'" #suffix>{{ i18n.ts._visibility.public }}</template>
@@ -65,9 +65,55 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</div>
 			</MkFolder>
 		</div>
+		<MkSwitch v-model="keepCw">{{ i18n.ts.keepCw }}</MkSwitch>
 	</FormSection>
 
-	<MkSwitch v-model="keepCw" @update:modelValue="save()">{{ i18n.ts.keepCw }}</MkSwitch>
+	<FormSection>
+		<template #label>{{ i18n.ts.hideSensitiveInformation }}</template>
+
+		<div class="_gaps_m">
+			<MkSwitch v-model="hideSensitiveInformation">
+				{{ i18n.ts._hideSensitiveInformation.use }}
+				<template #caption>{{ i18n.ts._hideSensitiveInformation.about }}</template>
+			</MkSwitch>
+			<MkFolder v-if="hideSensitiveInformation">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.directMessages }}</template>
+				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDirectMessages">
+					{{ i18n.ts._hideSensitiveInformation.directMessagesUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.directMessagesDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="hideSensitiveInformation">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.drive }}</template>
+				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDirectMessages">
+					{{ i18n.ts._hideSensitiveInformation.driveUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.driveDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="hideSensitiveInformation && $i.isModerator">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.moderationLog }}</template>
+				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDirectMessages">
+					{{ i18n.ts._hideSensitiveInformation.moderationLogUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.moderationLogDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="hideSensitiveInformation && $i.isModerator">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.roles }}</template>
+				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDirectMessages">
+					{{ i18n.ts._hideSensitiveInformation.rolesUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.rolesDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+		</div>
+	</FormSection>
 </div>
 </template>
 
@@ -99,6 +145,8 @@ const defaultNoteVisibility = computed(defaultStore.makeGetterSetter('defaultNot
 const defaultNoteLocalOnly = computed(defaultStore.makeGetterSetter('defaultNoteLocalOnly'));
 const rememberNoteVisibility = computed(defaultStore.makeGetterSetter('rememberNoteVisibility'));
 const keepCw = computed(defaultStore.makeGetterSetter('keepCw'));
+const hideSensitiveInformation = computed(defaultStore.makeGetterSetter('hideSensitiveInformation'));
+const hideDirectMessages = computed(defaultStore.makeGetterSetter('hideDirectMessages'));
 
 function save() {
 	misskeyApi('i/update', {
