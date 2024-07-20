@@ -136,6 +136,8 @@ function showHiddenContent(ev: MouseEvent) {
 	}
 
 	if (defaultStore.state.sensitiveDoubleClickRequired) {
+		ev.preventDefault();
+		ev.stopPropagation();
 		return;
 	}
 

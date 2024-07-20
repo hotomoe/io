@@ -42,6 +42,8 @@ const hide = ref(true);
 
 function showHiddenContent(ev: MouseEvent) {
 	if (defaultStore.state.sensitiveDoubleClickRequired) {
+		ev.preventDefault();
+		ev.stopPropagation();
 		return;
 	}
 
