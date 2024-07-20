@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		@drop.prevent.stop="onDrop"
 		@contextmenu.stop="onContextmenu"
 	>
-		<div ref="contents" v-if="!hideDriveFileList">
+		<div v-if="!hideDriveFileList" ref="contents">
 			<div v-show="folders.length > 0" ref="foldersContainer" :class="$style.folders">
 				<XFolder
 					v-for="(f, i) in folders"
@@ -87,7 +87,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div v-if="!draghover && folder != null">{{ i18n.ts.emptyFolder }}</div>
 			</div>
 		</div>
-		<div ref="contents" :class="$style.privateMode" v-else>
+		<div v-else ref="contents" :class="$style.privateMode">
 			<div v-if="!fetching" :class="$style.empty">
 				<div>
 					<strong>{{ i18n.ts.privateMode }}</strong>
