@@ -154,7 +154,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</template>
 	</I18n>
 </div>
-<div v-else :class="$style.muted" :style="hideMutedNotes ? 'display: none' : undefined" @click="isRedacted = false; muted = false">
+<div v-else :class="$style.muted" @click="isRedacted = false; muted = false">
 	<I18n :src="i18n.ts.youAreHidingSensitiveInformation" tag="small"/>
 </div>
 </template>
@@ -250,11 +250,6 @@ const isRenote = (
 	note.value.fileIds && note.value.fileIds.length === 0 &&
 	note.value.poll == null
 );
-const isRedacted = (
-	defaultStore.state.hideDirectMessages &&
-	defaultStore.state.hideSensitiveInformation &&
-	note.value.visibility === 'specified'
-);
 
 const rootEl = shallowRef<HTMLElement>();
 const menuButton = shallowRef<HTMLElement>();
@@ -272,6 +267,11 @@ const isLong = shouldCollapsed(appearNote.value, urls.value ?? []);
 const collapsed = ref(appearNote.value.cw == null && isLong);
 const isDeleted = ref(false);
 const muted = ref(checkMute(appearNote.value, $i?.mutedWords ?? []));
+const isRedacted = ref<boolean>(
+	defaultStore.state.hideDirectMessages &&
+	defaultStore.state.hideSensitiveInformation &&
+	note.value.visibility === 'specified'
+);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);
 const translating = ref(false);
 const showTicker = (defaultStore.state.instanceTicker === 'always') || (defaultStore.state.instanceTicker === 'remote' && appearNote.value.user.instance);

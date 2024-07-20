@@ -5092,13 +5092,21 @@ export interface Locale extends ILocale {
      */
     "here": string;
     /**
-     * 민감한 정보 숨기기
+     * プライベートモード
+     */
+    "privateMode": string;
+    /**
+     * 個人情報の非表示
      */
     "hideSensitiveInformation": string;
     /**
-     *
+     * 「プライベートモード」で非表示になっています。
      */
     "youAreHidingSensitiveInformation": string;
+    /**
+     * 無視して表示する
+     */
+    "temporarilySeeThis": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -10383,67 +10391,67 @@ export interface Locale extends ILocale {
     };
     "_hideSensitiveInformation": {
         /**
-         *
+         * 「プライベートモード」を有効にする
          */
         "use": string;
         /**
-         *
+         * この機能を有効にすると、他の人が自分の画面を見たり、公共の場所などでMisskeyを利用する際にプライバシー保護に役立ちます。
          */
         "about": string;
         /**
-         *
+         * 非表示
          */
         "itsHidden": string;
         /**
-         *
+         * 表示
          */
         "itsNotHidden": string;
         /**
-         *
+         * ダイレクト投稿
          */
         "directMessages": string;
         /**
-         *
+         * ダイレクト投稿を非表示にする
          */
         "directMessagesUse": string;
         /**
-         *
+         * このオプションを有効にすると、ダイレクト投稿の内容が基本的に表示されなくなります。
          */
         "directMessagesDescription": string;
         /**
-         *
+         * ドライブ
          */
         "drive": string;
         /**
-         *
+         * ファイルリストを非表示にする
          */
         "driveUse": string;
         /**
-         *
+         * このオプションを有効にすると、ドライブのファイルリストが表示されなくなります（ドライブ内のファイルの添付が難しくなります）。
          */
         "driveDescription": string;
         /**
-         *
+         * モデレーションノート
          */
         "moderationLog": string;
         /**
-         *
+         * モデレーションノートを非表示にする
          */
         "moderationLogUse": string;
         /**
-         *
+         * このオプションを有効にすると、ユーザープロフィールにモデレーターが作成したモデレーションノートが表示されなくなります。
          */
         "moderationLogDescription": string;
         /**
-         *
+         * ロール
          */
         "roles": string;
         /**
-         *
+         * 割り当てられたロールを非表示にする
          */
         "rolesUse": string;
         /**
-         *
+         * このオプションを有効にすると、ユーザープロファイルにすべてのロールリストが表示されなくなります。
          */
         "rolesDescription": string;
     };

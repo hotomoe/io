@@ -64,8 +64,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkSwitch v-model="defaultNoteLocalOnly">{{ i18n.ts._visibility.disableFederation }}</MkSwitch>
 				</div>
 			</MkFolder>
+			<MkSwitch v-model="keepCw">{{ i18n.ts.keepCw }}</MkSwitch>
 		</div>
-		<MkSwitch v-model="keepCw">{{ i18n.ts.keepCw }}</MkSwitch>
 	</FormSection>
 
 	<FormSection>
