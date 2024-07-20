@@ -321,6 +321,7 @@ const enableSeasonalScreenEffect = computed(defaultStore.makeGetterSetter('enabl
 const enableHorizontalSwipe = computed(defaultStore.makeGetterSetter('enableHorizontalSwipe'));
 const useNativeUIForVideoAudioPlayer = computed(defaultStore.makeGetterSetter('useNativeUIForVideoAudioPlayer'));
 const alwaysConfirmFollow = computed(defaultStore.makeGetterSetter('alwaysConfirmFollow'));
+const sensitiveDoubleClickRequired = computed(defaultStore.makeGetterSetter('sensitiveDoubleClickRequired'));
 
 watch(lang, () => {
 	miLocalStorage.setItem('lang', lang.value as string);
