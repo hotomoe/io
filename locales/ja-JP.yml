@@ -1272,6 +1272,7 @@ privateMode: "プライベートモード"
 hideSensitiveInformation: "個人情報の非表示"
 youAreHidingSensitiveInformation: "「プライベートモード」で非表示になっています。"
 temporarilySeeThis: "無視して表示する"
+sensitiveDoubleClickRequired: "敏感な内容のメディアをダブルクリックして表示"
 
 _bubbleGame:
   howToPlay: "遊び方"

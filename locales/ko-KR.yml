@@ -1258,6 +1258,7 @@ privateMode: "프라이빗 모드"
 hideSensitiveInformation: "민감한 정보 숨기기"
 youAreHidingSensitiveInformation: "'프라이빗 모드'에 의해 숨겨졌습니다."
 temporarilySeeThis: "무시하고 표시하기"
+sensitiveDoubleClickRequired: "민감한 내용의 미디어를 더블 클릭해서 표시"
 _bubbleGame:
   howToPlay: "설명"
   hold: "홀드"
