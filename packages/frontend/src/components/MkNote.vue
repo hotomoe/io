@@ -138,7 +138,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 	</article>
 </div>
-<div v-else-if="!isRedacted" :class="$style.muted" :style="hideMutedNotes ? 'display: none' : undefined" @click="muted = false">
+<div v-else-if="isRedacted && !muted" :class="$style.muted" @click="isRedacted = false">
+	<I18n :src="i18n.ts.youAreHidingSensitiveInformation" tag="small"/>
+</div>
+<div v-else :class="$style.muted" :style="hideMutedNotes ? 'display: none' : undefined" @click="muted = false; isRedacted = false">
 	<I18n v-if="muted === 'sensitiveMute'" :src="i18n.ts.userSaysSomethingSensitive" tag="small">
 		<template #name>
 			<MkA v-user-preview="appearNote.userId" :to="userPage(appearNote.user)">
@@ -153,9 +156,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkA>
 		</template>
 	</I18n>
-</div>
-<div v-else :class="$style.muted" @click="isRedacted = false; muted = false">
-	<I18n :src="i18n.ts.youAreHidingSensitiveInformation" tag="small"/>
 </div>
 </template>
 
