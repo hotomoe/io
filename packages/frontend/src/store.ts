@@ -156,6 +156,14 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'deviceAccount',
 		default: false,
 	},
+	hideSensitiveInformation: {
+		where: 'device',
+		default: false,
+	},
+	hideDirectMessages: {
+		where: 'device',
+		default: false,
+	},
 	showPreview: {
 		where: 'device',
 		default: false,
@@ -213,6 +221,10 @@ export const defaultStore = markRaw(new Storage('base', {
 	highlightSensitiveMedia: {
 		where: 'device',
 		default: true,
+	},
+	sensitiveDoubleClickRequired: {
+		where: 'device',
+		default: false,
 	},
 	animation: {
 		where: 'device',

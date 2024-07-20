@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="[hide ? $style.hidden : $style.visible, (image.isSensitive && defaultStore.state.highlightSensitiveMedia) && $style.sensitive]" :style="darkMode ? '--c: rgb(255 255 255 / 2%);' : '--c: rgb(0 0 0 / 2%);'" @click="showHiddenContent">
+<div :class="[hide ? $style.hidden : $style.visible, (image.isSensitive && defaultStore.state.highlightSensitiveMedia) && $style.sensitive]" :style="darkMode ? '--c: rgb(255 255 255 / 2%);' : '--c: rgb(0 0 0 / 2%);'" @click="showHiddenContent" @dblclick="showHiddenContentDouble">
 	<component
 		:is="(image.isSensitive && !$i) || disableImageLink ? 'div' : 'a'"
 		v-bind="(image.isSensitive && !$i) || disableImageLink ? {
@@ -131,6 +131,29 @@ function showMenu(ev: MouseEvent) {
 }
 
 function showHiddenContent(ev: MouseEvent) {
+	if (!props.controls) {
+		return;
+	}
+
+	if (defaultStore.state.sensitiveDoubleClickRequired) {
+		return;
+	}
+
+	if (props.image.isSensitive && !$i) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		pleaseLogin();
+		return;
+	}
+
+	if (hide.value) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		hide.value = false;
+	}
+}
+
+function showHiddenContentDouble(ev: MouseEvent) {
 	if (!props.controls) {
 		return;
 	}
