@@ -164,6 +164,18 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false,
 	},
+	hideDriveFileList: {
+		where: 'device',
+		default: false,
+	},
+	hideModerationLog: {
+		where: 'device',
+		default: false,
+	},
+	hideRoleList: {
+		where: 'device',
+		default: false,
+	},
 	showPreview: {
 		where: 'device',
 		default: false,

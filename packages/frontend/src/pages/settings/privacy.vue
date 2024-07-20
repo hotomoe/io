@@ -87,27 +87,27 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkFolder>
 			<MkFolder v-if="hideSensitiveInformation">
 				<template #label>{{ i18n.ts._hideSensitiveInformation.drive }}</template>
-				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-if="hideDriveFileList" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
 				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
-				<MkSwitch v-model="hideDirectMessages">
+				<MkSwitch v-model="hideDriveFileList">
 					{{ i18n.ts._hideSensitiveInformation.driveUse }}
 					<template #caption>{{ i18n.ts._hideSensitiveInformation.driveDescription }}</template>
 				</MkSwitch>
 			</MkFolder>
 			<MkFolder v-if="hideSensitiveInformation && $i.isModerator">
 				<template #label>{{ i18n.ts._hideSensitiveInformation.moderationLog }}</template>
-				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-if="hideModerationLog" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
 				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
-				<MkSwitch v-model="hideDirectMessages">
+				<MkSwitch v-model="hideModerationLog">
 					{{ i18n.ts._hideSensitiveInformation.moderationLogUse }}
 					<template #caption>{{ i18n.ts._hideSensitiveInformation.moderationLogDescription }}</template>
 				</MkSwitch>
 			</MkFolder>
 			<MkFolder v-if="hideSensitiveInformation && $i.isModerator">
 				<template #label>{{ i18n.ts._hideSensitiveInformation.roles }}</template>
-				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-if="hideRoleList" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
 				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
-				<MkSwitch v-model="hideDirectMessages">
+				<MkSwitch v-model="hideRoleList">
 					{{ i18n.ts._hideSensitiveInformation.rolesUse }}
 					<template #caption>{{ i18n.ts._hideSensitiveInformation.rolesDescription }}</template>
 				</MkSwitch>
@@ -147,6 +147,9 @@ const rememberNoteVisibility = computed(defaultStore.makeGetterSetter('rememberN
 const keepCw = computed(defaultStore.makeGetterSetter('keepCw'));
 const hideSensitiveInformation = computed(defaultStore.makeGetterSetter('hideSensitiveInformation'));
 const hideDirectMessages = computed(defaultStore.makeGetterSetter('hideDirectMessages'));
+const hideDriveFileList = computed(defaultStore.makeGetterSetter('hideDriveFileList'));
+const hideModerationLog = computed(defaultStore.makeGetterSetter('hideModerationLog'));
+const hideRoleList = computed(defaultStore.makeGetterSetter('hideRoleList'));
 
 function save() {
 	misskeyApi('i/update', {

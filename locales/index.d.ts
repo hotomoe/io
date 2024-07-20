@@ -5096,7 +5096,7 @@ export interface Locale extends ILocale {
      */
     "hideSensitiveInformation": string;
     /**
-     * 이 노트는 ''에 의해 숨겨졌습니다.
+     *
      */
     "youAreHidingSensitiveInformation": string;
     "_bubbleGame": {
@@ -10391,11 +10391,11 @@ export interface Locale extends ILocale {
          */
         "about": string;
         /**
-         * 숨겨짐
+         *
          */
         "itsHidden": string;
         /**
-         * 표시됨
+         *
          */
         "itsNotHidden": string;
         /**
@@ -10413,6 +10413,18 @@ export interface Locale extends ILocale {
         /**
          *
          */
+        "drive": string;
+        /**
+         *
+         */
+        "driveUse": string;
+        /**
+         *
+         */
+        "driveDescription": string;
+        /**
+         *
+         */
         "moderationLog": string;
         /**
          *
@@ -10422,6 +10434,18 @@ export interface Locale extends ILocale {
          *
          */
         "moderationLogDescription": string;
+        /**
+         *
+         */
+        "roles": string;
+        /**
+         *
+         */
+        "rolesUse": string;
+        /**
+         *
+         */
+        "rolesDescription": string;
     };
 }
 declare const locales: {
