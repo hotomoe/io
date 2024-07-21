@@ -5107,6 +5107,10 @@ export interface Locale extends ILocale {
      * 無視して表示する
      */
     "temporarilySeeThis": string;
+    /**
+     * 敏感な内容のメディアをダブルクリックして表示
+     */
+    "sensitiveDoubleClickRequired": string;
     "_bubbleGame": {
         /**
          * 遊び方
