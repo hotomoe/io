@@ -217,6 +217,53 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</FormSection>
 
 	<FormSection>
+		<template #label>{{ i18n.ts.hideSensitiveInformation }}</template>
+
+		<div class="_gaps_m">
+			<MkSwitch v-model="privateMode">
+				{{ i18n.ts._hideSensitiveInformation.use }}
+				<template #caption>{{ i18n.ts._hideSensitiveInformation.about }}</template>
+			</MkSwitch>
+			<MkFolder v-if="privateMode">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.directMessages }}</template>
+				<template v-if="hideDirectMessages" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDirectMessages">
+					{{ i18n.ts._hideSensitiveInformation.directMessagesUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.directMessagesDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="privateMode">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.drive }}</template>
+				<template v-if="hideDriveFileList" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideDriveFileList">
+					{{ i18n.ts._hideSensitiveInformation.driveUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.driveDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="privateMode && $i?.isModerator">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.moderationLog }}</template>
+				<template v-if="hideModerationLog" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideModerationLog">
+					{{ i18n.ts._hideSensitiveInformation.moderationLogUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.moderationLogDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+			<MkFolder v-if="privateMode && $i?.isModerator">
+				<template #label>{{ i18n.ts._hideSensitiveInformation.roles }}</template>
+				<template v-if="hideRoleList" #suffix>{{ i18n.ts._hideSensitiveInformation.itsHidden }}</template>
+				<template v-else #suffix>{{ i18n.ts._hideSensitiveInformation.itsNotHidden }}</template>
+				<MkSwitch v-model="hideRoleList">
+					{{ i18n.ts._hideSensitiveInformation.rolesUse }}
+					<template #caption>{{ i18n.ts._hideSensitiveInformation.rolesDescription }}</template>
+				</MkSwitch>
+			</MkFolder>
+		</div>
+	</FormSection>
+
+	<FormSection>
 		<template #label>{{ i18n.ts.other }}</template>
 
 		<div class="_gaps">
@@ -259,6 +306,7 @@ import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { globalEvents } from '@/events.js';
 import { claimAchievement } from '@/scripts/achievements.js';
+import { $i } from '@/account.js';
 
 const lang = ref(miLocalStorage.getItem('lang'));
 const fontSize = ref(miLocalStorage.getItem('fontSize'));
@@ -322,6 +370,11 @@ const enableHorizontalSwipe = computed(defaultStore.makeGetterSetter('enableHori
 const useNativeUIForVideoAudioPlayer = computed(defaultStore.makeGetterSetter('useNativeUIForVideoAudioPlayer'));
 const alwaysConfirmFollow = computed(defaultStore.makeGetterSetter('alwaysConfirmFollow'));
 const sensitiveDoubleClickRequired = computed(defaultStore.makeGetterSetter('sensitiveDoubleClickRequired'));
+const privateMode = computed(defaultStore.makeGetterSetter('privateMode'));
+const hideDirectMessages = computed(defaultStore.makeGetterSetter('hideDirectMessages'));
+const hideDriveFileList = computed(defaultStore.makeGetterSetter('hideDriveFileList'));
+const hideModerationLog = computed(defaultStore.makeGetterSetter('hideModerationLog'));
+const hideRoleList = computed(defaultStore.makeGetterSetter('hideRoleList'));
 
 watch(lang, () => {
 	miLocalStorage.setItem('lang', lang.value as string);
@@ -365,6 +418,11 @@ watch([
 	disableStreamingTimeline,
 	enableSeasonalScreenEffect,
 	alwaysConfirmFollow,
+	privateMode,
+	hideDirectMessages,
+	hideDriveFileList,
+	hideModerationLog,
+	hideRoleList,
 ], async () => {
 	await reloadAsk();
 });

@@ -269,7 +269,7 @@ const isDeleted = ref(false);
 const muted = ref(checkMute(appearNote.value, $i?.mutedWords ?? []));
 const isRedacted = ref<boolean>(
 	defaultStore.state.hideDirectMessages &&
-	defaultStore.state.hideSensitiveInformation &&
+	defaultStore.state.privateMode &&
 	note.value.visibility === 'specified'
 );
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);

@@ -156,7 +156,7 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'deviceAccount',
 		default: false,
 	},
-	hideSensitiveInformation: {
+	privateMode: {
 		where: 'device',
 		default: false,
 	},

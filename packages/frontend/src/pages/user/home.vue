@@ -255,8 +255,8 @@ const isEditingMemo = ref(false);
 const moderationNote = ref(props.user.moderationNote);
 const editModerationNote = ref(false);
 
-const hideModerationNote = !iAmModerator || (defaultStore.state.hideSensitiveInformation && defaultStore.state.hideModerationLog);
-const hideRoleList = defaultStore.state.hideSensitiveInformation && defaultStore.state.hideRoleList;
+const hideModerationNote = !iAmModerator || (defaultStore.state.privateMode && defaultStore.state.hideModerationLog);
+const hideRoleList = defaultStore.state.privateMode && defaultStore.state.hideRoleList;
 
 watch(moderationNote, async () => {
 	await misskeyApi('admin/update-user-note', { userId: props.user.id, text: moderationNote.value });

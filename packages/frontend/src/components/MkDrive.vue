@@ -152,7 +152,7 @@ const selectedFolders = ref<Misskey.entities.DriveFolder[]>([]);
 const uploadings = uploads;
 const connection = useStream().useChannel('drive');
 const keepOriginal = ref<boolean>(defaultStore.state.keepOriginalUploading); // 外部渡しが多いので$refは使わないほうがよい
-const hideDriveFileList = ref<boolean>(defaultStore.state.hideSensitiveInformation && defaultStore.state.hideDriveFileList);
+const hideDriveFileList = ref<boolean>(defaultStore.state.privateMode && defaultStore.state.hideDriveFileList);
 
 // ドロップされようとしているか
 const draghover = ref(false);
