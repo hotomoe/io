@@ -1341,6 +1341,7 @@ _initialAccountSetting:
   startTutorial: "チュートリアルを開始"
   skipAreYouSure: "初期設定をスキップしますか？"
   laterAreYouSure: "初期設定をあとでやり直しますか？"
+  mustBeSetBotOwner: "Botアカウントは管理者を必ず記載する必要があります。以下から管理者のアカウントを選択してください。"
 
 _initialTutorial:
   launchTutorial: "チュートリアルを見る"
@@ -1771,6 +1772,7 @@ _role:
     canSearchNotes: "ノート検索の利用"
     canUseTranslator: "翻訳機能の利用"
     canUseDriveFileInSoundSettings: "サウンド設定でドライブのファイルを利用"
+    canUseReaction: "リアクションの利用"
     avatarDecorationLimit: "アイコンデコレーションの最大取付個数"
   _condition:
     roleAssignedTo: "マニュアルロールにアサイン済み"
