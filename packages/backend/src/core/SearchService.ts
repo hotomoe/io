@@ -278,13 +278,13 @@ export class SearchService {
 				k: 'createdAt',
 				v: this.idService.parse(pagination.sinceId).date.getTime()
 			});
-			if (opts.userId) filter.qs.push({op: '=', k: 'userId', v: opts.userId});
-			if (opts.channelId) filter.qs.push({op: '=', k: 'channelId', v: opts.channelId});
+			if (opts.userId) filter.qs.push({ op: '=', k: 'userId', v: opts.userId });
+			if (opts.channelId) filter.qs.push({ op: '=', k: 'channelId', v: opts.channelId });
 			if (opts.host) {
 				if (opts.host === '.') {
-					filter.qs.push({op: 'is null', k: 'userHost'});
+					filter.qs.push({ op: 'is null', k: 'userHost' });
 				} else {
-					filter.qs.push({op: '=', k: 'userHost', v: opts.host});
+					filter.qs.push({ op: '=', k: 'userHost', v: opts.host });
 				}
 			}
 			const res = await this.meilisearchNoteIndex!.search(q, {
@@ -299,65 +299,65 @@ export class SearchService {
 			const notes = await this.notesRepository.findBy({
 				id: In(res.hits.map(x => x.id)),
 			});
-			const promises = notes.map(async note => ({note: note, result: (await this.filter(me, note))}));
+			const promises = notes.map(async note => ({ note: note, result: (await this.filter(me, note)) }));
 			const data = await Promise.all(promises);
 			const dataFilter = data.filter(d => d.result);
 			const filteredNotes = dataFilter.map(d => d.note);
 			return filteredNotes.sort((a, b) => a.id > b.id ? -1 : 1);
 		} else if (this.elasticsearch) {
-				const esFilter: any = {
+			const esFilter: any = {
+				bool: {
+					must: [],
+				},
+			};
+
+			if (pagination.untilId) esFilter.bool.must.push({ range: { createdAt: { lt: this.idService.parse(pagination.untilId).date.getTime() } } });
+			if (pagination.sinceId) esFilter.bool.must.push({ range: { createdAt: { gt: this.idService.parse(pagination.sinceId).date.getTime() } } });
+			if (opts.userId) esFilter.bool.must.push({ term: { userId: opts.userId } });
+			if (opts.channelId) esFilter.bool.must.push({ term: { channelId: opts.channelId } });
+			if (opts.host) {
+				if (opts.host === '.') {
+					esFilter.bool.must.push({ bool: { must_not: [{ exists: { field: 'userHost' } }] } });
+				} else {
+					esFilter.bool.must.push({ term: { userHost: opts.host } });
+				}
+			}
+
+			if (q !== '') {
+				esFilter.bool.must.push({
 					bool: {
-						must: [],
+						should: [
+							{ wildcard: { 'text': { value: q } } },
+							{ simple_query_string: { fields: ['text'], 'query': q, default_operator: 'and' } },
+							{ wildcard: { 'cw': { value: q } } },
+							{ simple_query_string: { fields: ['cw'], 'query': q, default_operator: 'and' } },
+						],
+						minimum_should_match: 1,
 					},
-				};
-
-				if (pagination.untilId) esFilter.bool.must.push({ range: { createdAt: { lt: this.idService.parse(pagination.untilId).date.getTime() } } });
-				if (pagination.sinceId) esFilter.bool.must.push({ range: { createdAt: { gt: this.idService.parse(pagination.sinceId).date.getTime() } } });
-				if (opts.userId) esFilter.bool.must.push({ term: { userId: opts.userId } });
-				if (opts.channelId) esFilter.bool.must.push({ term: { channelId: opts.channelId } });
-				if (opts.host) {
-					if (opts.host === '.') {
-						esFilter.bool.must.push({ bool: { must_not: [{ exists: { field: 'userHost' } }] } });
-					} else {
-						esFilter.bool.must.push({ term: { userHost: opts.host } });
-					}
-				}
-
-				if (q !== '') {
-					esFilter.bool.must.push({
-						bool: {
-							should: [
-								{ wildcard: { 'text': { value: q } } },
-								{ simple_query_string: { fields: ['text'], 'query': q, default_operator: 'and' } },
-								{ wildcard: { 'cw': { value: q } } },
-								{ simple_query_string: { fields: ['cw'], 'query': q, default_operator: 'and' } },
-							],
-							minimum_should_match: 1,
-						},
-					});
-				}
-
-				const res = await (this.elasticsearch.search)({
-					index: this.elasticsearchNoteIndex + '*' as string,
-					body: {
-						query: esFilter,
-						sort: [{ createdAt: { order: 'desc' } }],
-					},
-					_source: ['id', 'createdAt'],
-					size: pagination.limit,
 				});
+			}
 
-				const noteIds = res.hits.hits.map((hit: any) => hit._id);
-				if (noteIds.length === 0) return [];
-				const notes = await this.notesRepository.findBy({
-					id: In(noteIds),
-				});
-				const promises = notes.map(async note => ({ note: note, result: (await this.filter(me, note)) }));
-				const data = await Promise.all(promises);
-				const dataFilter = data.filter(d => d.result);
-				const filteredNotes = dataFilter.map(d => d.note);
-				return filteredNotes.sort((a, b) => a.id > b.id ? -1 : 1);
-			} else {
+			const res = await (this.elasticsearch.search)({
+				index: this.elasticsearchNoteIndex + '*' as string,
+				body: {
+					query: esFilter,
+					sort: [{ createdAt: { order: 'desc' } }],
+				},
+				_source: ['id', 'createdAt'],
+				size: pagination.limit,
+			});
+
+			const noteIds = res.hits.hits.map((hit: any) => hit._id);
+			if (noteIds.length === 0) return [];
+			const notes = await this.notesRepository.findBy({
+				id: In(noteIds),
+			});
+			const promises = notes.map(async note => ({ note: note, result: (await this.filter(me, note)) }));
+			const data = await Promise.all(promises);
+			const dataFilter = data.filter(d => d.result);
+			const filteredNotes = dataFilter.map(d => d.note);
+			return filteredNotes.sort((a, b) => a.id > b.id ? -1 : 1);
+		} else {
 			const query = this.queryService.makePaginationQuery(this.notesRepository.createQueryBuilder('note'), pagination.sinceId, pagination.untilId);
 
 			if (opts.userId) {
