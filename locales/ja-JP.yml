@@ -1268,6 +1268,11 @@ reportComplete: "通報完了"
 blockThisUser: "このユーザーをブロックする"
 muteThisUser: "このユーザーをミュートする"
 here: "こちら"
+privateMode: "プライベートモード"
+hideSensitiveInformation: "個人情報の非表示"
+youAreHidingSensitiveInformation: "「プライベートモード」で非表示になっています。"
+temporarilySeeThis: "無視して表示する"
+sensitiveDoubleClickRequired: "敏感な内容のメディアをダブルクリックして表示"
 
 _bubbleGame:
   howToPlay: "遊び方"
@@ -1341,6 +1346,7 @@ _initialAccountSetting:
   startTutorial: "チュートリアルを開始"
   skipAreYouSure: "初期設定をスキップしますか？"
   laterAreYouSure: "初期設定をあとでやり直しますか？"
+  mustBeSetBotOwner: "Botアカウントは管理者を必ず記載する必要があります。以下から管理者のアカウントを選択してください。"
 
 _initialTutorial:
   launchTutorial: "チュートリアルを見る"
@@ -1771,6 +1777,7 @@ _role:
     canSearchNotes: "ノート検索の利用"
     canUseTranslator: "翻訳機能の利用"
     canUseDriveFileInSoundSettings: "サウンド設定でドライブのファイルを利用"
+    canUseReaction: "リアクションの利用"
     avatarDecorationLimit: "アイコンデコレーションの最大取付個数"
   _condition:
     roleAssignedTo: "マニュアルロールにアサイン済み"
@@ -2757,3 +2764,21 @@ _skebStatus:
   yenX: "{x}円"
   nWorks: "納品実績 {n}件"
   nRequests: "取引実績 {n}件"
+
+_hideSensitiveInformation:
+  use: "「プライベートモード」を有効にする"
+  about: "この機能を有効にすると、他の人が自分の画面を見たり、公共の場所などでMisskeyを利用する際にプライバシー保護に役立ちます。"
+  itsHidden: "非表示"
+  itsNotHidden: "表示"
+  directMessages: "ダイレクト投稿"
+  directMessagesUse: "ダイレクト投稿を非表示にする"
+  directMessagesDescription: "このオプションを有効にすると、ダイレクト投稿の内容が基本的に表示されなくなります。"
+  drive: "ドライブ"
+  driveUse: "ファイルリストを非表示にする"
+  driveDescription: "このオプションを有効にすると、ドライブのファイルリストが表示されなくなります（ドライブ内のファイルの添付が難しくなります）。"
+  moderationLog: "モデレーションノート"
+  moderationLogUse: "モデレーションノートを非表示にする"
+  moderationLogDescription: "このオプションを有効にすると、ユーザープロフィールにモデレーターが作成したモデレーションノートが表示されなくなります。"
+  roles: "ロール"
+  rolesUse: "割り当てられたロールを非表示にする"
+  rolesDescription: "このオプションを有効にすると、ユーザープロファイルにすべてのロールリストが表示されなくなります。"

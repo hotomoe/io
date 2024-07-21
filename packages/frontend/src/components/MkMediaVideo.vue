@@ -18,7 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	@contextmenu.stop
 	@keydown.stop
 >
-	<button v-if="hide" :class="$style.hidden" @click="showHiddenContent">
+	<button v-if="hide" :class="$style.hidden" @click="showHiddenContent" @dblclick="showHiddenContentDouble">
 		<div :class="$style.hiddenTextWrapper">
 			<b v-if="video.isSensitive" style="display: block;"><i class="ti ti-eye-exclamation"></i> {{ i18n.ts.sensitive }}{{ defaultStore.state.dataSaver.media ? ` (${i18n.ts.video}${video.size ? ' ' + bytes(video.size) : ''})` : '' }}</b>
 			<b v-else style="display: block;"><i class="ti ti-movie"></i> {{ defaultStore.state.dataSaver.media && video.size ? bytes(video.size) : i18n.ts.video }}</b>
@@ -255,6 +255,27 @@ function showMenu(ev: MouseEvent) {
 }
 
 function showHiddenContent(ev: MouseEvent) {
+	if (defaultStore.state.sensitiveDoubleClickRequired) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		return;
+	}
+
+	if (props.video.isSensitive && !$i) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		pleaseLogin();
+		return;
+	}
+
+	if (hide.value) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		hide.value = false;
+	}
+}
+
+function showHiddenContentDouble(ev: MouseEvent) {
 	if (props.video.isSensitive && !$i) {
 		ev.preventDefault();
 		ev.stopPropagation();

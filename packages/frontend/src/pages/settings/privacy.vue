@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<FormSection>
 		<div class="_gaps_m">
-			<MkSwitch v-model="rememberNoteVisibility" @update:modelValue="save()">{{ i18n.ts.rememberNoteVisibility }}</MkSwitch>
+			<MkSwitch v-model="rememberNoteVisibility">{{ i18n.ts.rememberNoteVisibility }}</MkSwitch>
 			<MkFolder v-if="!rememberNoteVisibility">
 				<template #label>{{ i18n.ts.defaultNoteVisibility }}</template>
 				<template v-if="defaultNoteVisibility === 'public'" #suffix>{{ i18n.ts._visibility.public }}</template>
@@ -64,10 +64,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkSwitch v-model="defaultNoteLocalOnly">{{ i18n.ts._visibility.disableFederation }}</MkSwitch>
 				</div>
 			</MkFolder>
+			<MkSwitch v-model="keepCw">{{ i18n.ts.keepCw }}</MkSwitch>
 		</div>
 	</FormSection>
-
-	<MkSwitch v-model="keepCw" @update:modelValue="save()">{{ i18n.ts.keepCw }}</MkSwitch>
 </div>
 </template>
 

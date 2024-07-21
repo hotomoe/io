@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<span v-if="user.isBot" :title="i18n.ts.isBot"><i class="ti ti-robot"></i></span>
 						</div>
 					</div>
-					<div v-if="user.roles.length > 0" class="roles">
+					<div v-if="user.roles.length > 0 && !hideRoleList" class="roles">
 						<span v-for="role in user.roles" :key="role.id" v-tooltip="role.description" class="role" :style="{ '--color': role.color }">
 							<MkA v-adaptive-bg :to="`/roles/${role.id}`">
 								<img v-if="role.iconUrl" style="height: 1.3em; vertical-align: -22%;" :src="role.iconUrl"/>
@@ -55,7 +55,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</MkA>
 						</span>
 					</div>
-					<div v-if="iAmModerator" class="moderationNote">
+					<div v-if="!hideModerationNote" class="moderationNote">
 						<MkTextarea v-if="editModerationNote || (moderationNote != null && moderationNote !== '')" v-model="moderationNote" manualSave>
 							<template #label>{{ i18n.ts.moderationNote }}</template>
 						</MkTextarea>
@@ -212,6 +212,7 @@ import { confetti } from '@/scripts/confetti.js';
 import { misskeyApi, misskeyApiGet } from '@/scripts/misskey-api.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/scripts/isFfVisibleForMe.js';
 import { useRouter } from '@/router/supplier.js';
+import { defaultStore } from '@/store.js';
 
 function calcAge(birthdate: string): number {
 	const date = new Date(birthdate);
@@ -254,6 +255,9 @@ const isEditingMemo = ref(false);
 const moderationNote = ref(props.user.moderationNote);
 const editModerationNote = ref(false);
 
+const hideModerationNote = !iAmModerator || (defaultStore.state.privateMode && defaultStore.state.hideModerationLog);
+const hideRoleList = defaultStore.state.privateMode && defaultStore.state.hideRoleList;
+
 watch(moderationNote, async () => {
 	await misskeyApi('admin/update-user-note', { userId: props.user.id, text: moderationNote.value });
 });
@@ -266,6 +270,7 @@ const style = computed(() => {
 });
 
 const age = computed(() => {
+	if (props.user.birthday == null) return 0;
 	return calcAge(props.user.birthday);
 });
 

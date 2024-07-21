@@ -5091,6 +5091,26 @@ export interface Locale extends ILocale {
      * こちら
      */
     "here": string;
+    /**
+     * プライベートモード
+     */
+    "privateMode": string;
+    /**
+     * 個人情報の非表示
+     */
+    "hideSensitiveInformation": string;
+    /**
+     * 「プライベートモード」で非表示になっています。
+     */
+    "youAreHidingSensitiveInformation": string;
+    /**
+     * 無視して表示する
+     */
+    "temporarilySeeThis": string;
+    /**
+     * 敏感な内容のメディアをダブルクリックして表示
+     */
+    "sensitiveDoubleClickRequired": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -5355,6 +5375,10 @@ export interface Locale extends ILocale {
          * 初期設定をあとでやり直しますか？
          */
         "laterAreYouSure": string;
+        /**
+         * Botアカウントは管理者を必ず記載する必要があります。以下から管理者のアカウントを選択してください。
+         */
+        "mustBeSetBotOwner": string;
     };
     "_initialTutorial": {
         /**
@@ -6864,6 +6888,10 @@ export interface Locale extends ILocale {
              * サウンド設定でドライブのファイルを利用
              */
             "canUseDriveFileInSoundSettings": string;
+            /**
+             * リアクションの利用
+             */
+            "canUseReaction": string;
             /**
              * アイコンデコレーションの最大取付個数
              */
@@ -10364,6 +10392,72 @@ export interface Locale extends ILocale {
          * 取引実績 {n}件
          */
         "nRequests": ParameterizedString<"n">;
+    };
+    "_hideSensitiveInformation": {
+        /**
+         * 「プライベートモード」を有効にする
+         */
+        "use": string;
+        /**
+         * この機能を有効にすると、他の人が自分の画面を見たり、公共の場所などでMisskeyを利用する際にプライバシー保護に役立ちます。
+         */
+        "about": string;
+        /**
+         * 非表示
+         */
+        "itsHidden": string;
+        /**
+         * 表示
+         */
+        "itsNotHidden": string;
+        /**
+         * ダイレクト投稿
+         */
+        "directMessages": string;
+        /**
+         * ダイレクト投稿を非表示にする
+         */
+        "directMessagesUse": string;
+        /**
+         * このオプションを有効にすると、ダイレクト投稿の内容が基本的に表示されなくなります。
+         */
+        "directMessagesDescription": string;
+        /**
+         * ドライブ
+         */
+        "drive": string;
+        /**
+         * ファイルリストを非表示にする
+         */
+        "driveUse": string;
+        /**
+         * このオプションを有効にすると、ドライブのファイルリストが表示されなくなります（ドライブ内のファイルの添付が難しくなります）。
+         */
+        "driveDescription": string;
+        /**
+         * モデレーションノート
+         */
+        "moderationLog": string;
+        /**
+         * モデレーションノートを非表示にする
+         */
+        "moderationLogUse": string;
+        /**
+         * このオプションを有効にすると、ユーザープロフィールにモデレーターが作成したモデレーションノートが表示されなくなります。
+         */
+        "moderationLogDescription": string;
+        /**
+         * ロール
+         */
+        "roles": string;
+        /**
+         * 割り当てられたロールを非表示にする
+         */
+        "rolesUse": string;
+        /**
+         * このオプションを有効にすると、ユーザープロファイルにすべてのロールリストが表示されなくなります。
+         */
+        "rolesDescription": string;
     };
 }
 declare const locales: {

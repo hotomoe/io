@@ -237,6 +237,16 @@ export type paths = {
      */
     post: operations['admin___unset-user-banner'];
   };
+  '/admin/dispose-cache': {
+    /**
+     * admin/dispose-cache
+     * @description No description provided.
+     *
+     * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
+     * **Credential required**: *Yes*
+     */
+    post: operations['admin___dispose-cache'];
+  };
   '/admin/drive/clean-remote-files': {
     /**
      * admin/drive/clean-remote-files
@@ -4911,6 +4921,7 @@ export type components = {
       canSearchNotes: boolean;
       canUseTranslator: boolean;
       canUseDriveFileInSoundSettings: boolean;
+      canUseReaction: boolean;
       canHideAds: boolean;
       driveCapacityMb: number;
       alwaysMarkNsfw: boolean;
@@ -6783,6 +6794,51 @@ export type operations = {
         };
       };
     };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * admin/dispose-cache
+   * @description No description provided.
+   *
+   * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
+   * **Credential required**: *Yes*
+   */
+  'admin___dispose-cache': {
     responses: {
       /** @description OK (without any results) */
       204: {
@@ -25482,7 +25538,7 @@ export type operations = {
           /** @default 0 */
           offset?: number;
           /** @enum {string} */
-          sort?: '+follower' | '-follower' | '+createdAt' | '-createdAt' | '+updatedAt' | '-updatedAt';
+          sort?: '+follower' | '-follower' | '+createdAt' | '-createdAt' | '+updatedAt' | '-updatedAt' | '+pv' | '-pv';
           /**
            * @default all
            * @enum {string}

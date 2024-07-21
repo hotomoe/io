@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div
-	v-if="muted === false"
+	v-if="muted === false && isRedacted === false"
 	v-show="!isDeleted"
 	ref="rootEl"
 	v-hotkey="keymap"
@@ -119,16 +119,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<i class="ti ti-ban"></i>
 				</button>
 				<button ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleReact()">
-					<i v-if="appearNote.reactionAcceptance === 'likeOnly' && appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--eventReactionHeart);"></i>
-					<i v-else-if="appearNote.myReaction != null" class="ti ti-minus" style="color: var(--accent);"></i>
-					<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
+					<i v-if=" (appearNote.reactionAcceptance === 'likeOnly' || !$i?.policies.canUseReaction) && appearNote.myReaction != null " class="ti ti-heart-filled" style="color: var(--eventReactionHeart);"></i>
+					<i v-else-if="appearNote.myReaction != null " class="ti ti-minus" style="color: var(--accent);"></i>
+					<i v-else-if="appearNote.reactionAcceptance === 'likeOnly' || !$i?.policies.canUseReaction" class="ti ti-heart"></i>
 					<i v-else class="ti ti-plus"></i>
 					<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || defaultStore.state.showReactionsCount) && appearNote.reactionCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.reactionCount) }}</p>
 				</button>
 				<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" :class="$style.footerButton" class="_button" @mousedown="clip()">
 					<i class="ti ti-paperclip"></i>
 				</button>
-				<button v-if="defaultStore.state.showTranslateButtonInNoteFooter" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
+				<button v-if="defaultStore.state.showTranslateButtonInNoteFooter && $i?.policies.canUseTranslator" ref="translateButton" :class="$style.footerButton" class="_button" @mousedown="translate()">
 					<i class="ti ti-language-hiragana"></i>
 				</button>
 				<button ref="menuButton" :class="$style.footerButton" class="_button" @mousedown="showMenu()">
@@ -138,7 +138,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 	</article>
 </div>
-<div v-else :class="$style.muted" :style="hideMutedNotes ? 'display: none' : undefined" @click="muted = false">
+<div v-else-if="isRedacted && !muted" :class="$style.muted" @click="isRedacted = false">
+	<I18n :src="i18n.ts.youAreHidingSensitiveInformation" tag="small"/>
+</div>
+<div v-else :class="$style.muted" :style="hideMutedNotes ? 'display: none' : undefined" @click="muted = false; isRedacted = false">
 	<I18n v-if="muted === 'sensitiveMute'" :src="i18n.ts.userSaysSomethingSensitive" tag="small">
 		<template #name>
 			<MkA v-user-preview="appearNote.userId" :to="userPage(appearNote.user)">
@@ -160,6 +163,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed, inject, onMounted, ref, shallowRef, Ref, watch, provide } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
+import MkButton from '@/components/MkButton.vue';
 import MkNoteSub from '@/components/MkNoteSub.vue';
 import MkNoteHeader from '@/components/MkNoteHeader.vue';
 import MkNoteSimple from '@/components/MkNoteSimple.vue';
@@ -168,7 +172,6 @@ import MkReactionsViewerDetails from '@/components/MkReactionsViewer.details.vue
 import MkMediaList from '@/components/MkMediaList.vue';
 import MkCwButton from '@/components/MkCwButton.vue';
 import MkPoll from '@/components/MkPoll.vue';
-import MkButton from './MkButton.vue';
 import MkUsersTooltip from '@/components/MkUsersTooltip.vue';
 import MkUrlPreview from '@/components/MkUrlPreview.vue';
 import MkInstanceTicker from '@/components/MkInstanceTicker.vue';
@@ -196,7 +199,7 @@ import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { showMovedDialog } from '@/scripts/show-moved-dialog.js';
 import { shouldCollapsed } from '@/scripts/collapsed.js';
 import { isEnabledUrlPreview } from '@/instance.js';
-import { miLocalStorage } from "@/local-storage.js";
+import { miLocalStorage } from '@/local-storage.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
@@ -264,6 +267,11 @@ const isLong = shouldCollapsed(appearNote.value, urls.value ?? []);
 const collapsed = ref(appearNote.value.cw == null && isLong);
 const isDeleted = ref(false);
 const muted = ref(checkMute(appearNote.value, $i?.mutedWords ?? []));
+const isRedacted = ref<boolean>(
+	defaultStore.state.hideDirectMessages &&
+	defaultStore.state.privateMode &&
+	note.value.visibility === 'specified'
+);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);
 const translating = ref(false);
 const showTicker = (defaultStore.state.instanceTicker === 'always') || (defaultStore.state.instanceTicker === 'remote' && appearNote.value.user.instance);
@@ -385,7 +393,7 @@ function reply(viaKeyboard = false): void {
 function react(viaKeyboard = false): void {
 	pleaseLogin();
 	showMovedDialog();
-	if (appearNote.value.reactionAcceptance === 'likeOnly') {
+	if (appearNote.value.reactionAcceptance === 'likeOnly' || !$i?.policies.canUseReaction) {
 		sound.playMisskeySfx('reaction');
 
 		if (props.mock) {

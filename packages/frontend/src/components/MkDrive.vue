@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		@drop.prevent.stop="onDrop"
 		@contextmenu.stop="onContextmenu"
 	>
-		<div ref="contents">
+		<div v-if="!hideDriveFileList" ref="contents">
 			<div v-show="folders.length > 0" ref="foldersContainer" :class="$style.folders">
 				<XFolder
 					v-for="(f, i) in folders"
@@ -86,6 +86,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div v-if="!draghover && folder == null"><strong>{{ i18n.ts.emptyDrive }}</strong><br/>{{ i18n.ts['empty-drive-description'] }}</div>
 				<div v-if="!draghover && folder != null">{{ i18n.ts.emptyFolder }}</div>
 			</div>
+		</div>
+		<div v-else ref="contents" :class="$style.privateMode">
+			<div v-if="!fetching" :class="$style.empty">
+				<div>
+					<strong>{{ i18n.ts.privateMode }}</strong>
+					<br/>
+					{{ i18n.ts.youAreHidingSensitiveInformation }}
+				</div>
+			</div>
+			<MkButton small inline @click="hideDriveFileList = false">{{ i18n.ts.temporarilySeeThis }}</MkButton>
 		</div>
 		<MkLoading v-if="fetching"/>
 	</div>
@@ -142,6 +152,7 @@ const selectedFolders = ref<Misskey.entities.DriveFolder[]>([]);
 const uploadings = uploads;
 const connection = useStream().useChannel('drive');
 const keepOriginal = ref<boolean>(defaultStore.state.keepOriginalUploading); // 外部渡しが多いので$refは使わないほうがよい
+const hideDriveFileList = ref<boolean>(defaultStore.state.privateMode && defaultStore.state.hideDriveFileList);
 
 // ドロップされようとしているか
 const draghover = ref(false);
@@ -766,6 +777,11 @@ onBeforeUnmount(() => {
 	&.uploading {
 		height: calc(100% - 38px - 100px);
 	}
+}
+
+.privateMode {
+	text-align: center;
+	align-items: center;
 }
 
 .folders,
