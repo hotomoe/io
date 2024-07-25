@@ -118,7 +118,7 @@ function more() {
 
 .instanceIcon {
 	display: inline-block;
-	width: 38px;
+	width: 65px;
 	aspect-ratio: 1;
 }
 
