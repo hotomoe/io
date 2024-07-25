@@ -15,7 +15,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<span v-else-if="page === 4"><i class="ti ti-user-plus"></i> {{ i18n.ts.follow }}</span>
 				<span v-else-if="page === 5"><i class="ti ti-pencil-plus"></i> {{ i18n.ts._initialTutorial._postNote.title }}</span>
 				<span v-else-if="page === 6"><i class="ti ti-eye-exclamation"></i> {{ i18n.ts._initialTutorial._howToMakeAttachmentsSensitive.title }}</span>
-				<span v-else-if="page === 7"><i class="ti ti-lock"></i> {{ i18n.ts.privacy }}</span>
+				<span v-else-if="page === 7"><i class="ti ti-user"></i> {{ i18n.ts._initialTutorial._profileSettings.title }}</span>
+				<span v-else-if="page === 8"><i class="ti ti-lock"></i> {{ i18n.ts._initialTutorial._privacySettings.title }}</span>
 				<span v-else-if="page === MAX_PAGE"><!-- なんもなし --></span>
 				<span v-else>{{ i18n.ts._initialTutorial.title }}</span>
 			</div>
@@ -126,6 +127,7 @@ import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import { host } from '@/config.js';
 import { confirm as osConfirm } from '@/os.js';
+import { defaultStore } from '@/store.js';
 
 import MkAnimBg from '@/components/MkAnimBg.vue';
 import MkButton from '@/components/MkButton.vue';
@@ -155,6 +157,7 @@ async function cancel() {
 
 	if (confirm.canceled) return;
 
+	defaultStore.set('accountSetupWizard', -1);
 	location.href = '/';
 }
 
@@ -232,8 +235,8 @@ onMounted(() => {
 // #endregion
 
 definePageMetadata(() => ({
-	title: 'Onboarding',
-	description: 'Welcome to Misskey!',
+	title: i18n.ts.onboarding,
+	description: i18n.ts.headlineMisskey,
 }));
 </script>
 

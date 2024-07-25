@@ -83,12 +83,21 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div :class="$style.pageRoot">
 					<MkSpacer :marginMin="20" :marginMax="28" :class="$style.pageMain">
 						<div class="_gaps">
+							<XProfileSettings/>
+						</div>
+					</MkSpacer>
+				</div>
+			</div>
+			<div v-else-if="page === 8" key="tutorialPage_8" :class="$style.pageContainer">
+				<div :class="$style.pageRoot">
+					<MkSpacer :marginMin="20" :marginMax="28" :class="$style.pageMain">
+						<div class="_gaps">
 							<XPrivacySettings/>
 						</div>
 					</MkSpacer>
 				</div>
 			</div>
-			<slot v-else-if="page === 8" key="tutorialPage_8" name="finish" :close="() => emit('close')" :prev="prev">
+			<slot v-else-if="page === 9" key="tutorialPage_9" name="finish" :close="() => emit('close')" :prev="prev">
 				<div :class="$style.centerPage">
 					<MkAnimBg style="position: absolute; top: 0;" :scale="1.5"/>
 					<MkSpacer :marginMin="20" :marginMax="28">
@@ -124,7 +133,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts">
 
 // チュートリアルの枚数を増やしたら必ず変更すること！！
-export const MAX_PAGE = 8;
+export const MAX_PAGE = 9;
 
 </script>
 
@@ -136,8 +145,10 @@ import XTimeline from '@/components/MkTutorial.Timeline.vue';
 import XFollowUsers from '@/components/MkTutorial.FollowUsers.vue';
 import XPostNote from '@/components/MkTutorial.PostNote.vue';
 import XSensitive from '@/components/MkTutorial.Sensitive.vue';
+import XProfileSettings from '@/components/MkTutorial.Profile.vue';
 import XPrivacySettings from '@/components/MkTutorial.PrivacySettings.vue';
 import MkAnimBg from '@/components/MkAnimBg.vue';
+import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import { host } from '@/config.js';
@@ -164,6 +175,7 @@ const page = ref(props.initialPage ?? 0);
 watch(page, (to) => {
 	if (to === MAX_PAGE) {
 		claimAchievement('tutorialCompleted');
+		defaultStore.set('accountSetupWizard', -1);
 	}
 });
 

@@ -10,6 +10,7 @@ import { instance } from '@/instance.js';
 import { host } from '@/config.js';
 import { i18n } from '@/i18n.js';
 import { $i } from '@/account.js';
+import { defaultStore } from '@/store.js';
 
 function toolsMenuItems(): MenuItem[] {
 	return [{
@@ -112,7 +113,8 @@ export function openInstanceMenu(ev: MouseEvent) {
 		text: i18n.ts._initialTutorial.launchTutorial,
 		icon: 'ti ti-presentation',
 		action: () => {
-			os.popup(defineAsyncComponent(() => import('@/components/MkTutorialDialog.vue')), {}, {}, 'closed');
+			defaultStore.set('accountSetupWizard', 0);
+			location.href = '/onboarding';
 		},
 	} : undefined, {
 		type: 'link',
