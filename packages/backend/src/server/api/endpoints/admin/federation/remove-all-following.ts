@@ -13,7 +13,7 @@ export const meta = {
 	tags: ['admin'],
 
 	requireCredential: true,
-	requireModerator: true,
+	requireAdmin: true,
 	kind: 'write:admin:federation',
 } as const;
 
@@ -40,13 +40,21 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			const followings = await this.followingsRepository.findBy({
 				followerHost: ps.host,
 			});
+			const followers = await this.followingsRepository.findBy({
+				followeeHost: ps.host,
+			});
 
-			const pairs = await Promise.all(followings.map(f => Promise.all([
+			const followingPairs = await Promise.all(followings.map(f => Promise.all([
+				this.usersRepository.findOneByOrFail({ id: f.followerId }),
+				this.usersRepository.findOneByOrFail({ id: f.followeeId }),
+			]).then(([from, to]) => [{ id: from.id }, { id: to.id }])));
+			const followerPairs = await Promise.all(followers.map(f => Promise.all([
 				this.usersRepository.findOneByOrFail({ id: f.followerId }),
 				this.usersRepository.findOneByOrFail({ id: f.followeeId }),
 			]).then(([from, to]) => [{ id: from.id }, { id: to.id }])));
 
-			this.queueService.createUnfollowJob(pairs.map(p => ({ from: p[0], to: p[1], silent: true })));
+			await this.queueService.createUnfollowJob(followingPairs.map(p => ({ from: p[0], to: p[1], silent: true })));
+			await this.queueService.createUnfollowJob(followerPairs.map(p => ({ from: p[0], to: p[1], silent: true })));
 		});
 	}
 }

@@ -5123,6 +5123,18 @@ export interface Locale extends ILocale {
      * オンボーディング
      */
     "onboarding": string;
+    /**
+     * サーバー情報を更新
+     */
+    "refreshMetadata": string;
+    /**
+     * 相互フォロー解除
+     */
+    "removeAllFollowings": string;
+    /**
+     * 本当に{host}とのすべてのフォロー関係を削除しますか？ 実行後は元に戻せません。 相手インスタンスが閉鎖されたと判断した場合のみ実行してください。
+     */
+    "areYouSureToRemoveAllFollowings": ParameterizedString<"host">;
     "_bubbleGame": {
         /**
          * 遊び方
