@@ -181,7 +181,7 @@ watch(moderationNote, async () => {
 
 	await misskeyApi('admin/federation/update-instance', {
 		host: instance.value.host,
-		moderationNote: moderationNote.value
+		moderationNote: moderationNote.value,
 	});
 });
 
