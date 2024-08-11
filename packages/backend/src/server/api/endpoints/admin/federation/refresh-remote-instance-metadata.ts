@@ -17,6 +17,7 @@ export const meta = {
 
 	requireCredential: true,
 	requireAdmin: true,
+	secure: true,
 	kind: 'write:admin:federation',
 
 	errors: {
@@ -41,6 +42,8 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	constructor(
 		@Inject(DI.instancesRepository)
 		private instancesRepository: InstancesRepository,
+
+		@Inject(DI.followingsRepository)
 		private followingsRepository: FollowingsRepository,
 
 		private utilityService: UtilityService,

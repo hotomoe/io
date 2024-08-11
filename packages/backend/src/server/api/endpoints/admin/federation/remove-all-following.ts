@@ -5,16 +5,27 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import { Endpoint } from '@/server/api/endpoint-base.js';
-import type { FollowingsRepository, UsersRepository } from '@/models/_.js';
+import type { FollowingsRepository, InstancesRepository, UsersRepository } from '@/models/_.js';
 import { DI } from '@/di-symbols.js';
 import { QueueService } from '@/core/QueueService.js';
+import { ApiError } from '@/server/api/error.js';
+import { UtilityService } from '@/core/UtilityService.js';
 
 export const meta = {
 	tags: ['admin'],
 
 	requireCredential: true,
 	requireAdmin: true,
+	secure: true,
 	kind: 'write:admin:federation',
+
+	errors: {
+		instanceNotFound: {
+			message: 'Instance with that hostname is not found.',
+			code: 'INSTANCE_NOT_FOUND',
+			id: '82791415-ae4b-4e82-bffe-e3dbc4322a0a',
+		},
+	},
 } as const;
 
 export const paramDef = {
@@ -34,9 +45,19 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		@Inject(DI.notesRepository)
 		private followingsRepository: FollowingsRepository,
 
+		@Inject(DI.instancesRepository)
+		private instancesRepository: InstancesRepository,
+
 		private queueService: QueueService,
+		private utilityService: UtilityService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
+			const instance = await this.instancesRepository.findOneBy({ host: this.utilityService.toPuny(ps.host) });
+
+			if (instance == null) {
+				throw new ApiError(meta.errors.instanceNotFound);
+			}
+
 			const followings = await this.followingsRepository.findBy({
 				followerHost: ps.host,
 			});

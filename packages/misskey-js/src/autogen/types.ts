@@ -424,6 +424,7 @@ export type paths = {
      * admin/federation/refresh-remote-instance-metadata
      * @description No description provided.
      *
+     * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
      * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
      */
     post: operations['admin___federation___refresh-remote-instance-metadata'];
@@ -433,6 +434,7 @@ export type paths = {
      * admin/federation/remove-all-following
      * @description No description provided.
      *
+     * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
      * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
      */
     post: operations['admin___federation___remove-all-following'];
@@ -8001,6 +8003,7 @@ export type operations = {
    * admin/federation/refresh-remote-instance-metadata
    * @description No description provided.
    *
+   * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
    * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
    */
   'admin___federation___refresh-remote-instance-metadata': {
@@ -8052,6 +8055,7 @@ export type operations = {
    * admin/federation/remove-all-following
    * @description No description provided.
    *
+   * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
    * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
    */
   'admin___federation___remove-all-following': {
