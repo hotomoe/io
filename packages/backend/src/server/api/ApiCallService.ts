@@ -17,6 +17,7 @@ import { MetaService } from '@/core/MetaService.js';
 import { createTemp } from '@/misc/create-temp.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
+import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
 import type { Config } from '@/config.js';
 import { ApiError } from './error.js';
@@ -46,6 +47,7 @@ export class ApiCallService implements OnApplicationShutdown {
 		private userIpsRepository: UserIpsRepository,
 
 		private metaService: MetaService,
+		private userEntityService: UserEntityService,
 		private authenticateService: AuthenticateService,
 		private rateLimiterService: RateLimiterService,
 		private roleService: RoleService,
@@ -218,12 +220,13 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 
 			try {
-				this.userIpsRepository.createQueryBuilder().insert().values({
+				await this.userIpsRepository.createQueryBuilder().insert().values({
 					createdAt: new Date(),
 					userId: user.id,
 					ip: ip,
 				}).orIgnore(true).execute();
 			} catch {
+				/* empty */
 			}
 		}
 	}
@@ -278,7 +281,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}
 
-		if (ep.meta.requireCredential || ep.meta.requireModerator || ep.meta.requireAdmin) {
+		if (ep.meta.requireCredential ?? ep.meta.requireModerator ?? ep.meta.requireAdmin) {
 			if (user == null) {
 				throw new ApiError({
 					message: 'Credential required.',
@@ -307,19 +310,39 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}
 
-		if ((ep.meta.requireModerator || ep.meta.requireAdmin) && !user!.isRoot) {
+		if ((ep.meta.requireModerator ?? ep.meta.requireAdmin)) {
 			const myRoles = await this.roleService.getUserRoles(user!.id);
-			if (ep.meta.requireModerator && !myRoles.some(r => r.isModerator || r.isAdministrator)) {
+			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator);
+			const isAdmin = myRoles.some(r => r.isAdministrator);
+			const userProfile = await this.userEntityService.pack(user!.id, user, { schema: 'MeDetailed' });
+			const isMFAEnabled = userProfile.twoFactorEnabled;
+			if (!isMFAEnabled) {
 				throw new ApiError({
-					message: 'You are not assigned to a moderator role.',
+					message: 'You need to enable 2FA to access this endpoint.',
+					code: 'REQUIRES_MFA_ENABLED',
+					kind: 'permission',
+					id: 'abce13fe-1d9f-4e85-8f00-4a5251155470',
+				});
+			}
+			if (!user!.isRoot) {
+				throw new ApiError({
+					message: 'You are not assigned to a proper role.',
 					code: 'ROLE_PERMISSION_DENIED',
 					kind: 'permission',
 					id: 'd33d5333-db36-423d-a8f9-1a2b9549da41',
 				});
 			}
-			if (ep.meta.requireAdmin && !myRoles.some(r => r.isAdministrator)) {
+			if (ep.meta.requireModerator && !isModerator) {
 				throw new ApiError({
-					message: 'You are not assigned to an administrator role.',
+					message: 'You are not assigned to a proper role.',
+					code: 'ROLE_PERMISSION_DENIED',
+					kind: 'permission',
+					id: 'd33d5333-db36-423d-a8f9-1a2b9549da41',
+				});
+			}
+			if (ep.meta.requireAdmin && !isAdmin) {
+				throw new ApiError({
+					message: 'You are not assigned to a proper role.',
 					code: 'ROLE_PERMISSION_DENIED',
 					kind: 'permission',
 					id: 'c3d38592-54c0-429d-be96-5636b0431a61',
@@ -332,7 +355,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			const policies = await this.roleService.getUserPolicies(user!.id);
 			if (!policies[ep.meta.requireRolePolicy] && !myRoles.some(r => r.isAdministrator)) {
 				throw new ApiError({
-					message: 'You are not assigned to a required role.',
+					message: 'Your role doesn\'t have proper permission.',
 					code: 'ROLE_PERMISSION_DENIED',
 					kind: 'permission',
 					id: '7f86f06f-7e15-4057-8561-f4b6d4ac755a',

@@ -17,14 +17,20 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</span>
 		<span :class="$style.title">{{ i18n.ts.verificationEmailSent }}</span>
 	</MkA>
-	<MkA v-if="unresolvedReportCount > 0" :class="$style.item" to="/admin/">
+	<MkA v-if="unresolvedReportCount > 0" :class="$style.item" to="/admin/abuses">
 		<span :class="$style.icon">
-			<i class="ti ti-circle-x" style="color: var(--error);"></i>
+			<i class="ti ti-alert-triangle" style="color: var(--warn);"></i>
 		</span>
 		<span :class="$style.title">{{ i18n.tsx.thereIsUnresolvedAbuseReport({ left: unresolvedReportCount }) }}</span>
 	</MkA>
+	<MkA v-if="($i?.isModerator ?? $i?.isAdmin) && !$i?.twoFactorEnabled" :class="$style.item" to="/settings/security">
+		<span :class="$style.icon">
+			<i class="ti ti-circle-key" style="color: var(--error);"></i>
+		</span>
+		<span :class="$style.title">{{ i18n.ts.youNeedToEnableTwoFactor }}</span>
+	</MkA>
 	<MkA
-		v-for="announcement in $i.unreadAnnouncements.filter(x => x.display === 'banner')"
+		v-for="announcement in $i?.unreadAnnouncements.filter(x => x.display === 'banner')"
 		:key="announcement.id"
 		:class="$style.item"
 		to="/announcements"
