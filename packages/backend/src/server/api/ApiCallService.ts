@@ -310,7 +310,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}
 
-		if ((ep.meta.requireModerator ?? ep.meta.requireAdmin)) {
+		if (ep.meta.requireModerator || ep.meta.requireAdmin) {
 			const myRoles = await this.roleService.getUserRoles(user!.id);
 			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator);
 			const isAdmin = myRoles.some(r => r.isAdministrator);
