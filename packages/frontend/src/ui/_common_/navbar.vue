@@ -186,6 +186,7 @@ function more(ev: MouseEvent) {
 	.instanceIcon {
 		display: inline-block;
 		width: 65px;
+		margin: 12px;
 		aspect-ratio: 1;
 	}
 
