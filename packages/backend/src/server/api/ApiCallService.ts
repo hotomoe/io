@@ -310,7 +310,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}
 
-		if (ep.meta.requireModerator || ep.meta.requireAdmin) {
+		if ((ep.meta.requireModerator || ep.meta.requireAdmin) && !user!.isRoot) {
 			const myRoles = await this.roleService.getUserRoles(user!.id);
 			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator);
 			const isAdmin = myRoles.some(r => r.isAdministrator);
@@ -322,14 +322,6 @@ export class ApiCallService implements OnApplicationShutdown {
 					code: 'REQUIRES_MFA_ENABLED',
 					kind: 'permission',
 					id: 'abce13fe-1d9f-4e85-8f00-4a5251155470',
-				});
-			}
-			if (!user!.isRoot) {
-				throw new ApiError({
-					message: 'You are not assigned to a proper role.',
-					code: 'ROLE_PERMISSION_DENIED',
-					kind: 'permission',
-					id: 'd33d5333-db36-423d-a8f9-1a2b9549da41',
 				});
 			}
 			if (ep.meta.requireModerator && !isModerator) {

@@ -196,7 +196,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 
 			<div v-else-if="tab === 'raw'" class="_gaps_m">
-				<MkObjectView v-if="info && $i.isAdmin" tall :value="info">
+				<MkObjectView v-if="info && iAmAdmin" tall :value="info">
 				</MkObjectView>
 
 				<MkObjectView tall :value="user">
@@ -229,7 +229,7 @@ import { url } from '@/config.js';
 import { acct } from '@/filters/user.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';
-import { iAmAdmin, iAmModerator, $i } from '@/account.js';
+import { iAmAdmin, iAmModerator } from '@/account.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
 

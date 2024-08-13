@@ -4013,6 +4013,14 @@ export interface Locale extends ILocale {
      */
     "loggedInAsBot": string;
     /**
+     * Botアカウント
+     */
+    "isBot": string;
+    /**
+     * フォロー申請が必要
+     */
+    "isLocked": string;
+    /**
      * ツール
      */
     "tools": string;

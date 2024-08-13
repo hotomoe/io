@@ -28,7 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</component>
 	</template>
 	<div class="divider"></div>
-	<MkA v-if="$i.isAdmin || $i.isModerator" v-click-anime class="item" activeClass="active" to="/admin" :behavior="settingsWindowed ? 'window' : null">
+	<MkA v-if="iAmModerator" v-click-anime class="item" activeClass="active" to="/admin" :behavior="settingsWindowed ? 'window' : null">
 		<i class="ti ti-dashboard ti-fw"></i><span class="text">{{ i18n.ts.controlPanel }}</span>
 	</MkA>
 	<button v-click-anime class="item _button" @click="more">
@@ -51,14 +51,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { defineAsyncComponent, computed, watch, ref, shallowRef } from 'vue';
 import { openInstanceMenu } from './_common_/common.js';
-// import { host } from '@/config.js';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
-import { openAccountMenu as openAccountMenu_, $i } from '@/account.js';
+import { $i, iAmModerator, openAccountMenu as openAccountMenu_ } from '@/account.js';
 import MkButton from '@/components/MkButton.vue';
-// import { StickySidebar } from '@/scripts/sticky-sidebar.js';
-// import { mainRouter } from '@/router.js';
-//import MisskeyLogo from '@assets/client/misskey.svg';
 import { defaultStore } from '@/store.js';
 import { instance } from '@/instance.js';
 import { i18n } from '@/i18n.js';

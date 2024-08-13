@@ -6,7 +6,7 @@
 import { defineAsyncComponent, Ref, ShallowRef } from 'vue';
 import * as Misskey from 'misskey-js';
 import { claimAchievement } from './achievements.js';
-import { $i } from '@/account.js';
+import { $i, iAmModerator } from '@/account.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import * as os from '@/os.js';
@@ -372,7 +372,7 @@ export function getNoteMenu(props: {
 				},
 			},
 			/*
-		...($i.isModerator || $i.isAdmin ? [
+		...(iAmModerator ? [
 			{ type: 'divider' },
 			{
 				icon: 'ti ti-speakerphone',
@@ -387,7 +387,7 @@ export function getNoteMenu(props: {
 			]
 			: []
 			),
-			...(appearNote.channel && (appearNote.channel.userId === $i.id || $i.isModerator || $i.isAdmin) ? [
+			...(appearNote.channel && (appearNote.channel.userId === $i.id || iAmModerator) ? [
 				{ type: 'divider' },
 				{
 					type: 'parent' as const,
@@ -423,7 +423,7 @@ export function getNoteMenu(props: {
 			]
 			: []
 			),
-			...(appearNote.userId === $i.id || $i.isModerator || $i.isAdmin ? [
+			...(appearNote.userId === $i.id || iAmModerator ? [
 				{ type: 'divider' },
 				appearNote.userId === $i.id ? {
 					icon: 'ti ti-edit',

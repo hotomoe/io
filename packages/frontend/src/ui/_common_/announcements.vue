@@ -51,13 +51,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { ref } from 'vue';
 import { instanceName } from '@/config.js';
 import { instance } from '@/instance.js';
-import { $i } from '@/account.js';
+import { $i, iAmModerator } from '@/account.js';
 import { i18n } from '@/i18n.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 
 const unresolvedReportCount = ref<number>(0);
 
-if ($i?.isAdmin || $i?.isModerator) {
+if (iAmModerator) {
 	misskeyApi('admin/abuse-user-reports', {
 		state: 'unresolved',
 	}).then(reports => {

@@ -43,7 +43,7 @@ import { acct as getAcct } from '@/filters/user.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';
-import { $i } from '@/account.js';
+import { $i, iAmModerator } from '@/account.js';
 import MkUserNotFound from '@/components/MkUserNotFound.vue';
 import MkUserSuspended from '@/components/MkUserSuspended.vue';
 import MkHorizontalSwipe from '@/components/MkHorizontalSwipe.vue';
@@ -111,7 +111,7 @@ const headerTabs = computed(() => user.value ? [{
 	key: 'achievements',
 	title: i18n.ts.achievements,
 	icon: 'ti ti-medal',
-}] : []), ...($i && ($i.id === user.value.id || $i.isAdmin || $i.isModerator)) || user.value.publicReactions ? [{
+}] : []), ...($i && ($i.id === user.value.id || iAmModerator )) || user.value.publicReactions ? [{
 	key: 'reactions',
 	title: i18n.ts.reaction,
 	icon: 'ti ti-mood-happy',
