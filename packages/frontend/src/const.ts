@@ -109,6 +109,8 @@ export const ROLE_POLICIES = [
 	'rateLimitFactor',
 	'avatarDecorationLimit',
 	'canUseAccountRemoval',
+	'mutualLinkSectionLimit',
+	'mutualLinkLimit',
 ] as const;
 
 // なんか動かない

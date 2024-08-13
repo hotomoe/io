@@ -179,7 +179,7 @@ export const packedUserLiteSchema = {
 					behavior: {
 						type: 'string',
 						nullable: false, optional: true,
-					}
+					},
 				},
 			},
 		},
@@ -385,6 +385,29 @@ export const packedUserDetailedNotMeOnlySchema = {
 		moderationNote: {
 			type: 'string',
 			nullable: false, optional: true,
+		},
+		mutualLinkSections: {
+			type: 'array',
+			items: {
+				type: 'object',
+				properties: {
+					name: { type: 'string', nullable: true },
+					mutualLinks: {
+						type: 'array',
+						items: {
+							type: 'object',
+							properties: {
+								url: { type: 'string' },
+								fileId: { type: 'string', format: 'misskey:id' },
+								description: { type: 'string', nullable: true },
+								imgSrc: { type: 'string' },
+							},
+							required: ['url', 'fileId'],
+						},
+					},
+				},
+				required: ['mutualLinks'],
+			},
 		},
 		//#region relations
 		isFollowing: {

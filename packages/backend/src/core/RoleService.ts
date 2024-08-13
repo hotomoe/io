@@ -70,6 +70,8 @@ export type RolePolicies = {
 	rateLimitFactor: number;
 	avatarDecorationLimit: number;
 	canUseAccountRemoval: boolean;
+	mutualLinkSectionLimit: number;
+	mutualLinkLimit: number;
 };
 
 export const DEFAULT_POLICIES: RolePolicies = {
@@ -110,6 +112,8 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	rateLimitFactor: 1,
 	avatarDecorationLimit: 1,
 	canUseAccountRemoval: true,
+	mutualLinkSectionLimit: 1,
+	mutualLinkLimit: 15,
 };
 
 @Injectable()
@@ -423,6 +427,8 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 			userEachUserListsLimit: calc('userEachUserListsLimit', vs => Math.max(...vs)),
 			rateLimitFactor: calc('rateLimitFactor', vs => Math.max(...vs)),
 			avatarDecorationLimit: calc('avatarDecorationLimit', vs => Math.max(...vs)),
+			mutualLinkSectionLimit: calc('mutualLinkSectionLimit', vs => Math.max(...vs)),
+			mutualLinkLimit: calc('mutualLinkLimit', vs => Math.max(...vs)),
 		};
 	}
 
