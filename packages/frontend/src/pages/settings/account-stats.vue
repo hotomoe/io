@@ -109,11 +109,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</MkKeyValue>
 		<MkKeyValue oneline style="margin: 1em 0;">
 			<template #key>isModerator</template>
-			<template #value>{{ $i.isModerator ? i18n.ts.yes : i18n.ts.no }}</template>
+			<template #value>{{ iAmModerator ? i18n.ts.yes : i18n.ts.no }}</template>
 		</MkKeyValue>
 		<MkKeyValue oneline style="margin: 1em 0;">
 			<template #key>isAdmin</template>
-			<template #value>{{ $i.isAdmin ? i18n.ts.yes : i18n.ts.no }}</template>
+			<template #value>{{ iAmAdmin ? i18n.ts.yes : i18n.ts.no }}</template>
 		</MkKeyValue>
 	</FormSection>
 </div>
@@ -125,7 +125,7 @@ import FormSection from '@/components/form/section.vue';
 import MkKeyValue from '@/components/MkKeyValue.vue';
 import number from '@/filters/number.js';
 import bytes from '@/filters/bytes.js';
-import { $i } from '@/account.js';
+import { $i, iAmAdmin, iAmModerator } from '@/account.js';
 import { i18n } from '@/i18n.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';

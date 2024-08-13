@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { defineAsyncComponent } from 'vue';
 import type { MenuItem } from '@/types/menu.js';
 import * as os from '@/os.js';
 import { instance } from '@/instance.js';
 import { host } from '@/config.js';
 import { i18n } from '@/i18n.js';
-import { $i } from '@/account.js';
+import { $i, iAmAdmin } from '@/account.js';
+import { defaultStore } from '@/store.js';
 
 function toolsMenuItems(): MenuItem[] {
 	return [{
@@ -27,12 +27,12 @@ function toolsMenuItems(): MenuItem[] {
 		to: '/clicker',
 		text: '🍪👈',
 		icon: 'ti ti-cookie',
-	}, ($i && ($i.isAdmin || $i.policies.canManageCustomEmojis)) ? {
+	}, ($i && (iAmAdmin || $i.policies.canManageCustomEmojis)) ? {
 		type: 'link',
 		to: '/custom-emojis-manager',
 		text: i18n.ts.manageCustomEmojis,
 		icon: 'ti ti-icons',
-	} : undefined, ($i && ($i.isAdmin || $i.policies.canManageAvatarDecorations)) ? {
+	} : undefined, ($i && (iAmAdmin || $i.policies.canManageAvatarDecorations)) ? {
 		type: 'link',
 		to: '/avatar-decorations',
 		text: i18n.ts.manageAvatarDecorations,
@@ -69,7 +69,7 @@ export function openInstanceMenu(ev: MouseEvent) {
 		text: i18n.ts.ads,
 		icon: 'ti ti-ad',
 		to: '/ads',
-	}, ($i && ($i.isAdmin || $i.policies.canInvite) && instance.disableRegistration) ? {
+	}, ($i && (iAmAdmin || $i.policies.canInvite) && instance.disableRegistration) ? {
 		type: 'link',
 		to: '/invite',
 		text: i18n.ts.invite,
@@ -112,7 +112,8 @@ export function openInstanceMenu(ev: MouseEvent) {
 		text: i18n.ts._initialTutorial.launchTutorial,
 		icon: 'ti ti-presentation',
 		action: () => {
-			os.popup(defineAsyncComponent(() => import('@/components/MkTutorialDialog.vue')), {}, {}, 'closed');
+			defaultStore.set('accountSetupWizard', 0);
+			location.href = '/onboarding';
 		},
 	} : undefined, {
 		type: 'link',

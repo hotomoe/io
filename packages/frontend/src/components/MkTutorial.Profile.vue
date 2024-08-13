@@ -5,7 +5,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div class="_gaps">
-	<MkInfo>{{ i18n.ts._initialAccountSetting.theseSettingsCanEditLater }}</MkInfo>
+	<div style="word-break: auto-phrase; text-align: center; padding: 0 16px;">{{ i18n.ts._initialTutorial._profileSettings.description }}</div>
+
+	<MkInfo>{{ i18n.ts._initialTutorial._profileSettings.theseSettingsCanEditLater }}</MkInfo>
 
 	<FormSlot>
 		<template #label>{{ i18n.ts.avatar }}</template>
@@ -31,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<div v-if="useAsBot" class="_gaps_m">
 		<div>
-			<MkInfo>{{ i18n.ts._initialAccountSetting.mustBeSetBotOwner }}</MkInfo>
+			<MkInfo>{{ i18n.ts._initialTutorial._profileSettings.mustBeSetBotOwner }}</MkInfo>
 		</div>
 		<div>
 			<MkButton @click="selectBotOwner">{{ i18n.ts.selectUser }}</MkButton>
@@ -39,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 	</div>
 
-	<MkInfo>{{ i18n.ts._initialAccountSetting.youCanEditMoreSettingsInSettingsPageLater }}</MkInfo>
+	<MkInfo>{{ i18n.ts._initialTutorial._profileSettings.youCanEditMoreSettingsInSettingsPageLater }}</MkInfo>
 </div>
 </template>
 

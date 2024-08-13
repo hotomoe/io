@@ -214,7 +214,7 @@ async function onSubmit(): Promise<void> {
 			emit('signup', res);
 
 			if (props.autoSet) {
-				return login(res.i);
+				return login(res.i, '/onboarding');
 			}
 		}
 	} catch {

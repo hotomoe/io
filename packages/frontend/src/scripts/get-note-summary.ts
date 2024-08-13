@@ -24,7 +24,7 @@ export const getNoteSummary = (note?: Misskey.entities.Note | null): string => {
 		return `(${i18n.ts.invisibleNote})`;
 	}
 
-	if (note.visibility === 'specified' && defaultStore.state.hideDirectMessages) {
+	if (note.visibility === 'specified' && defaultStore.state.privateMode && defaultStore.state.hideDirectMessages) {
 		return `(${i18n.ts.youAreHidingSensitiveInformation})`;
 	}
 

@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<template #key>{{ i18n.ts.email }}</template>
 						<template #value><span class="_monospace">{{ info.email }}</span></template>
 					</MkKeyValue>
-					<MkKeyValue v-if="iAmAdmin && ips ? ips.length : 0 > 0" :copy="ips ? ips[0].ip : null" oneline>
+					<MkKeyValue v-if="iAmAdmin && ips && ips.length > 0" :copy="ips[0].ip" oneline>
 						<template #key>IP (recent)</template>
 						<template #value><span class="_monospace">{{ ips ? ips[0].ip : 'N/A' }}</span></template>
 					</MkKeyValue>
@@ -66,6 +66,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								<MkButton v-if="user?.host == null" @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
 								<MkButton inline danger @click="unsetUserAvatar"><i class="ti ti-user-circle"></i> {{ i18n.ts.unsetUserAvatar }}</MkButton>
 								<MkButton inline danger @click="unsetUserBanner"><i class="ti ti-photo"></i> {{ i18n.ts.unsetUserBanner }}</MkButton>
+								<MkButton inline danger @click="unsetUserMutualLink"><i class="ti ti-photo"></i> {{ i18n.ts.unsetUserMutualLink }}</MkButton>
 							</div>
 						</MkFolder>
 
@@ -195,7 +196,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 
 			<div v-else-if="tab === 'raw'" class="_gaps_m">
-				<MkObjectView v-if="info && $i.isAdmin" tall :value="info">
+				<MkObjectView v-if="info && iAmAdmin" tall :value="info">
 				</MkObjectView>
 
 				<MkObjectView tall :value="user">
@@ -228,7 +229,7 @@ import { url } from '@/config.js';
 import { acct } from '@/filters/user.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';
-import { iAmAdmin, iAmModerator, $i } from '@/account.js';
+import { iAmAdmin, iAmModerator } from '@/account.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
 
@@ -292,7 +293,7 @@ function createFetcher() {
 
 		watch(moderationNote, async () => {
 			await misskeyApi('admin/update-user-note', {
-				userId: user.value.id, text: moderationNote.value
+				userId: user.value.id, text: moderationNote.value,
 			}).then(refreshUser);
 		});
 	});
@@ -304,7 +305,7 @@ function refreshUser() {
 
 async function updateRemoteUser() {
 	await os.apiWithDialog('federation/update-remote-user', {
-		userId: user.value.id
+		userId: user.value.id,
 	}).then(refreshUser);
 }
 
@@ -335,7 +336,7 @@ async function toggleSuspend(v) {
 		suspended.value = !v;
 	} else {
 		await misskeyApi(v ? 'admin/suspend-user' : 'admin/unsuspend-user', {
-			userId: user.value.id
+			userId: user.value.id,
 		}).then(refreshUser);
 	}
 }
@@ -348,7 +349,7 @@ async function unsetUserAvatar() {
 	if (confirm.canceled) return;
 
 	await os.apiWithDialog('admin/unset-user-avatar', {
-		userId: user.value.id
+		userId: user.value.id,
 	}).then(refreshUser);
 }
 
@@ -360,7 +361,19 @@ async function unsetUserBanner() {
 	if (confirm.canceled) return;
 
 	await os.apiWithDialog('admin/unset-user-banner', {
-		userId: user.value.id
+		userId: user.value.id,
+	}).then(refreshUser);
+}
+
+async function unsetUserMutualLink() {
+	const confirm = await os.confirm({
+		type: 'warning',
+		text: i18n.ts.unsetUserMutualLinkConfirm,
+	});
+	if (confirm.canceled) return;
+
+	await os.apiWithDialog('admin/unset-user-mutual-banner', {
+		userId: user.value.id,
 	}).then(refreshUser);
 }
 
@@ -378,7 +391,7 @@ async function deleteAllFiles() {
 
 	if (typed.result === user.value?.username) {
 		await os.apiWithDialog('admin/drive/delete-all-files-of-a-user', {
-			userId: user.value.id
+			userId: user.value.id,
 		}).then(refreshUser);
 	} else {
 		os.alert({
@@ -447,7 +460,7 @@ async function assignRole() {
 		: null;
 
 	await os.apiWithDialog('admin/roles/assign', {
-		roleId, userId: user.value.id, expiresAt
+		roleId, userId: user.value.id, expiresAt,
 	}).then(refreshUser);
 }
 
@@ -458,7 +471,7 @@ async function unassignRole(role, ev) {
 		danger: true,
 		action: async () => {
 			await os.apiWithDialog('admin/roles/unassign', {
-				roleId: role.id, userId: user.value.id
+				roleId: role.id, userId: user.value.id,
 			}).then(refreshUser);
 		},
 	}], ev.currentTarget ?? ev.target);

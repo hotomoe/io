@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</component>
 			</template>
 			<div :class="$style.divider"></div>
-			<MkA v-if="$i.isAdmin || $i.isModerator" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
+			<MkA v-if="($i?.isAdmin || $i?.isModerator) && $i?.twoFactorEnabled" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
 				<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
 				<span v-if="unresolvedReportAvailable" :class="$style.itemIndicator">
 					<i class="_indicatorCircle"></i>
@@ -185,7 +185,7 @@ function more(ev: MouseEvent) {
 
 	.instanceIcon {
 		display: inline-block;
-		width: 38px;
+		width: 65px;
 		aspect-ratio: 1;
 	}
 

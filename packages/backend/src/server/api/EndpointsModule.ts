@@ -32,6 +32,7 @@ import * as ep___admin_avatarDecorations_update from './endpoints/admin/avatar-d
 import * as ep___admin_unsetUserAvatar from './endpoints/admin/unset-user-avatar.js';
 import * as ep___admin_unsetUserBanner from './endpoints/admin/unset-user-banner.js';
 import * as ep___admin_disposeCache from './endpoints/admin/dispose-cache.js';
+import * as ep___admin_unsetUserMutualLink from './endpoints/admin/unset-user-mutual-link.js';
 import * as ep___admin_drive_cleanRemoteFiles from './endpoints/admin/drive/clean-remote-files.js';
 import * as ep___admin_drive_cleanup from './endpoints/admin/drive/cleanup.js';
 import * as ep___admin_drive_deleteAllFilesOfAUser from './endpoints/admin/drive/delete-all-files-of-a-user.js';
@@ -423,6 +424,7 @@ const $admin_avatarDecorations_update: Provider = { provide: 'ep:admin/avatar-de
 const $admin_unsetUserAvatar: Provider = { provide: 'ep:admin/unset-user-avatar', useClass: ep___admin_unsetUserAvatar.default };
 const $admin_unsetUserBanner: Provider = { provide: 'ep:admin/unset-user-banner', useClass: ep___admin_unsetUserBanner.default };
 const $admin_disposeCache: Provider = { provide: 'ep:admin/dispose-cache', useClass: ep___admin_disposeCache.default };
+const $admin_unsetUserMutualLink: Provider = { provide: 'ep:admin/unset-user-mutual-link', useClass: ep___admin_unsetUserMutualLink.default };
 const $admin_drive_cleanRemoteFiles: Provider = { provide: 'ep:admin/drive/clean-remote-files', useClass: ep___admin_drive_cleanRemoteFiles.default };
 const $admin_drive_cleanup: Provider = { provide: 'ep:admin/drive/cleanup', useClass: ep___admin_drive_cleanup.default };
 const $admin_drive_deleteAllFilesOfAUser: Provider = { provide: 'ep:admin/drive/delete-all-files-of-a-user', useClass: ep___admin_drive_deleteAllFilesOfAUser.default };
@@ -818,6 +820,7 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$admin_unsetUserAvatar,
 		$admin_unsetUserBanner,
 		$admin_disposeCache,
+		$admin_unsetUserMutualLink,
 		$admin_drive_cleanRemoteFiles,
 		$admin_drive_cleanup,
 		$admin_drive_deleteAllFilesOfAUser,
@@ -1207,6 +1210,7 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$admin_unsetUserAvatar,
 		$admin_unsetUserBanner,
 		$admin_disposeCache,
+		$admin_unsetUserMutualLink,
 		$admin_drive_cleanRemoteFiles,
 		$admin_drive_cleanup,
 		$admin_drive_deleteAllFilesOfAUser,

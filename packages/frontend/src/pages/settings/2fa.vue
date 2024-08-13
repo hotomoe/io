@@ -25,11 +25,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInfo>
 					<Mfm :text="i18n.tsx._2fa.detailedGuide({ link: `[${i18n.ts.here}](https://go.misskey.io/howto-2fa)`})"/>
 				</MkInfo>
-				<MkInfo v-if="$i.securityKeysList.length > 0">{{ i18n.ts._2fa.whyTOTPOnlyRenew }}</MkInfo>
+				<MkInfo v-if="$i.securityKeysList && $i.securityKeysList.length > 0">{{ i18n.ts._2fa.whyTOTPOnlyRenew }}</MkInfo>
 
 				<div v-if="$i.twoFactorEnabled" class="_gaps_s">
 					<div v-text="i18n.ts._2fa.alreadyRegistered"/>
-					<MkButton v-if="$i.securityKeysList.length > 0" @click="renewTOTP">{{ i18n.ts._2fa.renewTOTP }}</MkButton>
+					<MkButton v-if="$i.securityKeysList && $i.securityKeysList.length > 0" @click="renewTOTP">{{ i18n.ts._2fa.renewTOTP }}</MkButton>
 					<MkButton v-else danger @click="unregisterTOTP">{{ i18n.ts.unregister }}</MkButton>
 				</div>
 
@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</MkFolder>
 
-		<MkSwitch :disabled="!$i.twoFactorEnabled || $i.securityKeysList.length === 0" :modelValue="usePasswordLessLogin" @update:modelValue="v => updatePasswordLessLogin(v)">
+		<MkSwitch :disabled="!$i.twoFactorEnabled || ($i.securityKeysList && $i.securityKeysList.length === 0)" :modelValue="usePasswordLessLogin" @update:modelValue="v => updatePasswordLessLogin(v)">
 			<template #label>{{ i18n.ts.passwordLessLogin }}</template>
 			<template #caption>{{ i18n.ts.passwordLessLoginDescription }}</template>
 		</MkSwitch>

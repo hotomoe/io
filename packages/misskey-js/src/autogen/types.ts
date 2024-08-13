@@ -247,6 +247,15 @@ export type paths = {
      */
     post: operations['admin___dispose-cache'];
   };
+  '/admin/unset-user-mutual-link': {
+    /**
+     * admin/unset-user-mutual-link
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:admin:unset-user-mutual-link*
+     */
+    post: operations['admin___unset-user-mutual-link'];
+  };
   '/admin/drive/clean-remote-files': {
     /**
      * admin/drive/clean-remote-files
@@ -424,6 +433,7 @@ export type paths = {
      * admin/federation/refresh-remote-instance-metadata
      * @description No description provided.
      *
+     * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
      * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
      */
     post: operations['admin___federation___refresh-remote-instance-metadata'];
@@ -433,6 +443,7 @@ export type paths = {
      * admin/federation/remove-all-following
      * @description No description provided.
      *
+     * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
      * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
      */
     post: operations['admin___federation___remove-all-following'];
@@ -3843,6 +3854,16 @@ export type components = {
       roles: components['schemas']['RoleLite'][];
       memo: string | null;
       moderationNote?: string;
+      mutualLinkSections: ({
+          name: string | null;
+          mutualLinks: ({
+              url: string;
+              /** Format: misskey:id */
+              fileId: string;
+              description: string | null;
+              imgSrc: string;
+            })[];
+        })[];
       isFollowing?: boolean;
       isFollowed?: boolean;
       hasPendingFollowRequestFromYou?: boolean;
@@ -4938,6 +4959,8 @@ export type components = {
       rateLimitFactor: number;
       avatarDecorationLimit: number;
       canUseAccountRemoval: boolean;
+      mutualLinkSectionLimit: number;
+      mutualLinkLimit: number;
     };
     ReversiGameLite: {
       /** Format: id */
@@ -5031,6 +5054,7 @@ export type components = {
       defaultLightTheme: string | null;
       disableRegistration: boolean;
       emailRequiredForSignup: boolean;
+      canSkipInitialTutorial: boolean;
       enableHcaptcha: boolean;
       hcaptchaSiteKey: string | null;
       enableMcaptcha: boolean;
@@ -5177,6 +5201,7 @@ export type operations = {
             cacheRemoteFiles: boolean;
             cacheRemoteSensitiveFiles: boolean;
             emailRequiredForSignup: boolean;
+            canSkipInitialTutorial: boolean;
             enableHcaptcha: boolean;
             hcaptchaSiteKey: string | null;
             enableMcaptcha: boolean;
@@ -6877,6 +6902,58 @@ export type operations = {
     };
   };
   /**
+   * admin/unset-user-mutual-link
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:admin:unset-user-mutual-link*
+   */
+  'admin___unset-user-mutual-link': {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** Format: misskey:id */
+          userId: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
    * admin/drive/clean-remote-files
    * @description No description provided.
    *
@@ -7999,6 +8076,7 @@ export type operations = {
    * admin/federation/refresh-remote-instance-metadata
    * @description No description provided.
    *
+   * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
    * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
    */
   'admin___federation___refresh-remote-instance-metadata': {
@@ -8050,6 +8128,7 @@ export type operations = {
    * admin/federation/remove-all-following
    * @description No description provided.
    *
+   * **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
    * **Credential required**: *Yes* / **Permission**: *write:admin:federation*
    */
   'admin___federation___remove-all-following': {
@@ -9844,6 +9923,7 @@ export type operations = {
           cacheRemoteFiles?: boolean;
           cacheRemoteSensitiveFiles?: boolean;
           emailRequiredForSignup?: boolean;
+          canSkipInitialTutorial?: boolean;
           enableHcaptcha?: boolean;
           hcaptchaSiteKey?: string | null;
           hcaptchaSecretKey?: string | null;
@@ -20269,6 +20349,16 @@ export type operations = {
           };
           emailNotificationTypes?: string[];
           alsoKnownAs?: string[];
+          mutualLinkSections?: ({
+              name?: string | null;
+              mutualLinks: ({
+                  /** Format: url */
+                  url: string;
+                  /** Format: misskey:id */
+                  fileId: string;
+                  description?: string | null;
+                })[];
+            })[];
         };
       };
     };

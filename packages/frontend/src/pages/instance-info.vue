@@ -32,8 +32,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<template #value>{{ instance.description }}</template>
 				</MkKeyValue>
 
-				<FormSection v-if="iAmModerator">
-					<template #label>Moderation</template>
+				<MkFolder v-if="iAmModerator">
+					<template #label>{{ i18n.ts.moderation }}</template>
 					<div class="_gaps_s">
 						<MkTextarea v-model="moderationNote" manualSave>
 							<template #label>{{ i18n.ts.moderationNote }}</template>
@@ -42,9 +42,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkSwitch v-model="isBlocked" :disabled="!meta || !instance" @update:modelValue="toggleBlock">{{ i18n.ts.blockThisInstance }}</MkSwitch>
 						<MkSwitch v-model="isSilenced" :disabled="!meta || !instance" @update:modelValue="toggleSilenced">{{ i18n.ts.silenceThisInstance }}</MkSwitch>
 						<MkSwitch v-model="isSensitiveMedia" :disabled="!meta || !instance" @update:modelValue="toggleSensitiveMedia">{{ i18n.ts.sensitiveMediaThisInstance }}</MkSwitch>
-						<MkButton @click="refreshMetadata"><i class="ti ti-refresh"></i> Refresh metadata</MkButton>
+						<MkButton :disabled="!meta || !instance" @click="refreshMetadata"><i class="ti ti-refresh"></i> {{ i18n.ts.refreshMetadata }}</MkButton>
+						<MkButton :disabled="!meta || !instance" @click="removeAllFollowings"><i class="ti ti-users-minus"></i> {{ i18n.ts.removeAllFollowings }}</MkButton>
 					</div>
-				</FormSection>
+				</MkFolder>
 
 				<FormSection>
 					<MkKeyValue oneline style="margin: 1em 0;">
@@ -134,6 +135,7 @@ import FormSection from '@/components/form/section.vue';
 import MkKeyValue from '@/components/MkKeyValue.vue';
 import MkSelect from '@/components/MkSelect.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
+import MkFolder from '@/components/MkFolder.vue';
 import * as os from '@/os.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 import number from '@/filters/number.js';
@@ -179,7 +181,7 @@ watch(moderationNote, async () => {
 
 	await misskeyApi('admin/federation/update-instance', {
 		host: instance.value.host,
-		moderationNote: moderationNote.value
+		moderationNote: moderationNote.value,
 	});
 });
 
@@ -235,13 +237,23 @@ async function toggleSuspend(): Promise<void> {
 	});
 }
 
-function refreshMetadata(): void {
+async function refreshMetadata(): Promise<void> {
 	if (!instance.value) throw new Error('No instance?');
-	misskeyApi('admin/federation/refresh-remote-instance-metadata', {
+	await os.apiWithDialog('admin/federation/refresh-remote-instance-metadata', {
 		host: instance.value.host,
 	});
-	os.alert({
-		text: 'Refresh requested',
+}
+
+async function removeAllFollowings(): Promise<void> {
+	if (!instance.value) throw new Error('No instance?');
+	const { canceled } = await os.confirm({
+		type: 'warning',
+		text: i18n.tsx.areYouSureToRemoveAllFollowings({ host: instance.value.host }),
+	});
+
+	if (canceled) return;
+	await os.apiWithDialog('admin/federation/remove-all-following', {
+		host: instance.value.host,
 	});
 }
 

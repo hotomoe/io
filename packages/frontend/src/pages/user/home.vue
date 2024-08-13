@@ -23,9 +23,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<MkUserName class="name" :user="user" :nowrap="true"/>
 							<div class="bottom">
 								<span class="username"><MkAcct :user="user" :detail="true"/></span>
-								<span v-if="user.isAdmin" :title="i18n.ts.isAdmin" style="color: var(--badge);"><i class="ti ti-shield"></i></span>
-								<span v-if="user.isLocked" :title="i18n.ts.isLocked"><i class="ti ti-lock"></i></span>
-								<span v-if="user.isBot" :title="i18n.ts.isBot"><i class="ti ti-robot"></i></span>
+								<span v-if="user.isAdmin" v-tooltip.noDelay="i18n.ts.administrator" style="color: var(--badge);"><i class="ti ti-shield"></i></span>
+								<span v-if="user.isLocked" v-tooltip.noDelay="i18n.ts.isLocked"><i class="ti ti-lock"></i></span>
+								<span v-if="user.isBot" v-tooltip.noDelay="i18n.ts.isBot"><i class="ti ti-robot"></i></span>
 								<button v-if="$i && !isEditingMemo && !memoDraft" class="_button add-note-button" @click="showMemoTextarea">
 									<i class="ti ti-edit"/> {{ i18n.ts.addMemo }}
 								</button>
@@ -42,7 +42,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkUserName :user="user" :nowrap="false" class="name"/>
 						<div class="bottom">
 							<span class="username"><MkAcct :user="user" :detail="true"/></span>
-							<span v-if="user.isAdmin" :title="i18n.ts.isAdmin" style="color: var(--badge);"><i class="ti ti-shield"></i></span>
+							<span v-if="user.isAdmin" :title="i18n.ts.administrator" style="color: var(--badge);"><i class="ti ti-shield"></i></span>
 							<span v-if="user.isLocked" :title="i18n.ts.isLocked"><i class="ti ti-lock"></i></span>
 							<span v-if="user.isBot" :title="i18n.ts.isBot"><i class="ti ti-robot"></i></span>
 						</div>
@@ -80,6 +80,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<p v-else class="empty">{{ i18n.ts.noAccountDescription }}</p>
 						</MkOmit>
 					</div>
+					<MkContainer v-if="user?.mutualLinkSections?.length > 0" :showHeader="false" :max-height="200" class="fields" :style="{borderRadius: 0}">
+						<div v-for="(section, index) in user?.mutualLinkSections" :key="index" :class="$style.mutualLinkSections">
+							<span v-if="section.name">{{ section.name }}</span>
+							<div :class="$style.mutualLinks">
+								<div v-for="(mutualLink, i) in section.mutualLinks" :key="i">
+									<MkLink :hideIcon="true" :url="mutualLink.url">
+										<img :class="$style.mutualLinkImg" :src="mutualLink.imgSrc" :alt="mutualLink.description"/>
+									</MkLink>
+								</div>
+							</div>
+						</div>
+					</MkContainer>
 					<div class="fields system">
 						<dl v-if="user.location" class="field">
 							<dt class="name"><i class="ti ti-map-pin ti-fw"></i> {{ i18n.ts.location }}</dt>
@@ -143,6 +155,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</dd>
 						</dl>
 					</div>
+
 					<div class="status">
 						<MkA :to="userPage(user)">
 							<b>{{ number(user.notesCount) }}</b>
@@ -213,6 +226,8 @@ import { misskeyApi, misskeyApiGet } from '@/scripts/misskey-api.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/scripts/isFfVisibleForMe.js';
 import { useRouter } from '@/router/supplier.js';
 import { defaultStore } from '@/store.js';
+import MkLink from '@/components/MkLink.vue';
+import MkContainer from '@/components/MkContainer.vue';
 
 function calcAge(birthdate: string): number {
 	const date = new Date(birthdate);
@@ -791,5 +806,38 @@ onUnmounted(() => {
 .skebClient {
 	color: rgb(255, 255, 255);
 	background-color: rgb(54, 54, 54);
+}
+
+.mutualLinkSections {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	flex-direction: column;
+	background: var(--panel);
+	gap: 8px;
+	margin-bottom: 8px;
+
+}
+
+.mutualLinks {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding-top: 8px;
+	@media (max-width: 500px) {
+		gap: 8px;
+	}
+}
+
+.mutualLink {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.mutualLinkImg {
+	max-width: 150px;
+	max-height: 30px;
 }
 </style>

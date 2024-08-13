@@ -85,11 +85,11 @@ onMounted(async () => {
 	onlineUsersCount.value = _onlineUsersCount;
 
 	misskeyApiGet('charts/users', { limit: 2, span: 'day' }).then(chart => {
-		usersComparedToThePrevDay.value = stats.value?.originalUsersCount ?? 0 - chart.local.total[1];
+		usersComparedToThePrevDay.value = (stats.value ? stats.value.originalUsersCount : 0) - chart.local.total[1];
 	});
 
 	misskeyApiGet('charts/notes', { limit: 2, span: 'day' }).then(chart => {
-		notesComparedToThePrevDay.value = stats.value?.originalNotesCount ?? 0 - chart.local.total[1];
+		notesComparedToThePrevDay.value = (stats.value ? stats.value.originalNotesCount : 0) - chart.local.total[1];
 	});
 
 	fetching.value = false;
