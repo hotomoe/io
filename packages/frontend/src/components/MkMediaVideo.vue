@@ -255,7 +255,7 @@ function showMenu(ev: MouseEvent) {
 }
 
 function showHiddenContent(ev: MouseEvent) {
-	if (defaultStore.state.sensitiveDoubleClickRequired) {
+	if (hide.value && defaultStore.state.sensitiveDoubleClickRequired) {
 		ev.preventDefault();
 		ev.stopPropagation();
 		return;
