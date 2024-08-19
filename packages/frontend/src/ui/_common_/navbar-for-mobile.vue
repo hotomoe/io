@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.top">
 		<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }"></div>
 		<button class="_button" :class="$style.instance" @click="openInstanceMenu">
-			<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.instanceIconAlt"/>
+			<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/about-icon.png" alt="" :class="$style.instanceIconAlt"/>
 			<img v-else :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
 		</button>
 	</div>
@@ -29,6 +29,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div :class="$style.divider"></div>
 		<MkA v-if="iAmModerator" :class="$style.item" :activeClass="$style.active" to="/admin">
 			<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
+			<span v-if="unresolvedReportAvailable" :class="$style.itemIndicator">
+				<i class="_indicatorCircle"></i>
+			</span>
 		</MkA>
 		<button :class="$style.item" class="_button" @click="more">
 			<i :class="$style.itemIcon" class="ti ti-grid-dots ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.more }}</span>
@@ -50,7 +53,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, toRef } from 'vue';
+import { computed, defineAsyncComponent, ref, toRef } from 'vue';
 import { openInstanceMenu } from './common.js';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
@@ -59,8 +62,10 @@ import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import { miLocalStorage } from "@/local-storage.js";
+import { misskeyApi } from "@/scripts/misskey-api.js";
 
 const menu = toRef(defaultStore.state, 'menu');
+const unresolvedReportAvailable = ref<boolean>(false);
 const otherMenuItemIndicated = computed(() => {
 	for (const def in navbarItemDef) {
 		if (menu.value.includes(def)) continue;
@@ -68,6 +73,15 @@ const otherMenuItemIndicated = computed(() => {
 	}
 	return false;
 });
+
+if (iAmModerator) {
+	misskeyApi('admin/abuse-user-reports', {
+		state: 'unresolved',
+		limit: 1,
+	}).then(reports => {
+		if (reports.length > 0) unresolvedReportAvailable.value = true;
+	});
+}
 
 function openAccountMenu(ev: MouseEvent) {
 	openAccountMenu_({
