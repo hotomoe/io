@@ -6,6 +6,8 @@
 import { Injectable } from '@nestjs/common';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import { CacheService } from '@/core/CacheService.js';
+import { ApDbResolverService } from '@/core/activitypub/ApDbResolverService.js';
+import {AuthenticateService} from "@/server/api/AuthenticateService.js";
 
 export const meta = {
 	tags: ['admin'],
@@ -25,9 +27,13 @@ export const paramDef = {
 export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
 	constructor(
 		private cacheService: CacheService,
+		private apDbResolverService: ApDbResolverService,
+		private authenticateService: AuthenticateService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
 			this.cacheService.dispose();
+			this.apDbResolverService.dispose();
+			this.authenticateService.dispose()
 		});
 	}
 }
