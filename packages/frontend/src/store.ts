@@ -156,6 +156,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'deviceAccount',
 		default: false,
 	},
+	vacationAlert: {
+		where: 'deviceAccount',
+		default: true,
+	},
 	privateMode: {
 		where: 'device',
 		default: false,
@@ -173,6 +177,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		default: false,
 	},
 	hideRoleList: {
+		where: 'device',
+		default: false,
+	},
+	hideCounters: {
 		where: 'device',
 		default: false,
 	},

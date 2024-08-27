@@ -3887,6 +3887,7 @@ export type components = {
       isModerator: boolean | null;
       isAdmin: boolean | null;
       isRoot: boolean | null;
+      isVacation: boolean | null;
       injectFeaturedNote: boolean;
       receiveAnnouncementEmail: boolean;
       alwaysMarkNsfw: boolean;
@@ -20212,6 +20213,7 @@ export type operations = {
           preventAiLearning?: boolean;
           isBot?: boolean;
           isCat?: boolean;
+          isVacation?: boolean;
           injectFeaturedNote?: boolean;
           receiveAnnouncementEmail?: boolean;
           alwaysMarkNsfw?: boolean;

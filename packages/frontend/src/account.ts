@@ -24,8 +24,8 @@ const accountData = miLocalStorage.getItem('account');
 // TODO: 外部からはreadonlyに
 export const $i = accountData ? reactive(JSON.parse(accountData) as Account) : null;
 
-export const iAmModerator = $i != null && ($i.isAdmin === true || $i.isModerator === true) && $i.twoFactorEnabled;
-export const iAmAdmin = $i != null && $i.isAdmin && $i.twoFactorEnabled;
+export const iAmModerator = $i != null && ($i.isAdmin === true || $i.isModerator === true) && $i.twoFactorEnabled && !$i.isVacation;
+export const iAmAdmin = $i != null && $i.isAdmin && $i.twoFactorEnabled && !$i.isVacation;
 
 export function signinRequired() {
 	if ($i == null) throw new Error('signin required');

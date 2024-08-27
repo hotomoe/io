@@ -164,6 +164,11 @@ const menuDef = computed(() => [{
 		to: '/settings/migration',
 		active: currentPage.value?.route.name === 'migration',
 	}, {
+		icon: 'ti ti-barrier-block',
+		text: i18n.ts.experimentalFeatures,
+		to: '/settings/laboratory',
+		active: currentPage.value?.route.name === 'laboratory',
+	}, {
 		icon: 'ti ti-dots',
 		text: i18n.ts.other,
 		to: '/settings/other',

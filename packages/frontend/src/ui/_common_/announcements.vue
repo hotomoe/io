@@ -25,9 +25,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</MkA>
 	<MkA v-if="($i?.isModerator ?? $i?.isAdmin) && !$i?.twoFactorEnabled" :class="$style.item" to="/settings/security">
 		<span :class="$style.icon">
-			<i class="ti ti-circle-key" style="color: var(--error);"></i>
+			<i class="ti ti-circle-key"></i>
 		</span>
 		<span :class="$style.title">{{ i18n.ts.youNeedToEnableTwoFactor }}</span>
+	</MkA>
+	<MkA v-if="($i?.isModerator ?? $i?.isAdmin) && $i?.isVacation && showVacationAlert" :class="$style.item" @click.prevent.stop="removeThisAnnouncement()">
+		<span :class="$style.icon">
+			<i class="ti ti-sandbox"></i>
+		</span>
+		<span :class="$style.title">{{ i18n.ts.youAreOnVacation }}</span>
 	</MkA>
 	<MkA
 		v-for="announcement in $i?.unreadAnnouncements.filter(x => x.display === 'banner')"
@@ -52,10 +58,16 @@ import { ref } from 'vue';
 import { instanceName } from '@/config.js';
 import { instance } from '@/instance.js';
 import { $i, iAmModerator } from '@/account.js';
+import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 
 const unresolvedReportCount = ref<number>(0);
+const showVacationAlert = defaultStore.reactiveState.vacationAlert;
+
+function removeThisAnnouncement(): void {
+	defaultStore.set('vacationAlert', false);
+}
 
 if (iAmModerator) {
 	misskeyApi('admin/abuse-user-reports', {

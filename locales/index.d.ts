@@ -3077,6 +3077,10 @@ export interface Locale extends ILocale {
      */
     "experimentalFeatures": string;
     /**
+     * Misskeyの実験的機能
+     */
+    "misskeyExperimentalFeatures": string;
+    /**
      * 実験的
      */
     "experimental": string;
@@ -3932,6 +3936,10 @@ export interface Locale extends ILocale {
      * ファイルサイズの制限を超えているためアップロードできません。
      */
     "cannotUploadBecauseExceedsFileSizeLimit": string;
+    /**
+     * 接続がタイムアウトしたため、ファイルをアップロードできませんでした。
+     */
+    "cannotUploadBecauseTimeout": string;
     /**
      * ベータ
      */
@@ -5159,6 +5167,42 @@ export interface Locale extends ILocale {
      * モデレーター権限を利用するには、まず二要素認証を有効にする必要があります。
      */
     "youNeedToEnableTwoFactor": string;
+    /**
+     * このファイルをドライブに保存する
+     */
+    "saveThisFile": string;
+    /**
+     * 휴가 모드
+     */
+    "vacationMode": string;
+    /**
+     * 휴가 모드는, 관리자가 잠시 직무를 내려놓고 일반 유저로 이용할 수 있도록 임시로 권한을 제거하는 모드입니다.
+     */
+    "vacationModeDescription": string;
+    /**
+     * 휴가 모드를 사용하기
+     */
+    "useVacationMode": string;
+    /**
+     * 인터넷과 잠시 거리두기
+     */
+    "mindControl": string;
+    /**
+     * 필요한 경우, Misskey에서 피로감을 덜 느끼도록 몇 가지 설정을 조정할 수 있습니다.
+     */
+    "mindControlDescription": string;
+    /**
+     * 모든 카운터를 가리기
+     */
+    "hideCounters": string;
+    /**
+     * 유저 페이지의 노트, 팔로잉, 팔로워 수 및 이러한 통계를 모두 숨깁니다.
+     */
+    "hideCountersDescription": string;
+    /**
+     * 현재 휴가 모드를 사용 중입니다. 이 메시지를 닫으려면 여기를 클릭하세요.
+     */
+    "youAreOnVacation": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -8987,9 +9031,13 @@ export interface Locale extends ILocale {
          */
         "sectionNameNoneDescription": string;
         /**
-         * セクション名を表示しない
+         * 名前が表示されないセクション
          */
         "sectionNameNone": string;
+        /**
+         * 現在の支援プランの表示上限({max}個)を超えているため、この項目は表示されません。[ここ](https://go.misskey.io/donate)からプランをアップグレードできます。
+         */
+        "policyDisplayLimitExceeded": ParameterizedString<"max">;
     };
     "_exportOrImport": {
         /**

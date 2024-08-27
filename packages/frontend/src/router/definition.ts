@@ -177,6 +177,10 @@ const routes: RouteDef[] = [{
 		name: 'profile',
 		component: page(() => import('@/pages/settings/accounts.vue')),
 	}, {
+		path: '/laboratory',
+		name: 'laboratory',
+		component: page(() => import('@/pages/settings/laboratory.vue')),
+	}, {
 		path: '/account-stats',
 		name: 'other',
 		component: page(() => import('@/pages/settings/account-stats.vue')),

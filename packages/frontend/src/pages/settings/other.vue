@@ -52,17 +52,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkFolder>
 
 			<MkFolder>
-				<template #icon><i class="ti ti-flask"></i></template>
-				<template #label>{{ i18n.ts.experimentalFeatures }}</template>
-
-				<div class="_gaps_m">
-					<MkSwitch v-model="enableCondensedLineForAcct">
-						<template #label>Enable condensed line for acct</template>
-					</MkSwitch>
-				</div>
-			</MkFolder>
-
-			<MkFolder>
 				<template #icon><i class="ti ti-code"></i></template>
 				<template #label>{{ i18n.ts.developer }}</template>
 
@@ -90,7 +79,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 import FormLink from '@/components/form/link.vue';
 import MkFolder from '@/components/MkFolder.vue';
@@ -109,7 +98,6 @@ import FormSection from '@/components/form/section.vue';
 const $i = signinRequired();
 
 // const reportError = computed(defaultStore.makeGetterSetter('reportError'));
-const enableCondensedLineForAcct = computed(defaultStore.makeGetterSetter('enableCondensedLineForAcct'));
 const devMode = computed(defaultStore.makeGetterSetter('devMode'));
 const defaultWithReplies = computed(defaultStore.makeGetterSetter('defaultWithReplies'));
 
@@ -137,16 +125,6 @@ async function deleteAccount() {
 	await signout();
 }
 
-async function reloadAsk() {
-	const { canceled } = await os.confirm({
-		type: 'info',
-		text: i18n.ts.reloadToApplySetting,
-	});
-	if (canceled) return;
-
-	unisonReload();
-}
-
 async function updateRepliesAll(withReplies: boolean) {
 	const { canceled } = await os.confirm({
 		type: 'warning',
@@ -156,12 +134,6 @@ async function updateRepliesAll(withReplies: boolean) {
 
 	misskeyApi('following/update-all', { withReplies });
 }
-
-watch([
-	enableCondensedLineForAcct,
-], async () => {
-	await reloadAsk();
-});
 
 const headerActions = computed(() => []);
 

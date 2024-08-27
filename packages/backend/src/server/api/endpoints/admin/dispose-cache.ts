@@ -28,12 +28,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 	constructor(
 		private cacheService: CacheService,
 		private apDbResolverService: ApDbResolverService,
-		private authenticateService: AuthenticateService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
 			this.cacheService.dispose();
 			this.apDbResolverService.dispose();
-			this.authenticateService.dispose()
 		});
 	}
 }

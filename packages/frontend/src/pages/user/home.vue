@@ -168,7 +168,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</dl>
 					</div>
 
-					<div class="status">
+					<div class="status" v-if="!hideCounters">
 						<MkA :to="userPage(user)">
 							<b>{{ number(user.notesCount) }}</b>
 							<span>{{ i18n.ts.notes }}</span>
@@ -207,7 +207,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 		<div v-if="!narrow" class="sub _gaps" style="container-type: inline-size;">
 			<XFiles :key="user.id" :user="user"/>
-			<XActivity :key="user.id" :user="user"/>
+			<XActivity v-if="!hideCounters" :key="user.id" :user="user"/>
 		</div>
 	</div>
 </MkSpacer>
@@ -284,6 +284,7 @@ const editModerationNote = ref(false);
 
 const hideModerationNote = !iAmModerator || (defaultStore.state.privateMode && defaultStore.state.hideModerationLog);
 const hideRoleList = defaultStore.state.privateMode && defaultStore.state.hideRoleList;
+const hideCounters = defaultStore.reactiveState.hideCounters;
 
 watch(moderationNote, async () => {
 	await misskeyApi('admin/update-user-note', { userId: props.user.id, text: moderationNote.value });
