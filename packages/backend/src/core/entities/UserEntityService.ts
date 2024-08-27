@@ -412,13 +412,13 @@ export class UserEntityService implements OnModuleInit {
 		}, options);
 
 		const user = typeof src === 'object' ? src : await this.usersRepository.findOneByOrFail({ id: src });
-		const meObject = await this.usersRepository.findOneByOrFail({ id: me?.id });
-		const meProfile = await this.userProfilesRepository.findOneByOrFail({ userId: user.id });
 
 		const isDetailed = opts.schema !== 'UserLite';
 		const meId = me ? me.id : null;
 		const isMe = meId === user.id;
-		const iAmModerator = me ? (await this.roleService.isModerator(me as MiUser)) && !meObject.isVacation && meProfile.twoFactorEnabled : false;
+		const meObject = await this.usersRepository.findOneBy({ id: me?.id });
+		const meProfile = await this.userProfilesRepository.findOneBy({ userId: me?.id });
+		const iAmModerator = me ? (await this.roleService.isModerator(me as MiUser)) && !meObject?.isVacation && meProfile?.twoFactorEnabled : false;
 		if (user.isSuspended && !iAmModerator) throw new IdentifiableError('85ab9bd7-3a41-4530-959d-f07073900109', `User ${user.id} has been suspended.`);
 
 		const profile = isDetailed
