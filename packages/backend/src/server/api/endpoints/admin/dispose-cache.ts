@@ -7,7 +7,6 @@ import { Injectable } from '@nestjs/common';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import { CacheService } from '@/core/CacheService.js';
 import { ApDbResolverService } from '@/core/activitypub/ApDbResolverService.js';
-import {AuthenticateService} from "@/server/api/AuthenticateService.js";
 
 export const meta = {
 	tags: ['admin'],
