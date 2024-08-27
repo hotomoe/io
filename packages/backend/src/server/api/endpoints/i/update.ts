@@ -35,7 +35,7 @@ import { AvatarDecorationService } from '@/core/AvatarDecorationService.js';
 import { notificationRecieveConfig } from '@/models/json-schema/user.js';
 import { ApiLoggerService } from '../../ApiLoggerService.js';
 import { ApiError } from '../../error.js';
-import { IdService } from "@/core/IdService.js";
+import { IdService } from '@/core/IdService.js';
 
 export const meta = {
 	tags: ['account'],

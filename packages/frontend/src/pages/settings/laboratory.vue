@@ -84,7 +84,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<FormSection>
 		<template #label><i class="ti ti-globe-off"></i> {{ i18n.ts.mindControl }}</template>
-		<template #description></template>
+		<template #description>{{ i18n.ts.mindControlDescription }}</template>
 
 		<div class="_gaps_m">
 			<MkInfo warn rounded>
@@ -144,9 +144,9 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import { i18n } from '@/i18n.js';
 import { iAmModerator, signinRequired } from '@/account.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
-import { defaultStore } from "@/store.js";
-import * as os from "@/os.js";
-import { unisonReload } from "@/scripts/unison-reload.js";
+import { defaultStore } from '@/store.js';
+import * as os from '@/os.js';
+import { unisonReload } from '@/scripts/unison-reload.js';
 
 const $i = signinRequired();
 

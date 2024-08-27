@@ -29,11 +29,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</span>
 		<span :class="$style.title">{{ i18n.ts.youNeedToEnableTwoFactor }}</span>
 	</MkA>
-	<MkA v-if="($i?.isModerator ?? $i?.isAdmin) && $i?.isVacation && showVacationAlert" :class="$style.item" @click.prevent.stop="removeThisAnnouncement()">
+	<MkA v-if="($i?.isModerator ?? $i?.isAdmin) && $i?.isVacation && showVacationAlert" :class="$style.item" to="./#" @click.prevent.stop="removeThisAnnouncement()">
 		<span :class="$style.icon">
 			<i class="ti ti-sandbox"></i>
 		</span>
-		<span :class="$style.title">{{ i18n.ts.youAreOnVacation }}</span>
+		<span :class="$style.title" @click.prevent.stop="removeThisAnnouncement()">{{ i18n.ts.youAreOnVacation }}</span>
 	</MkA>
 	<MkA
 		v-for="announcement in $i?.unreadAnnouncements.filter(x => x.display === 'banner')"

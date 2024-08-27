@@ -61,8 +61,8 @@ import { $i, iAmModerator, openAccountMenu as openAccountMenu_ } from '@/account
 import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
-import { miLocalStorage } from "@/local-storage.js";
-import { misskeyApi } from "@/scripts/misskey-api.js";
+import { miLocalStorage } from '@/local-storage.js';
+import { misskeyApi } from '@/scripts/misskey-api.js';
 
 const menu = toRef(defaultStore.state, 'menu');
 const unresolvedReportAvailable = ref<boolean>(false);
