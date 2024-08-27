@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<template #label>{{ i18n.ts._role.policies }}</template>
 		<div class="_gaps_s">
 			<div v-for="policy in Object.keys($i.policies)" :key="policy">
-				{{ policy }} ... {{ $i.policies[policy] }}
+				{{ i18n.ts._role._options[`${policy}`] }} ... {{ $i.policies[policy] }}
 			</div>
 		</div>
 	</FormSection>
