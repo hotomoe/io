@@ -168,7 +168,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</dl>
 					</div>
 
-					<div class="status" v-if="!hideCounters">
+					<div v-if="!hideCounters" class="status">
 						<MkA :to="userPage(user)">
 							<b>{{ number(user.notesCount) }}</b>
 							<span>{{ i18n.ts.notes }}</span>
@@ -284,7 +284,7 @@ const editModerationNote = ref(false);
 
 const hideModerationNote = !iAmModerator || (defaultStore.state.privateMode && defaultStore.state.hideModerationLog);
 const hideRoleList = defaultStore.state.privateMode && defaultStore.state.hideRoleList;
-const hideCounters = defaultStore.reactiveState.hideCounters;
+const hideCounters = defaultStore.state.hideCounters;
 
 watch(moderationNote, async () => {
 	await misskeyApi('admin/update-user-note', { userId: props.user.id, text: moderationNote.value });
