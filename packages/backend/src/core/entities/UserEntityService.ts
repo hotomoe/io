@@ -416,7 +416,9 @@ export class UserEntityService implements OnModuleInit {
 		const isDetailed = opts.schema !== 'UserLite';
 		const meId = me ? me.id : null;
 		const isMe = meId === user.id;
-		const iAmModerator = me ? await this.roleService.isModerator(me as MiUser) : false;
+		const meObject = await this.usersRepository.findOneBy({ id: me?.id });
+		const meProfile = await this.userProfilesRepository.findOneBy({ userId: me?.id });
+		const iAmModerator = me ? (await this.roleService.isModerator(me as MiUser)) && !meObject?.isVacation && meProfile?.twoFactorEnabled : false;
 		if (user.isSuspended && !iAmModerator) throw new IdentifiableError('85ab9bd7-3a41-4530-959d-f07073900109', `User ${user.id} has been suspended.`);
 
 		const profile = isDetailed
@@ -534,7 +536,7 @@ export class UserEntityService implements OnModuleInit {
 				lang: profile?.lang,
 				fields: profile?.fields,
 				verifiedLinks: profile?.verifiedLinks,
-				mutualLinkSections: profile?.mutualLinkSections,
+				mutualLinkSections: isMe ? profile?.mutualLinkSections : profile?.mutualLinkSections.slice(0, policies?.mutualLinkSectionLimit).map(section => ({ ...section, mutualLinks: section.mutualLinks.slice(0, policies?.mutualLinkLimit) })),
 				followersCount: followersCount ?? 0,
 				followingCount: followingCount ?? 0,
 				notesCount: user.notesCount,
@@ -576,6 +578,7 @@ export class UserEntityService implements OnModuleInit {
 				isModerator: isModerator,
 				isAdmin: isAdmin,
 				isRoot: isRoot,
+				isVacation: user.isVacation,
 				injectFeaturedNote: profile?.injectFeaturedNote,
 				receiveAnnouncementEmail: profile?.receiveAnnouncementEmail,
 				alwaysMarkNsfw: profile?.alwaysMarkNsfw,

@@ -19,8 +19,9 @@ export const paramDef = {
 	type: 'object',
 	properties: {
 		userId: { type: 'string', format: 'misskey:id' },
+		itemId: { type: 'string', format: 'misskey:id' },
 	},
-	required: ['userId'],
+	required: ['userId', 'itemId'],
 } as const;
 
 @Injectable()
@@ -42,7 +43,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			await this.userProfilesRepository.update(user.id, {
-				mutualLinkSections: [],
+				mutualLinkSections: userProfile.mutualLinkSections.map(section => ({
+					...section,
+					mutualLinks: section.mutualLinks.filter(item => item.id !== ps.itemId),
+				})),
 			});
 
 			this.moderationLogService.log(me, 'unsetUserMutualLink', {

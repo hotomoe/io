@@ -35,6 +35,7 @@ import { AvatarDecorationService } from '@/core/AvatarDecorationService.js';
 import { notificationRecieveConfig } from '@/models/json-schema/user.js';
 import { ApiLoggerService } from '../../ApiLoggerService.js';
 import { ApiError } from '../../error.js';
+import { IdService } from '@/core/IdService.js';
 
 export const meta = {
 	tags: ['account'],
@@ -116,6 +117,12 @@ export const meta = {
 			id: 'bf326f31-d430-4f97-9933-5d61e4d48a23',
 		},
 
+		invalidUrl: {
+			message: 'Invalid URL',
+			code: 'INVALID_URL',
+			id: 'b2452e00-2bd0-4da8-a2d0-972859da7358',
+		},
+
 		forbiddenToSetYourself: {
 			message: 'You can\'t set yourself as your own alias.',
 			code: 'FORBIDDEN_TO_SET_YOURSELF',
@@ -180,6 +187,7 @@ export const paramDef = {
 		preventAiLearning: { type: 'boolean' },
 		isBot: { type: 'boolean' },
 		isCat: { type: 'boolean' },
+		isVacation: { type: 'boolean' },
 		injectFeaturedNote: { type: 'boolean' },
 		receiveAnnouncementEmail: { type: 'boolean' },
 		alwaysMarkNsfw: { type: 'boolean' },
@@ -227,12 +235,14 @@ export const paramDef = {
 		},
 		mutualLinkSections: {
 			type: 'array',
+			maxItems: 10,
 			items: {
 				type: 'object',
 				properties: {
 					name: { type: 'string', nullable: true },
 					mutualLinks: {
 						type: 'array',
+						maxItems: 30,
 						items: {
 							type: 'object',
 							properties: {
@@ -268,6 +278,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		@Inject(DI.pagesRepository)
 		private pagesRepository: PagesRepository,
 
+		private idService: IdService,
 		private userEntityService: UserEntityService,
 		private driveFileEntityService: DriveFileEntityService,
 		private globalEventService: GlobalEventService,
@@ -331,6 +342,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (typeof ps.noCrawle === 'boolean') profileUpdates.noCrawle = ps.noCrawle;
 			if (typeof ps.preventAiLearning === 'boolean') profileUpdates.preventAiLearning = ps.preventAiLearning;
 			if (typeof ps.isCat === 'boolean') updates.isCat = ps.isCat;
+			if (typeof ps.isVacation === 'boolean') updates.isVacation = ps.isVacation;
 			if (typeof ps.injectFeaturedNote === 'boolean') profileUpdates.injectFeaturedNote = ps.injectFeaturedNote;
 			if (typeof ps.receiveAnnouncementEmail === 'boolean') profileUpdates.receiveAnnouncementEmail = ps.receiveAnnouncementEmail;
 			if (typeof ps.alwaysMarkNsfw === 'boolean') {
@@ -357,26 +369,16 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			if (ps.mutualLinkSections) {
-				if (ps.mutualLinkSections.length > policy.mutualLinkSectionLimit) {
-					throw new ApiError(meta.errors.restrictedByRole);
-				}
-
 				const mutualLinkSections = ps.mutualLinkSections.map(async (section) => {
-					if (section.mutualLinks.length > policy.mutualLinkLimit) {
-						throw new ApiError(meta.errors.restrictedByRole);
-					}
-
 					const mutualLinks = await Promise.all(section.mutualLinks.map(async (mutualLink) => {
-						const file = await this.driveFilesRepository.findOneBy({ id: mutualLink.fileId });
+						if (!RegExp(/^https?:\/\//).test(mutualLink.url)) throw new ApiError(meta.errors.invalidUrl);
 
-						if (!file) {
-							throw new ApiError(meta.errors.noSuchFile);
-						}
-						if (!file.type.startsWith('image/')) {
-							throw new ApiError(meta.errors.fileNotAnImage);
-						}
+						const file = await this.driveFilesRepository.findOneBy({ id: mutualLink.fileId });
+						if (!file) throw new ApiError(meta.errors.noSuchFile);
+						if (!file.type.startsWith("image/")) throw new ApiError(meta.errors.fileNotAnImage);
 
 						return {
+							id: this.idService.gen(),
 							url: mutualLink.url,
 							fileId: file.id,
 							imgSrc: this.driveFileEntityService.getPublicUrl(file),

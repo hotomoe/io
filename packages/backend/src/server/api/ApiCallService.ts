@@ -310,7 +310,7 @@ export class ApiCallService implements OnApplicationShutdown {
 			}
 		}
 
-		if ((ep.meta.requireModerator || ep.meta.requireAdmin) && !user!.isRoot) {
+		if (ep.meta.requireModerator || ep.meta.requireAdmin) {
 			const myRoles = await this.roleService.getUserRoles(user!.id);
 			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator);
 			const isAdmin = myRoles.some(r => r.isAdministrator);
@@ -322,6 +322,14 @@ export class ApiCallService implements OnApplicationShutdown {
 					code: 'REQUIRES_MFA_ENABLED',
 					kind: 'permission',
 					id: 'abce13fe-1d9f-4e85-8f00-4a5251155470',
+				});
+			}
+			if (user?.isVacation) {
+				throw new ApiError({
+					message: 'You are on vacation.',
+					code: 'VACATION_MODE',
+					kind: 'permission',
+					id: 'bbe5ef78-fab6-46a2-9e29-64639747096c',
 				});
 			}
 			if (ep.meta.requireModerator && !isModerator) {

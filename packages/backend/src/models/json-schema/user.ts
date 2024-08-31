@@ -397,12 +397,13 @@ export const packedUserDetailedNotMeOnlySchema = {
 						items: {
 							type: 'object',
 							properties: {
-								url: { type: 'string' },
+								id: { type: 'string', format: 'misskey:id' },
+								url: { type: 'string', format: 'url' },
 								fileId: { type: 'string', format: 'misskey:id' },
 								description: { type: 'string', nullable: true },
 								imgSrc: { type: 'string' },
 							},
-							required: ['url', 'fileId'],
+							required: ['id', 'url', 'fileId'],
 						},
 					},
 				},
@@ -477,6 +478,10 @@ export const packedMeDetailedOnlySchema = {
 			nullable: true, optional: false,
 		},
 		isRoot: {
+			type: 'boolean',
+			nullable: true, optional: false,
+		},
+		isVacation: {
 			type: 'boolean',
 			nullable: true, optional: false,
 		},

@@ -3077,6 +3077,10 @@ export interface Locale extends ILocale {
      */
     "experimentalFeatures": string;
     /**
+     * Misskeyの実験的機能
+     */
+    "misskeyExperimentalFeatures": string;
+    /**
      * 実験的
      */
     "experimental": string;
@@ -3932,6 +3936,10 @@ export interface Locale extends ILocale {
      * ファイルサイズの制限を超えているためアップロードできません。
      */
     "cannotUploadBecauseExceedsFileSizeLimit": string;
+    /**
+     * 接続がタイムアウトしたため、ファイルをアップロードできませんでした。
+     */
+    "cannotUploadBecauseTimeout": string;
     /**
      * ベータ
      */
@@ -5159,6 +5167,42 @@ export interface Locale extends ILocale {
      * モデレーター権限を利用するには、まず二要素認証を有効にする必要があります。
      */
     "youNeedToEnableTwoFactor": string;
+    /**
+     * このファイルをドライブに保存する
+     */
+    "saveThisFile": string;
+    /**
+     * 休暇モード
+     */
+    "vacationMode": string;
+    /**
+     * 休暇モードは、管理者が一時的に職務を降りて一般ユーザーとして利用できるように一時的に権限を削除するモードです。
+     */
+    "vacationModeDescription": string;
+    /**
+     * 休暇モードを使う
+     */
+    "useVacationMode": string;
+    /**
+     * インターネットとしばらく距離を置く
+     */
+    "mindControl": string;
+    /**
+     * 必要に応じて、Misskeyの疲労感を少なくするためにいくつかの設定を調整することができます。
+     */
+    "mindControlDescription": string;
+    /**
+     * すべてのカウンターを隠す
+     */
+    "hideCounters": string;
+    /**
+     * ユーザーページのノート、フォロー、フォロワー数、およびこれらの統計をすべて非表示にします。
+     */
+    "hideCountersDescription": string;
+    /**
+     * 現在、休暇モードを使用しています。 このメッセージを閉じるにはここをクリックしてください。
+     */
+    "youAreOnVacation": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -8987,9 +9031,13 @@ export interface Locale extends ILocale {
          */
         "sectionNameNoneDescription": string;
         /**
-         * セクション名を表示しない
+         * 名前が表示されないセクション
          */
         "sectionNameNone": string;
+        /**
+         * 現在の支援プランの表示上限({max}個)を超えているため、この項目は表示されません。[ここ](https://go.misskey.io/donate)からプランをアップグレードできます。
+         */
+        "policyDisplayLimitExceeded": ParameterizedString<"max">;
     };
     "_exportOrImport": {
         /**

@@ -3857,6 +3857,9 @@ export type components = {
       mutualLinkSections: ({
           name: string | null;
           mutualLinks: ({
+              /** Format: misskey:id */
+              id: string;
+              /** Format: url */
               url: string;
               /** Format: misskey:id */
               fileId: string;
@@ -3884,6 +3887,7 @@ export type components = {
       isModerator: boolean | null;
       isAdmin: boolean | null;
       isRoot: boolean | null;
+      isVacation: boolean | null;
       injectFeaturedNote: boolean;
       receiveAnnouncementEmail: boolean;
       alwaysMarkNsfw: boolean;
@@ -6913,6 +6917,8 @@ export type operations = {
         'application/json': {
           /** Format: misskey:id */
           userId: string;
+          /** Format: misskey:id */
+          itemId: string;
         };
       };
     };
@@ -20207,6 +20213,7 @@ export type operations = {
           preventAiLearning?: boolean;
           isBot?: boolean;
           isCat?: boolean;
+          isVacation?: boolean;
           injectFeaturedNote?: boolean;
           receiveAnnouncementEmail?: boolean;
           alwaysMarkNsfw?: boolean;

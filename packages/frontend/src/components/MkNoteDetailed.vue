@@ -236,7 +236,7 @@ import MkPagination, { type Paging } from '@/components/MkPagination.vue';
 import MkReactionIcon from '@/components/MkReactionIcon.vue';
 import MkButton from '@/components/MkButton.vue';
 import { isEnabledUrlPreview } from '@/instance.js';
-import { miLocalStorage } from "@/local-storage.js";
+import { miLocalStorage } from '@/local-storage.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
