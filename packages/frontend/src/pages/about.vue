@@ -102,7 +102,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								{{ i18n.ts.support }}
 							</FormLink>
 							<!--
-							<FormLink to="https://misskeyhq.fanbox.cc" external>
+							<FormLink to="https://go.misskey.io/donate" external>
 								<template #icon><i class="ti ti-pig-money"></i></template>
 								{{ i18n.tsx.supportThisInstance({ name: instance.name ?? host }) }}
 								<template #suffix>pixivFANBOX</template>

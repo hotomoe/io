@@ -979,6 +979,7 @@ failedToUpload: "アップロード失敗"
 cannotUploadBecauseInappropriate: "不適切な内容を含む可能性があると判定されたためアップロードできません。"
 cannotUploadBecauseNoFreeSpace: "ドライブの空き容量が無いためアップロードできません。"
 cannotUploadBecauseExceedsFileSizeLimit: "ファイルサイズの制限を超えているためアップロードできません。"
+cannotUploadBecauseTimeout: "接続がタイムアウトしたため、ファイルをアップロードできませんでした。"
 beta: "ベータ"
 enableAutoSensitive: "自動センシティブ判定"
 enableAutoSensitiveDescription: "利用可能な場合は、機械学習を利用して自動でメディアにセンシティブフラグを設定します。この機能をオフにしても、サーバーによっては自動で設定されることがあります。"
@@ -1285,6 +1286,7 @@ removeAllFollowings: "相互フォロー解除"
 areYouSureToRemoveAllFollowings: "本当に{host}とのすべてのフォロー関係を削除しますか？ 実行後は元に戻せません。 相手インスタンスが閉鎖されたと判断した場合のみ実行してください。"
 mutualLink: "相互リンク"
 youNeedToEnableTwoFactor: "モデレーター権限を利用するには、まず二要素認証を有効にする必要があります。"
+saveThisFile: "このファイルをドライブに保存する"
 
 _bubbleGame:
   howToPlay: "遊び方"
@@ -2361,7 +2363,8 @@ _profile:
   addMutualLinkSection: "セクションを追加"
   sectionName: "セクション名"
   sectionNameNoneDescription: "セクション名を表示しないようにする"
-  sectionNameNone: "セクション名を表示しない"
+  sectionNameNone: "名前が表示されないセクション"
+  policyDisplayLimitExceeded: "現在の支援プランの表示上限({max}個)を超えているため、この項目は表示されません。[ここ](https://go.misskey.io/donate)からプランをアップグレードできます。"
 
 _exportOrImport:
   allNotes: "全てのノート"

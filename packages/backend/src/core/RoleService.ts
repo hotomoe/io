@@ -113,7 +113,7 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	avatarDecorationLimit: 1,
 	canUseAccountRemoval: true,
 	mutualLinkSectionLimit: 1,
-	mutualLinkLimit: 15,
+	mutualLinkLimit: 3,
 };
 
 @Injectable()
