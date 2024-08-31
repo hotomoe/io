@@ -5172,35 +5172,35 @@ export interface Locale extends ILocale {
      */
     "saveThisFile": string;
     /**
-     * 휴가 모드
+     * 休暇モード
      */
     "vacationMode": string;
     /**
-     * 휴가 모드는, 관리자가 잠시 직무를 내려놓고 일반 유저로 이용할 수 있도록 임시로 권한을 제거하는 모드입니다.
+     * 休暇モードは、管理者が一時的に職務を降りて一般ユーザーとして利用できるように一時的に権限を削除するモードです。
      */
     "vacationModeDescription": string;
     /**
-     * 휴가 모드를 사용하기
+     * 休暇モードを使う
      */
     "useVacationMode": string;
     /**
-     * 인터넷과 잠시 거리두기
+     * インターネットとしばらく距離を置く
      */
     "mindControl": string;
     /**
-     * 필요한 경우, Misskey에서 피로감을 덜 느끼도록 몇 가지 설정을 조정할 수 있습니다.
+     * 必要に応じて、Misskeyの疲労感を少なくするためにいくつかの設定を調整することができます。
      */
     "mindControlDescription": string;
     /**
-     * 모든 카운터를 가리기
+     * すべてのカウンターを隠す
      */
     "hideCounters": string;
     /**
-     * 유저 페이지의 노트, 팔로잉, 팔로워 수 및 이러한 통계를 모두 숨깁니다.
+     * ユーザーページのノート、フォロー、フォロワー数、およびこれらの統計をすべて非表示にします。
      */
     "hideCountersDescription": string;
     /**
-     * 현재 휴가 모드를 사용 중입니다. 이 메시지를 닫으려면 여기를 클릭하세요.
+     * 現在、休暇モードを使用しています。 このメッセージを閉じるにはここをクリックしてください。
      */
     "youAreOnVacation": string;
     "_bubbleGame": {
