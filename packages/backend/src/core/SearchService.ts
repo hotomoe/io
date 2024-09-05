@@ -148,11 +148,20 @@ export class SearchService {
 												type: 'kuromoji_tokenizer',
 												mode: 'search',
 											},
+											nori: {
+												type: 'nori_tokenizer',
+												decompound_mode: 'mixed',
+												discard_punctuation: false,
+											},
 										},
 										analyzer: {
 											kuromoji_analyzer: {
 												type: 'custom',
 												tokenizer: 'kuromoji',
+											},
+											nori_analyzer: {
+												type: 'custom',
+												tokenizer: 'nori',
 											},
 										},
 									},
