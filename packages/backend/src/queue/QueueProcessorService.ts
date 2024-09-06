@@ -9,6 +9,7 @@ import type { Config } from '@/config.js';
 import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
+import { ReindexNotesProcessorService } from "@/queue/processors/ReindexNotesProcessorService.js";
 import { WebhookDeliverProcessorService } from './processors/WebhookDeliverProcessorService.js';
 import { EndedPollNotificationProcessorService } from './processors/EndedPollNotificationProcessorService.js';
 import { DeliverProcessorService } from './processors/DeliverProcessorService.js';
@@ -91,6 +92,7 @@ export class QueueProcessorService implements OnApplicationShutdown {
 		private deliverProcessorService: DeliverProcessorService,
 		private inboxProcessorService: InboxProcessorService,
 		private deleteDriveFilesProcessorService: DeleteDriveFilesProcessorService,
+		private reindexNotesProcessorService: ReindexNotesProcessorService,
 		private exportCustomEmojisProcessorService: ExportCustomEmojisProcessorService,
 		private exportNotesProcessorService: ExportNotesProcessorService,
 		private exportClipsProcessorService: ExportClipsProcessorService,
@@ -166,6 +168,7 @@ export class QueueProcessorService implements OnApplicationShutdown {
 		this.dbQueueWorker = new Bull.Worker(QUEUE.DB, (job) => {
 			switch (job.name) {
 				case 'deleteDriveFiles': return this.deleteDriveFilesProcessorService.process(job);
+				case 'reindexNotes': return this.reindexNotesProcessorService.process(job);
 				case 'exportCustomEmojis': return this.exportCustomEmojisProcessorService.process(job);
 				case 'exportNotes': return this.exportNotesProcessorService.process(job);
 				case 'exportClips': return this.exportClipsProcessorService.process(job);

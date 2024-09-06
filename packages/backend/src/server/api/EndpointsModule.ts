@@ -70,6 +70,7 @@ import * as ep___admin_queue_deliverDelayed from './endpoints/admin/queue/delive
 import * as ep___admin_queue_inboxDelayed from './endpoints/admin/queue/inbox-delayed.js';
 import * as ep___admin_queue_promote from './endpoints/admin/queue/promote.js';
 import * as ep___admin_queue_stats from './endpoints/admin/queue/stats.js';
+import * as ep___admin_reindexSearch from './endpoints/admin/reindex-search.js';
 import * as ep___admin_relays_add from './endpoints/admin/relays/add.js';
 import * as ep___admin_relays_list from './endpoints/admin/relays/list.js';
 import * as ep___admin_relays_remove from './endpoints/admin/relays/remove.js';
@@ -462,6 +463,7 @@ const $admin_queue_deliverDelayed: Provider = { provide: 'ep:admin/queue/deliver
 const $admin_queue_inboxDelayed: Provider = { provide: 'ep:admin/queue/inbox-delayed', useClass: ep___admin_queue_inboxDelayed.default };
 const $admin_queue_promote: Provider = { provide: 'ep:admin/queue/promote', useClass: ep___admin_queue_promote.default };
 const $admin_queue_stats: Provider = { provide: 'ep:admin/queue/stats', useClass: ep___admin_queue_stats.default };
+const $admin_reindexSearch: Provider = { provide: 'ep:admin/reindex-search', useClass: ep___admin_reindexSearch.default };
 const $admin_relays_add: Provider = { provide: 'ep:admin/relays/add', useClass: ep___admin_relays_add.default };
 const $admin_relays_list: Provider = { provide: 'ep:admin/relays/list', useClass: ep___admin_relays_list.default };
 const $admin_relays_remove: Provider = { provide: 'ep:admin/relays/remove', useClass: ep___admin_relays_remove.default };
@@ -858,6 +860,7 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$admin_queue_inboxDelayed,
 		$admin_queue_promote,
 		$admin_queue_stats,
+		$admin_reindexSearch,
 		$admin_relays_add,
 		$admin_relays_list,
 		$admin_relays_remove,
@@ -1248,6 +1251,7 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$admin_queue_inboxDelayed,
 		$admin_queue_promote,
 		$admin_queue_stats,
+		$admin_reindexSearch,
 		$admin_relays_add,
 		$admin_relays_list,
 		$admin_relays_remove,
