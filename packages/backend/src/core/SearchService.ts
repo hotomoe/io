@@ -277,6 +277,7 @@ export class SearchService {
 		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
 		if (['followers', 'specified'].includes(note.visibility)) {
 			if (me == null) return false;
+			if (me.id === note.userId) return true;
 			if (note.visibility === 'followers') {
 				const relationship = await this.userEntityService.getRelation(me.id, note.userId);
 				if (relationship.isFollowing) return true;
