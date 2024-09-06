@@ -24,7 +24,7 @@ export class ReindexNotesProcessorService {
 		private searchService: SearchService,
 		private queueLoggerService: QueueLoggerService,
 	) {
-		this.logger = this.queueLoggerService.logger.createSubLogger('clean-remote-files');
+		this.logger = this.queueLoggerService.logger.createSubLogger('reindex-notes');
 	}
 
 	@bindThis
@@ -69,7 +69,7 @@ export class ReindexNotesProcessorService {
 				id: LessThanOrEqual(lastNote.id),
 			});
 
-			job.updateProgress(100 / total * indexedCount);
+			await job.updateProgress(100 / total * indexedCount);
 		}
 
 		this.logger.succ('Successfully re-indexed all notes to search engine.');

@@ -9,7 +9,7 @@ import type { Config } from '@/config.js';
 import { DI } from '@/di-symbols.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
-import { ReindexNotesProcessorService } from "@/queue/processors/ReindexNotesProcessorService.js";
+import { ReindexNotesProcessorService } from './processors/ReindexNotesProcessorService.js';
 import { WebhookDeliverProcessorService } from './processors/WebhookDeliverProcessorService.js';
 import { EndedPollNotificationProcessorService } from './processors/EndedPollNotificationProcessorService.js';
 import { DeliverProcessorService } from './processors/DeliverProcessorService.js';
