@@ -36,9 +36,10 @@ export class ReindexNotesProcessorService {
 		this.logger.info('Removed all indexes from search engine.');
 		this.logger.info('Indexing all notes to search engine...');
 
-		const lastNote = await this.notesRepository.findOneOrFail({
+		const lastNote = (await this.notesRepository.find({
 			order: { id: 'DESC' },
-		});
+			take: 1,
+		}))[0];
 		let indexedCount = 0;
 		let cursor: MiNote['id'] | null = null;
 
