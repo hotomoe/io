@@ -1,7 +1,7 @@
 <template>
 <MkInput v-model="password" :debounce="true" type="password" autocomplete="new-password" required data-cy-signup-password @update:modelValue="onChangePassword">
 	<template #label>
-		{{ label }} <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="nofollow noopener"><span :class="$style.hibpLogo">leak checked by <span>';--hibp?</span></span></a>
+		{{ label }} <div v-tooltip:dialog="i18n.ts.checkedByHIBP" class="_button _help"><i class="ti ti-help-circle"></i></div>
 	</template>
 	<template #prefix><i class="ti ti-lock"></i></template>
 	<template #caption>

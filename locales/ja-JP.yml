@@ -1296,6 +1296,7 @@ mindControlDescription: "必要に応じて、Misskeyの疲労感を少なくす
 hideCounters: "すべてのカウンターを隠す"
 hideCountersDescription: "ユーザーページのノート、フォロー、フォロワー数、およびこれらの統計をすべて非表示にします。"
 youAreOnVacation: "現在、休暇モードを使用しています。 このメッセージを閉じるにはここをクリックしてください。"
+checkedByHIBP: "パスワードの安全性に加え、HIBPを通じてパスワードの漏洩を検査します。"
 
 _bubbleGame:
   howToPlay: "遊び方"
