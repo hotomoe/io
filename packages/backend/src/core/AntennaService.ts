@@ -132,15 +132,12 @@ export class AntennaService implements OnApplicationShutdown {
 	private async filter(me: MiUser | null, note: (MiNote | Packed<'Note'>)): Promise<boolean> {
 		const [
 			userIdsWhoMeMuting,
-			userIdsWhoMeBlocking,
 			userIdsWhoBlockingMe,
 		] = me ? await Promise.all([
 			this.cacheService.userMutingsCache.fetch(me.id),
-			this.cacheService.userBlockingCache.fetch(me.id),
 			this.cacheService.userBlockedCache.fetch(me.id),
-		]) : [new Set<string>(), new Set<string>(), new Set<string>()];
+		]) : [new Set<string>(), new Set<string>()];
 		if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
-		if (me && isUserRelated(note, userIdsWhoMeBlocking)) return false;
 		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
 		if (['followers', 'specified'].includes(note.visibility)) {
 			if (me == null) return false;
