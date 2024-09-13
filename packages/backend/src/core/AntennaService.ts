@@ -140,7 +140,8 @@ export class AntennaService implements OnApplicationShutdown {
 		if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
 		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
 		if (['followers', 'specified'].includes(note.visibility)) {
-			if (!me) return false;
+			if (me == null) return false;
+			if (me.id === note.userId) return true;
 			if (note.visibility === 'followers') {
 				const relationship = await this.userEntityService.getRelation(me.id, note.userId);
 				if (relationship.isFollowing) return true;
@@ -153,7 +154,7 @@ export class AntennaService implements OnApplicationShutdown {
 	@bindThis
 	public async checkHitAntenna(antenna: MiAntenna, note: (MiNote | Packed<'Note'>), noteUser: { id: MiUser['id']; username: string; host: string | null; isBot: boolean; }): Promise<boolean> {
 		const result = await this.filter(antenna.user, note);
-		if (!result && antenna.userId !== note.userId) return false;
+		if (!result) return false;
 
 		if (antenna.excludeBots && noteUser.isBot) return false;
 

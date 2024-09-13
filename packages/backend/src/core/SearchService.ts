@@ -17,8 +17,8 @@ import { isUserRelated } from '@/misc/is-user-related.js';
 import { CacheService } from '@/core/CacheService.js';
 import { QueryService } from '@/core/QueryService.js';
 import { IdService } from '@/core/IdService.js';
-import { UserEntityService } from './entities/UserEntityService.js';
 import type Logger from '@/logger.js';
+import { UserEntityService } from './entities/UserEntityService.js';
 import type { Index, MeiliSearch } from 'meilisearch';
 import type { Client as ElasticSearch } from '@elastic/elasticsearch';
 
@@ -124,7 +124,7 @@ export class SearchService {
 			this.elasticsearchNoteIndex = `${config.elasticsearch!.index}---notes`;
 			this.elasticsearch.indices.exists({
 				index: this.elasticsearchNoteIndex,
-			}).then((indexExists) => {
+			}).then((indexExists: boolean) => {
 				if (!indexExists) {
 					this.elasticsearch?.indices.create(
 						{
@@ -148,11 +148,20 @@ export class SearchService {
 												type: 'kuromoji_tokenizer',
 												mode: 'search',
 											},
+											nori: {
+												type: 'nori_tokenizer',
+												decompound_mode: 'mixed',
+												discard_punctuation: false,
+											},
 										},
 										analyzer: {
 											kuromoji_analyzer: {
 												type: 'custom',
 												tokenizer: 'kuromoji',
+											},
+											nori_analyzer: {
+												type: 'custom',
+												tokenizer: 'nori',
 											},
 										},
 									},
@@ -216,7 +225,7 @@ export class SearchService {
 			await this.elasticsearch.index({
 				index: `${this.elasticsearchNoteIndex}-${createdAt.toISOString().slice(0, 7).replace(/-/g, '')}`,
 				id: note.id,
-				body: body,
+				document: body,
 			}).catch((error: any) => {
 				this.logger.error(error);
 			});
@@ -228,11 +237,27 @@ export class SearchService {
 		// if (!['home', 'public'].includes(note.visibility)) return;
 
 		if (this.meilisearch) {
-			this.meilisearchNoteIndex!.deleteDocument(note.id);
+			await this.meilisearchNoteIndex?.deleteDocument(note.id);
 		} else if (this.elasticsearch) {
 			await this.elasticsearch.delete({
 				index: `${this.elasticsearchNoteIndex}-${this.idService.parse(note.id).date.toISOString().slice(0, 7).replace(/-/g, '')}`,
 				id: note.id,
+			}).catch((error) => {
+				this.logger.error(error);
+			});
+		}
+	}
+
+	@bindThis
+	public async unindexAllNotes(): Promise<void> {
+		if (this.meilisearch) {
+			await this.meilisearchNoteIndex?.deleteAllDocuments();
+		} else if (this.elasticsearch) {
+			await this.elasticsearch.deleteByQuery({
+				index: this.elasticsearchNoteIndex + '*' as string,
+				query: {
+					match_all: {},
+				},
 			}).catch((error) => {
 				this.logger.error(error);
 			});
@@ -251,7 +276,8 @@ export class SearchService {
 		if (me && isUserRelated(note, userIdsWhoBlockingMe)) return false;
 		if (me && isUserRelated(note, userIdsWhoMeMuting)) return false;
 		if (['followers', 'specified'].includes(note.visibility)) {
-			if (!me) return false;
+			if (me == null) return false;
+			if (me.id === note.userId) return true;
 			if (note.visibility === 'followers') {
 				const relationship = await this.userEntityService.getRelation(me.id, note.userId);
 				if (relationship.isFollowing) return true;
@@ -276,16 +302,8 @@ export class SearchService {
 				op: 'and',
 				qs: [],
 			};
-			if (pagination.untilId) filter.qs.push({
-				op: '<',
-				k: 'createdAt',
-				v: this.idService.parse(pagination.untilId).date.getTime()
-			});
-			if (pagination.sinceId) filter.qs.push({
-				op: '>',
-				k: 'createdAt',
-				v: this.idService.parse(pagination.sinceId).date.getTime()
-			});
+			if (pagination.untilId) filter.qs.push({ op: '<', k: 'createdAt', v: this.idService.parse(pagination.untilId).date.getTime() });
+			if (pagination.sinceId) filter.qs.push({ op: '>', k: 'createdAt', v: this.idService.parse(pagination.sinceId).date.getTime() });
 			if (opts.userId) filter.qs.push({ op: '=', k: 'userId', v: opts.userId });
 			if (opts.channelId) filter.qs.push({ op: '=', k: 'channelId', v: opts.channelId });
 			if (opts.host) {
@@ -391,8 +409,10 @@ export class SearchService {
 			}
 
 			this.queryService.generateVisibilityQuery(query, me);
-			if (me) this.queryService.generateMutedUserQuery(query, me);
-			if (me) this.queryService.generateBlockedUserQuery(query, me);
+			if (me) {
+				this.queryService.generateMutedUserQuery(query, me);
+				this.queryService.generateBlockedUserQuery(query, me);
+			}
 
 			return await query.limit(pagination.limit).getMany();
 		}
