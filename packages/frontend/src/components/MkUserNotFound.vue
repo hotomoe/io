@@ -36,8 +36,7 @@ import { serverErrorImageUrl } from '@/instance.js';
 
 .img {
 	vertical-align: bottom;
-  width: 128px;
-	height: 128px;
+	height: 300px;
 	margin-bottom: 16px;
 	border-radius: 16px;
 }
