@@ -1270,6 +1270,7 @@ temporarilySeeThis: "Nevermind, just show me this"
 sensitiveDoubleClickRequired: "Require double-click to open sensitive media"
 mutualLink: "Mutual Link"
 saveThisFile: "Save this file to Drive"
+CheckedByHIBP: "In addition to ensuring your passwords are secure, HIBP scans for password leaks."
 _bubbleGame:
   howToPlay: "How to play"
   hold: "Hold"

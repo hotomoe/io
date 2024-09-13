@@ -5203,6 +5203,10 @@ export interface Locale extends ILocale {
      * 現在、休暇モードを使用しています。 このメッセージを閉じるにはここをクリックしてください。
      */
     "youAreOnVacation": string;
+    /**
+     * パスワードの安全性に加え、HIBPを通じてパスワードの漏洩を検査します。
+     */
+    "checkedByHIBP": string;
     "_bubbleGame": {
         /**
          * 遊び方
