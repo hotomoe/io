@@ -312,8 +312,8 @@ export class ApiCallService implements OnApplicationShutdown {
 
 		if (ep.meta.requireModerator || ep.meta.requireAdmin) {
 			const myRoles = await this.roleService.getUserRoles(user!.id);
-			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator);
-			const isAdmin = myRoles.some(r => r.isAdministrator);
+			const isModerator = myRoles.some(r => r.isModerator || r.isAdministrator) || user?.isRoot;
+			const isAdmin = myRoles.some(r => r.isAdministrator) || user?.isRoot;
 			const userProfile = await this.userEntityService.pack(user!.id, user, { schema: 'MeDetailed' });
 			const isMFAEnabled = userProfile.twoFactorEnabled;
 			if (!isMFAEnabled) {
