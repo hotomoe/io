@@ -145,7 +145,7 @@ export class AntennaService implements OnApplicationShutdown {
 				const relationship = await this.userEntityService.getRelation(userId, note.userId);
 				if (relationship.isFollowing) return true;
 			}
-			if (!note.visibleUserIds?.includes(userId) && !note.mentions?.includes(userId)) return false;
+			if (!note.visibleUserIds?.includes(userId)) return false;
 		}
 		return true;
 	}
