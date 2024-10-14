@@ -142,8 +142,7 @@ export class AntennaService implements OnApplicationShutdown {
 		if (['followers', 'specified'].includes(note.visibility)) {
 			if (userId === note.userId) return true;
 			if (note.visibility === 'followers') {
-				const relationship = await this.userEntityService.getRelation(userId, note.userId);
-				if (relationship.isFollowing) return true;
+				return await this.cacheService.userFollowingsCache.fetch(userId).then(followings => Object.hasOwn(followings, note.userId));
 			}
 			if (!note.visibleUserIds?.includes(userId)) return false;
 		}
