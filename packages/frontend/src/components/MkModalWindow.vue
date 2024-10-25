@@ -46,6 +46,7 @@ const emit = defineEmits<{
 	(event: 'close'): void;
 	(event: 'closed'): void;
 	(event: 'ok'): void;
+	(event: 'esc'): void;
 }>();
 
 const modal = shallowRef<InstanceType<typeof MkModal>>();
