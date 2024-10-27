@@ -51,7 +51,6 @@ const page = ref(props.initialPage ?? 0);
 function handlePageChange(to: number) {
 	page.value = to;
 	if (to === 9) {
-		claimAchievement('tutorialCompleted');
 		emit('done');
 	}
 }
