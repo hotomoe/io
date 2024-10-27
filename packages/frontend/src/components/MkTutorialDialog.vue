@@ -39,6 +39,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+	(ev: 'done'): void;
 	(ev: 'closed'): void;
 }>();
 
@@ -49,6 +50,9 @@ const page = ref(props.initialPage ?? 0);
 
 function handlePageChange(to: number) {
 	page.value = to;
+	if (to === 9) {
+		emit('done');
+	}
 }
 
 async function close(skip?: boolean) {

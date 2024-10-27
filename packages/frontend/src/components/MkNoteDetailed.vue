@@ -174,6 +174,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<span style="margin-left: 4px;">{{ appearNote.reactions[reaction] }}</span>
 				</button>
 			</div>
+			<MkButton v-if="reactionTabType" :class="$style.reactionMuteButton" @click="reactionMuteToggle(reactionTabTypeTrimLocal)">
+				<i :class="!mutedReactions.includes(reactionTabTypeTrimLocal) ? 'ti ti-mood-off' : 'ti ti-mood-happy'"/>
+				{{ !mutedReactions.includes(reactionTabTypeTrimLocal) ? i18n.ts.muteThisReaction : i18n.ts.unmuteThisReaction }}
+			</MkButton>
 			<MkPagination v-if="reactionTabType" :key="reactionTabType" :pagination="reactionsPagination" :disableAutoLoad="true">
 				<template #default="{ items }">
 					<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); grid-gap: 12px;">
@@ -297,6 +301,7 @@ const showTicker = (defaultStore.state.instanceTicker === 'always') || (defaultS
 const conversation = ref<Misskey.entities.Note[]>([]);
 const replies = ref<Misskey.entities.Note[]>([]);
 const canRenote = computed(() => ['public', 'home'].includes(appearNote.value.visibility) || appearNote.value.userId === $i?.id);
+const mutedReactions = ref<string[]>(defaultStore.state.mutedReactions);
 
 const keymap = {
 	'r': () => reply(true),
@@ -316,6 +321,7 @@ provide('react', (reaction: string) => {
 
 const tab = ref(props.initialTab);
 const reactionTabType = ref<string | null>(null);
+const reactionTabTypeTrimLocal = computed(() => reactionTabType.value?.replace('@.', '') ?? null);
 
 const renotesPagination = computed<Paging>(() => ({
 	endpoint: 'notes/renotes',
@@ -495,6 +501,18 @@ async function translate(): Promise<void> {
 	});
 	translating.value = false;
 	translation.value = res;
+}
+
+async function reactionMuteToggle(reactionName: string | null) {
+	if (reactionName == null) return;
+
+	if (!mutedReactions.value.includes(reactionName)) {
+		mutedReactions.value.push(reactionName);
+		defaultStore.set('mutedReactions', mutedReactions.value);
+	} else {
+		mutedReactions.value = mutedReactions.value.filter(x => x !== reactionName);
+		defaultStore.set('mutedReactions', mutedReactions.value);
+	}
 }
 
 function showRenoteMenu(viaKeyboard = false): void {
@@ -779,6 +797,10 @@ function loadConversation() {
 	display: flex;
 	gap: 8px;
 	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.reactionMuteButton {
 	margin-bottom: 8px;
 }
 
