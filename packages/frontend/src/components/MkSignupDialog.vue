@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
 	(ev: 'done', res: Misskey.entities.SigninResponse): void;
+	(ev: 'cancelled'): void;
 	(ev: 'closed'): void;
 }>();
 

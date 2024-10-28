@@ -5,10 +5,10 @@
 
 import { defineAsyncComponent, reactive, ref } from 'vue';
 import * as Misskey from 'misskey-js';
+import type { MenuButton } from '@/types/menu.js';
 import { showSuspendedDialog } from '@/scripts/show-suspended-dialog.js';
 import { i18n } from '@/i18n.js';
 import { miLocalStorage } from '@/local-storage.js';
-import { MenuButton } from '@/types/menu.js';
 import { del, get, set } from '@/scripts/idb-proxy.js';
 import { apiUrl } from '@/config.js';
 import { waiting, popup, popupMenu, success, alert } from '@/os.js';
@@ -296,10 +296,22 @@ export async function openAccountMenu(opts: {
 			text: i18n.ts.addAccount,
 			children: [{
 				text: i18n.ts.existingAccount,
-				action: () => { showSigninDialog(); },
+				action: () => {
+					getAccountWithSigninDialog().then(res => {
+						if (res != null) {
+							success();
+						}
+					});
+				},
 			}, {
 				text: i18n.ts.createAccount,
-				action: () => { createAccount(); },
+				action: () => {
+					getAccountWithSignupDialog().then(res => {
+						if (res != null) {
+							switchAccountWithToken(res.token);
+						}
+					});
+				},
 			}],
 		}, {
 			type: 'link' as const,
@@ -314,6 +326,40 @@ export async function openAccountMenu(opts: {
 			align: 'left',
 		});
 	}
+}
+
+export function getAccountWithSigninDialog(): Promise<{ id: string, token: string } | null> {
+	return new Promise((resolve) => {
+		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkSigninDialog.vue')), {}, {
+			done: async (res: Misskey.entities.SigninFlowResponse & { finished: true }) => {
+				await addAccount(res.id, res.i);
+				resolve({ id: res.id, token: res.i });
+			},
+			cancelled: () => {
+				resolve(null);
+			},
+			closed: () => {
+				dispose();
+			},
+		});
+	});
+}
+
+export function getAccountWithSignupDialog(): Promise<{ id: string, token: string } | null> {
+	return new Promise((resolve) => {
+		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkSignupDialog.vue')), {}, {
+			done: async (res: Misskey.entities.SignupResponse) => {
+				await addAccount(res.id, res.token);
+				resolve({ id: res.id, token: res.token });
+			},
+			cancelled: () => {
+				resolve(null);
+			},
+			closed: () => {
+				dispose();
+			},
+		});
+	});
 }
 
 if (_DEV_) {
