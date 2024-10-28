@@ -36,7 +36,7 @@
 				<div v-if="$i && !announcement.silence && !announcement.isRead" :class="$style.footer">
 					<MkButton primary gradate @click="read(announcement)">
 						<i :class="!announcement.needEnrollmentTutorialToRead ? 'ti ti-check' : 'ti ti-presentation'"/>
-						{{ !announcement.needEnrollmentTutorialToRead ? i18n.ts.gotIt : i18n.ts._initialAccountSetting.startTutorial }}
+						{{ !announcement.needEnrollmentTutorialToRead ? i18n.ts.gotIt : i18n.ts._initialTutorial.launchTutorial }}
 					</MkButton>
 				</div>
 			</div>
