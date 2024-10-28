@@ -95,8 +95,8 @@ definePageMetadata(() => ({
 .form {
 	position: relative;
 	z-index: 10;
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-panel);
+	border-radius: var(--radius);
+	background-color: var(--panel);
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 	overflow: clip;
 	max-width: 500px;
@@ -107,15 +107,15 @@ definePageMetadata(() => ({
 
 .redirectRoot {
 	padding: 16px;
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-bg);
+	border-radius: var(--radius);
+	background-color: var(--bg);
 }
 
 .redirectUrl {
 	font-size: 90%;
 	padding: 12px;
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-panel);
+	border-radius: var(--radius);
+	background-color: var(--panel);
 	overflow-x: scroll;
 }
 </style>

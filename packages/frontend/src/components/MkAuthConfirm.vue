@@ -286,7 +286,7 @@ defineExpose({
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: color-mix(in srgb, var(--MI_THEME-panel), transparent 50%);
+	background-color: color-mix(in srgb, var(--panel), transparent 50%);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -316,15 +316,15 @@ defineExpose({
 
 .icon {
 	border-radius: 50%;
-	border: 1px solid var(--MI_THEME-divider);
+	border: 1px solid var(--divider);
 	background-color: #fff;
 	object-fit: contain;
 }
 
 .iconFallback {
 	border-radius: 50%;
-	background-color: var(--MI_THEME-accentedBg);
-	color: var(--MI_THEME-accent);
+	background-color: var(--accentedBg);
+	color: var(--accent);
 	text-align: center;
 	line-height: 54px;
 	font-size: 18px;
@@ -344,16 +344,16 @@ defineExpose({
 
 .permissionRoot {
 	padding: 16px;
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-bg);
+	border-radius: var(--radius);
+	background-color: var(--bg);
 }
 
 .permissionListWrapper {
 	max-height: 350px;
 	overflow-y: auto;
 	padding: 12px;
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-panel);
+	border-radius: var(--radius);
+	background-color: var(--panel);
 }
 
 .permissionList {
@@ -369,8 +369,8 @@ defineExpose({
 }
 
 .accountSelectorList {
-	border-radius: var(--MI-radius);
-	border: 1px solid var(--MI_THEME-divider);
+	border-radius: var(--radius);
+	border: 1px solid var(--divider);
 	overflow: hidden;
 	overflow: clip;
 }
@@ -381,7 +381,7 @@ defineExpose({
 	pointer-events: none;
 
 	&:focus-visible + .accountSelectorItem {
-		outline: 2px solid var(--MI_THEME-accent);
+		outline: 2px solid var(--accent);
 		outline-offset: -4px;
 	}
 
@@ -390,7 +390,7 @@ defineExpose({
 	}
 
 	&:checked + .accountSelectorItem {
-		background: var(--MI_THEME-accent);
+		background: var(--accent);
 		color: #fff;
 	}
 }
@@ -404,7 +404,7 @@ defineExpose({
 	cursor: pointer;
 
 	&:hover {
-		background: var(--MI_THEME-buttonHoverBg);
+		background: var(--buttonHoverBg);
 	}
 
 	&.static {
@@ -431,8 +431,8 @@ defineExpose({
 }
 
 .accountSelectorAddAccountAvatar {
-	background-color: var(--MI_THEME-accentedBg);
-	color: var(--MI_THEME-accent);
+	background-color: var(--accentedBg);
+	color: var(--accent);
 	font-size: 16px;
 	line-height: 45px;
 	text-align: center;
