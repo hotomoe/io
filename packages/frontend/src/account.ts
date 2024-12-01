@@ -12,8 +12,10 @@ import { miLocalStorage } from '@/local-storage.js';
 import { del, get, set } from '@/scripts/idb-proxy.js';
 import { apiUrl } from '@/config.js';
 import { waiting, popup, popupMenu, success, alert } from '@/os.js';
-import { misskeyApi } from '@/scripts/misskey-api.js';
+import { generateClientTransactionId, misskeyApi } from '@/scripts/misskey-api.js';
 import { unisonReload, reloadChannel } from '@/scripts/unison-reload.js';
+import { set as gtagSet, time as gtagTime } from 'vue-gtag';
+import { instance } from '@/instance.js';
 
 // TODO: 他のタブと永続化されたstateを同期
 
@@ -51,6 +53,7 @@ export async function signout() {
 			const registration = await navigator.serviceWorker.ready;
 			const push = await registration.pushManager.getSubscription();
 			if (push) {
+				const initiateTime = Date.now();
 				await window.fetch(`${apiUrl}/sw/unregister`, {
 					method: 'POST',
 					body: JSON.stringify({
@@ -59,7 +62,16 @@ export async function signout() {
 					}),
 					headers: {
 						'Content-Type': 'application/json',
+						'X-Client-Transaction-Id': generateClientTransactionId('misskey'),
 					},
+				}).then(() => {
+					if (instance.googleAnalyticsId) {
+						gtagTime({
+							name: 'api',
+							event_category: '/sw/unregister',
+							value: Date.now() - initiateTime,
+						});
+					}
 				});
 			}
 		}
@@ -102,6 +114,7 @@ export async function removeAccount(idOrToken: Account['id']) {
 
 function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Promise<Account> {
 	return new Promise((done, fail) => {
+		const initiateTime = Date.now();
 		window.fetch(`${apiUrl}/i`, {
 			method: 'POST',
 			body: JSON.stringify({
@@ -109,8 +122,19 @@ function fetchAccount(token: string, id?: string, forceShowDialog?: boolean): Pr
 			}),
 			headers: {
 				'Content-Type': 'application/json',
+				'X-Client-Transaction-Id': generateClientTransactionId('misskey'),
 			},
 		})
+			.then(res => {
+				if (instance.googleAnalyticsId) {
+					gtagTime({
+						name: 'api',
+						event_category: '/i',
+						value: Date.now() - initiateTime,
+					});
+				}
+				return res;
+			})
 			.then(res => new Promise<Account | { error: Record<string, any> }>((done2, fail2) => {
 				if (res.status >= 500 && res.status < 600) {
 					// サーバーエラー(5xx)の場合をrejectとする
@@ -171,6 +195,12 @@ export function updateAccount(accountData: Partial<Account>) {
 		$i[key] = value;
 	}
 	miLocalStorage.setItem('account', JSON.stringify($i));
+	if (instance.googleAnalyticsId) {
+		gtagSet({
+			'client_id': miLocalStorage.getItem('id'),
+			'user_id': $i.id,
+		});
+	}
 }
 
 export async function refreshAccount() {
@@ -221,24 +251,6 @@ export async function openAccountMenu(opts: {
 	onChoose?: (account: Misskey.entities.UserDetailed) => void;
 }, ev: MouseEvent) {
 	if (!$i) return;
-
-	function showSigninDialog() {
-		popup(defineAsyncComponent(() => import('@/components/MkSigninDialog.vue')), {}, {
-			done: res => {
-				addAccount(res.id, res.i);
-				success();
-			},
-		}, 'closed');
-	}
-
-	function createAccount() {
-		popup(defineAsyncComponent(() => import('@/components/MkSignupDialog.vue')), {}, {
-			done: res => {
-				addAccount(res.id, res.i);
-				switchAccountWithToken(res.i);
-			},
-		}, 'closed');
-	}
 
 	async function switchAccount(account: Misskey.entities.UserDetailed) {
 		const storedAccounts = await getAccounts();
