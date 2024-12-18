@@ -181,7 +181,9 @@ export const navbarItemDef = reactive({
 	support: {
 		title: i18n.tsx.supportThisInstance({ name: instance.name ?? host }),
 		icon: 'ti ti-pig-money',
-		to: 'https://hotomoe.fanbox.cc',
+		action: (ev) => {
+			window.open('https://hotomoe.fanbox.cc');
+		},
 	},
 	cacheClear: {
 		title: i18n.ts.clearCache,
