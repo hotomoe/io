@@ -8,17 +8,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.root">
 		<img :class="$style.img" :src="serverErrorImageUrl" class="_ghost"/>
 		<p :class="$style.text"><i class="ti ti-alert-triangle"></i> {{ i18n.ts.somethingHappened }}</p>
-		<details class="_acrylic" style="margin: 1em 0;">
+		<details style="margin: 1em 0;">
 			<summary>{{ i18n.ts.details }}</summary>
-			<div class="_gaps_s" style="text-align: initial;">
-				<MkKeyValue v-for="(value, key) in error.info" :key="key" :value="value">
+			<div class="_gaps_s" style="margin: 0 40vh; text-align: initial;">
+				<MkKeyValue v-for="(value, key) in error" :key="key" :value="value">
 					<template #key>{{ key }}</template>
 					<template #value>{{ value }}</template>
 				</MkKeyValue>
 			</div>
 		</details>
-		<MkButton :class="$style.button" primary @click="() => emit('retry')">{{ i18n.ts.retry }}</MkButton>
-		<MkButton :class="$style.button" @click="copy">{{ i18n.ts.retry }}</MkButton>
+		<div class="command-item-button">
+			<MkButton :class="$style.button" primary inline @click="() => emit('retry')">{{ i18n.ts.retry }}</MkButton>
+			<MkButton :class="$style.button" inline @click="copy">{{ i18n.ts.copyErrorInfo }}</MkButton>
+		</div>
 	</div>
 </Transition>
 </template>
@@ -42,7 +44,7 @@ const emit = defineEmits<{
 
 function copy() {
 	const date = new Date().toISOString();
-	copyToClipboard(`Info: ${JSON.stringify(props.error.info)}\nDate: ${date}`);
+	copyToClipboard(`Info: ${JSON.stringify(props.error)}\nDate: ${date}`);
 	success();
 }
 </script>
@@ -59,7 +61,7 @@ function copy() {
 }
 
 .button {
-	margin: 0 auto;
+	margin: 0 5px;
 }
 
 .img {
