@@ -25,12 +25,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<template #value><div v-html="instance.description"></div></template>
 				</MkKeyValue>
 
-				<!--
 				<div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-					<div>© {{ new Date().getFullYear() }} MisskeyHQ Inc.</div>
-					<a href="https://go.misskey.io/legal-notice" target="_blank" rel="noopener"><u>特定商取引法に基づく表記</u></a>
+					<div>© {{ new Date().getFullYear() }} HotoUS LLC.</div>
 				</div>
 
+				<!--
 				<FormSection>
 					<template #label><Mfm text="$[jelly ❤]"/> Sponsored by</template>
 					<div style="display:flex;flex-wrap:wrap;gap:8px 8px;align-items:center;justify-content:center;">
@@ -101,13 +100,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 								<template #icon><i class="ti ti-message"></i></template>
 								{{ i18n.ts.support }}
 							</FormLink>
-							<!--
-							<FormLink to="https://go.misskey.io/donate" external>
+							<FormLink to="https://hotomoe.fanbox.cc" external>
 								<template #icon><i class="ti ti-pig-money"></i></template>
 								{{ i18n.tsx.supportThisInstance({ name: instance.name ?? host }) }}
 								<template #suffix>pixivFANBOX</template>
 							</FormLink>
-							-->
 						</div>
 					</div>
 				</FormSection>
