@@ -20,6 +20,7 @@ import I18n from './global/I18n.vue';
 import RouterView from './global/RouterView.vue';
 import MkLoading from './global/MkLoading.vue';
 import MkError from './global/MkError.vue';
+import MkErrorDetailed from './global/MkErrorDetailed.vue';
 import MkAd from './global/MkAd.vue';
 import MkPageHeader from './global/MkPageHeader.vue';
 import MkSpacer from './global/MkSpacer.vue';
@@ -49,6 +50,7 @@ export const components = {
 	MkUrl: MkUrl,
 	MkLoading: MkLoading,
 	MkError: MkError,
+	MkErrorDetailed: MkErrorDetailed,
 	MkAd: MkAd,
 	MkPageHeader: MkPageHeader,
 	MkSpacer: MkSpacer,
@@ -74,6 +76,7 @@ declare module '@vue/runtime-core' {
 		MkUrl: typeof MkUrl;
 		MkLoading: typeof MkLoading;
 		MkError: typeof MkError;
+		MkErrorDetailed: typeof MkErrorDetailed;
 		MkAd: typeof MkAd;
 		MkPageHeader: typeof MkPageHeader;
 		MkSpacer: typeof MkSpacer;
