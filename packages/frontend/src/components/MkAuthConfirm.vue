@@ -400,7 +400,7 @@ defineExpose({
 	}
 
 	&:checked + .accountSelectorItem {
-		background: var(--accent);
+		background: color-mix(in srgb, var(--accent), transparent 50%);
 		color: #fff;
 	}
 }

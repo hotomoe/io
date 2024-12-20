@@ -11,7 +11,7 @@ import components from '@/components/index.js';
 import { version, lang, updateLocale, locale } from '@/config.js';
 import { applyTheme } from '@/scripts/theme.js';
 import { isDeviceDarkmode } from '@/scripts/is-device-darkmode.js';
-import { updateI18n } from '@/i18n.js';
+import { updateI18n, i18n } from '@/i18n.js';
 import { $i, iAmAdmin, refreshAccount, login } from '@/account.js';
 import { defaultStore, ColdDeviceStorage } from '@/store.js';
 import { fetchInstance, instance } from '@/instance.js';
@@ -23,6 +23,8 @@ import { deckStore } from '@/ui/deck/deck-store.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { fetchCustomEmojis } from '@/custom-emojis.js';
 import { setupRouter } from '@/router/definition.js';
+import { mainRouter } from '@/router/main.js';
+import VueGtag, { bootstrap as gtagBootstrap, GtagConsent, GtagConsentParams } from 'vue-gtag';
 
 export async function common(createVue: () => App<Element>) {
 	console.info(`Misskey v${version}`);
@@ -58,6 +60,10 @@ export async function common(createVue: () => App<Element>) {
 			});
 			*/
 		});
+	}
+
+	if (miLocalStorage.getItem('id') === null) {
+		miLocalStorage.setItem('id', crypto.randomUUID());
 	}
 
 	let isClientUpdated = false;
@@ -268,6 +274,40 @@ export async function common(createVue: () => App<Element>) {
 	directives(app);
 	components(app);
 
+	if (instance.googleAnalyticsId) {
+		app.use(VueGtag, {
+			bootstrap: false,
+			appName: `Misskey v${version}`,
+			pageTrackerEnabled: true,
+			pageTrackerScreenviewEnabled: true,
+			config: {
+				id: instance.googleAnalyticsId,
+				params: {
+					anonymize_ip: false,
+					send_page_view: true,
+				},
+			},
+		}, mainRouter);
+
+		const gtagConsent = miLocalStorage.getItemAsJson('gtagConsent') as GtagConsentParams ?? {
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+			analytics_storage: 'denied',
+			functionality_storage: 'denied',
+			personalization_storage: 'denied',
+			security_storage: 'granted',
+		};
+		miLocalStorage.setItemAsJson('gtagConsent', gtagConsent);
+
+		if (typeof window['gtag'] === 'function') (window['gtag'] as GtagConsent)('consent', 'default', gtagConsent);
+
+		if (miLocalStorage.getItem('gaConsent') === 'true') {
+			// noinspection ES6MissingAwait
+			gtagBootstrap();
+		}
+	}
+
 	// https://github.com/misskey-dev/misskey/pull/8575#issuecomment-1114239210
 	// なぜか2回実行されることがあるため、mountするdivを1つに制限する
 	const rootEl = ((): HTMLElement => {
@@ -293,6 +333,27 @@ export async function common(createVue: () => App<Element>) {
 	window.onunhandledrejection = null;
 
 	removeSplash();
+
+	//#region Self-XSS 対策メッセージ
+	console.log(
+		`%c${i18n.ts._selfXssPrevention.warning}`,
+		'color: #f00; background-color: #ff0; font-size: 36px; padding: 4px;',
+	);
+	console.log(
+		`%c${i18n.ts._selfXssPrevention.title}`,
+		'color: #f00; font-weight: 900; font-family: "Hiragino Sans W9", "Hiragino Kaku Gothic ProN", sans-serif; font-size: 24px;',
+	);
+	console.log(
+		`%c${i18n.ts._selfXssPrevention.description1}`,
+		'font-size: 16px; font-weight: 700;',
+	);
+	console.log(
+		`%c${i18n.ts._selfXssPrevention.description2}`,
+		'font-size: 16px;',
+		'font-size: 20px; font-weight: 700; color: #f00;',
+	);
+	console.log(i18n.tsx._selfXssPrevention.description3({ link: 'https://misskey-hub.net/docs/for-users/resources/self-xss/' }));
+	//#endregion
 
 	return {
 		isClientUpdated,

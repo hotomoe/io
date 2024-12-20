@@ -7,7 +7,40 @@ import * as Misskey from 'misskey-js';
 import { ref } from 'vue';
 import { apiUrl } from '@/config.js';
 import { $i } from '@/account.js';
+import { miLocalStorage } from '@/local-storage.js';
+import { time as gtagTime } from 'vue-gtag';
+import { instance } from '@/instance.js';
 export const pendingApiRequestsCount = ref(0);
+
+let id: string | null = miLocalStorage.getItem('id');
+export function generateClientTransactionId(initiator: string) {
+	if (id === null) {
+		id = crypto.randomUUID();
+		miLocalStorage.setItem('id', id);
+	}
+
+	return `${id}-${initiator}-${crypto.randomUUID()}`;
+}
+
+function handleResponse<_ResT>(
+	resolve: (value: (_ResT | PromiseLike<_ResT>)) => void,
+	reject: (reason?: any) => void,
+): ((value: Response) => (void | PromiseLike<void>)) {
+	return async (res) => {
+		if (res.ok && res.status !== 204) {
+			const body = await res.json();
+			resolve(body);
+		} else if (res.status === 204) {
+			resolve(undefined as _ResT); // void -> undefined
+		} else {
+			// エラー応答で JSON.parse に失敗した場合は HTTP ステータスコードとメッセージを返す
+			const body = await res
+				.json()
+				.catch(() => ({ statusCode: res.status, message: res.statusText }));
+			reject(typeof body.error === 'object' ? body.error : body);
+		}
+	};
+}
 
 // Implements Misskey.api.ApiClient.request
 export function misskeyApi<
@@ -20,6 +53,7 @@ export function misskeyApi<
 	data: P = {} as any,
 	token?: string | null | undefined,
 	signal?: AbortSignal,
+	initiator: string = 'misskey',
 ): Promise<_ResT> {
 	if (endpoint.includes('://')) throw new Error('invalid endpoint');
 	pendingApiRequestsCount.value++;
@@ -34,6 +68,7 @@ export function misskeyApi<
 		if (token !== undefined) (data as any).i = token;
 
 		// Send request
+		const initiateTime = Date.now();
 		window.fetch(`${apiUrl}/${endpoint}`, {
 			method: 'POST',
 			body: JSON.stringify(data),
@@ -41,20 +76,19 @@ export function misskeyApi<
 			cache: 'no-cache',
 			headers: {
 				'Content-Type': 'application/json',
+				'X-Client-Transaction-Id': generateClientTransactionId(initiator),
 			},
 			signal,
-		}).then(async (res) => {
-			if (res.ok && res.status !== 204) {
-				const body = await res.json();
-				resolve(body);
-			} else if (res.status === 204) {
-				resolve(undefined as _ResT); // void -> undefined
-			} else {
-				// エラー応答で JSON.parse に失敗した場合は HTTP ステータスコードとメッセージを返す
-				const body = await res.json().catch(() => ({ statusCode: res.status, message: res.statusText }));
-				reject(typeof body.error === 'object' ? body.error : body);
+		}).then(res => {
+			if (instance.googleAnalyticsId) {
+				gtagTime({
+					name: 'api',
+					event_category: `/${endpoint}`,
+					value: Date.now() - initiateTime,
+				});
 			}
-		}).catch(reject);
+			return res;
+		}).then(handleResponse(resolve, reject)).catch(reject);
 	});
 
 	promise.then(onFinally, onFinally);
@@ -71,6 +105,7 @@ export function misskeyApiGet<
 >(
 	endpoint: E,
 	data: P = {} as any,
+	initiator: string = 'misskey',
 ): Promise<_ResT> {
 	pendingApiRequestsCount.value++;
 
@@ -82,21 +117,24 @@ export function misskeyApiGet<
 
 	const promise = new Promise<_ResT>((resolve, reject) => {
 		// Send request
+		const initiateTime = Date.now();
 		window.fetch(`${apiUrl}/${endpoint}?${query}`, {
 			method: 'GET',
 			credentials: 'omit',
 			cache: 'default',
-		}).then(async (res) => {
-			const body = res.status === 204 ? null : await res.json();
-
-			if (res.status === 200) {
-				resolve(body);
-			} else if (res.status === 204) {
-				resolve(undefined as _ResT); // void -> undefined
-			} else {
-				reject(body.error);
+			headers: {
+				'X-Client-Transaction-Id': generateClientTransactionId(initiator),
+			},
+		}).then(res => {
+			if (instance.googleAnalyticsId) {
+				gtagTime({
+					name: 'api-get',
+					event_category: `/${endpoint}?${query}`,
+					value: Date.now() - initiateTime,
+				});
 			}
-		}).catch(reject);
+			return res;
+		}).then(handleResponse(resolve, reject)).catch(reject);
 	});
 
 	promise.then(onFinally, onFinally);

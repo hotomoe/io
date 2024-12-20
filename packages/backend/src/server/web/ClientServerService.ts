@@ -282,7 +282,7 @@ export class ClientServerService {
 			};
 			const csp = this.config.contentSecurityPolicy
 				?? 'script-src \'self\' ' +
-				'https://challenges.cloudflare.com https://hcaptcha.com https://*.hcaptcha.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.recaptcha.net/recaptcha/ {scriptNonce}; ' +
+				'https://challenges.cloudflare.com https://hcaptcha.com https://*.hcaptcha.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.recaptcha.net/recaptcha/ https://www.googletagmanager.com/ {scriptNonce}; ' +
 				'worker-src blob: \'self\'; ' +
 				'base-uri \'self\'; object-src \'self\'; report-uri /csp-error';
 			reply.header('Content-Security-Policy-Report-Only', csp.replace('{scriptNonce}', `'nonce-${scriptNonce}'`));
@@ -478,7 +478,9 @@ export class ClientServerService {
 		};
 
 		// Atom
-		fastify.get<{ Params: { user: string; } }>('/@:user.atom', async (request, reply) => {
+		fastify.get<{ Params: { user?: string; } }>('/@:user.atom', async (request, reply) => {
+			if (request.params.user == null) return await renderBase(reply);
+
 			const feed = await getFeed(request.params.user);
 
 			if (feed) {
@@ -491,7 +493,9 @@ export class ClientServerService {
 		});
 
 		// RSS
-		fastify.get<{ Params: { user: string; } }>('/@:user.rss', async (request, reply) => {
+		fastify.get<{ Params: { user?: string; } }>('/@:user.rss', async (request, reply) => {
+			if (request.params.user == null) return await renderBase(reply);
+
 			const feed = await getFeed(request.params.user);
 
 			if (feed) {
@@ -504,7 +508,9 @@ export class ClientServerService {
 		});
 
 		// JSON
-		fastify.get<{ Params: { user: string; } }>('/@:user.json', async (request, reply) => {
+		fastify.get<{ Params: { user?: string; } }>('/@:user.json', async (request, reply) => {
+			if (request.params.user == null) return await renderBase(reply);
+
 			const feed = await getFeed(request.params.user);
 
 			if (feed) {

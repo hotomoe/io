@@ -5149,6 +5149,118 @@ export interface Locale extends ILocale {
      */
     "inquiry": string;
     /**
+     * もう一度お試しください。
+     */
+    "tryAgain": string;
+    /**
+     * センシティブなメディアを表示するとき確認する
+     */
+    "confirmWhenRevealingSensitiveMedia": string;
+    /**
+     * センシティブなメディアです。表示しますか？
+     */
+    "sensitiveMediaRevealConfirm": string;
+    /**
+     * 作成したリスト
+     */
+    "createdLists": string;
+    /**
+     * 作成したアンテナ
+     */
+    "createdAntennas": string;
+    /**
+     * {x}から
+     */
+    "fromX": ParameterizedString<"x">;
+    /**
+     * 埋め込みコードを生成
+     */
+    "genEmbedCode": string;
+    /**
+     * このユーザーのノート一覧
+     */
+    "noteOfThisUser": string;
+    /**
+     * これ以上このクリップにノートを追加できません。
+     */
+    "clipNoteLimitExceeded": string;
+    /**
+     * パフォーマンス
+     */
+    "performance": string;
+    /**
+     * 変更あり
+     */
+    "modified": string;
+    /**
+     * 破棄
+     */
+    "discard": string;
+    /**
+     * {n}件の変更があります
+     */
+    "thereAreNChanges": ParameterizedString<"n">;
+    /**
+     * パスキーでログイン
+     */
+    "signinWithPasskey": string;
+    /**
+     * 登録されていないパスキーです。
+     */
+    "unknownWebAuthnKey": string;
+    /**
+     * パスキーの検証に失敗しました。
+     */
+    "passkeyVerificationFailed": string;
+    /**
+     * パスキーの検証に成功しましたが、パスワードレスログインが無効になっています。
+     */
+    "passkeyVerificationSucceededButPasswordlessLoginDisabled": string;
+    /**
+     * フォロワーへのメッセージ
+     */
+    "messageToFollower": string;
+    /**
+     * 対象
+     */
+    "target": string;
+    /**
+     * CAPTCHAのテストを目的とした機能です。<strong>本番環境で使用しないでください。</strong>
+     */
+    "testCaptchaWarning": string;
+    /**
+     * 禁止ワード（ユーザーの名前）
+     */
+    "prohibitedWordsForNameOfUser": string;
+    /**
+     * このリストに含まれる文字列がユーザーの名前に含まれる場合、ユーザーの名前の変更を拒否します。モデレーター権限を持つユーザーはこの制限の影響を受けません。
+     */
+    "prohibitedWordsForNameOfUserDescription": string;
+    /**
+     * 変更しようとした名前に禁止された文字列が含まれています
+     */
+    "yourNameContainsProhibitedWords": string;
+    /**
+     * 名前に禁止されている文字列が含まれています。この名前を使用したい場合は、サーバー管理者にお問い合わせください。
+     */
+    "yourNameContainsProhibitedWordsDescription": string;
+    /**
+     * 投稿者により、表示にはログインが必要と設定されています
+     */
+    "thisContentsAreMarkedAsSigninRequiredByAuthor": string;
+    /**
+     * ロックダウン
+     */
+    "lockdown": string;
+    /**
+     * アカウントを選択してください
+     */
+    "pleaseSelectAccount": string;
+    /**
+     * 利用可能なロール
+     */
+    "availableRoles": string;
+    /**
      * 通報の種類
      */
     "abuseReportCategory": string;
@@ -5268,6 +5380,62 @@ export interface Locale extends ILocale {
      * 名前を変更
      */
     "changeUserName": string;
+    /**
+     * データ収集とプライバシー設定
+     */
+    "gtagConsentCustomize": string;
+    /**
+     * {host}が収集するデータの範囲をカスタマイズできます。
+     * ただし、認証機能、不正行為防止、その他のユーザー保護など、セキュリティに関連する情報の収集は無効化できません。
+     */
+    "gtagConsentCustomizeDescription": ParameterizedString<"host">;
+    /**
+     * 統計情報の収集
+     */
+    "gtagConsentAnalytics": string;
+    /**
+     * サイトの滞在時間など、分析に関連する情報の保存（Cookie など）を有効にします。
+     */
+    "gtagConsentAnalyticsDescription": string;
+    /**
+     * 機能・設定の利用状況の収集
+     */
+    "gtagConsentFunctionality": string;
+    /**
+     * 言語設定など、ウェブサイトやアプリの機能をサポートする情報の保存を有効にします。
+     */
+    "gtagConsentFunctionalityDescription": string;
+    /**
+     * パーソナライズされた情報の収集
+     */
+    "gtagConsentPersonalization": string;
+    /**
+     * おすすめの投稿など、パーソナライズに関連する情報の保存を有効にします。
+     */
+    "gtagConsentPersonalizationDescription": string;
+    /**
+     * Misskeyの明日を作るために、
+     * データ収集にご協力ください！
+     */
+    "helpUsImproveUserExperience": string;
+    /**
+     * {host}は[プライバシーポリシー]({privacyPolicyUrl})に基づき、サービスの提供・運営・ユーザー体験の向上のためにご利用中のIPアドレス、利用状況、デバイス情報等、個人情報を含む可能性のある情報を収集することがあります。
+     *
+     * 収集されたデータは今後の機能の開発、運営の方針の決定、サービスの改善点の特定に利用されます。
+     */
+    "pleaseConsentToTracking": ParameterizedString<"host" | "privacyPolicyUrl">;
+    /**
+     * 必須項目のみ許可
+     */
+    "consentEssential": string;
+    /**
+     * 全て許可
+     */
+    "consentAll": string;
+    /**
+     * 選択した項目のみ許可
+     */
+    "consentSelected": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -9511,6 +9679,18 @@ export interface Locale extends ILocale {
          * 特殊
          */
         "specialBlocks": string;
+        /**
+         * 公開範囲
+         */
+        "visibility": string;
+        /**
+         * 公開
+         */
+        "public": string;
+        /**
+         * 非公開
+         */
+        "private": string;
         "blocks": {
             /**
              * テキスト
@@ -10759,6 +10939,28 @@ export interface Locale extends ILocale {
          * このオプションを有効にすると、ユーザープロファイルにすべてのロールリストが表示されなくなります。
          */
         "rolesDescription": string;
+    };
+    "_selfXssPrevention": {
+        /**
+         * 警告
+         */
+        "warning": string;
+        /**
+         * 「この画面に何か貼り付けろ」はすべて詐欺です。
+         */
+        "title": string;
+        /**
+         * ここに何かを貼り付けると、悪意のあるユーザーにアカウントを乗っ取られたり、個人情報を盗まれたりする可能性があります。
+         */
+        "description1": string;
+        /**
+         * 貼り付けようとしているものが何なのかを正確に理解していない場合は、%c今すぐ作業を中止してこのウィンドウを閉じてください。
+         */
+        "description2": string;
+        /**
+         * 詳しくはこちらをご確認ください。 {link}
+         */
+        "description3": ParameterizedString<"link">;
     };
 }
 declare const locales: {
