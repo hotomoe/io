@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div v-if="instance" :class="$style.root">
 	<div :class="[$style.main, $style.panel]">
-		<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="Logo by @hcho3@hoto.moe" :class="$style.mainIconAlt"/>
+		<img v-if="kawaiiMode" src="/client-assets/kawaii/hotomoe-logo.png" alt="Logo by @sawaratsuki@misskey.io" :class="$style.mainIconAlt"/>
 		<img v-else :src="instance.iconUrl || '/favicon.ico'" alt="" :class="$style.mainIcon"/>
 		<button class="_button _acrylic" :class="$style.mainMenu" @click="showMenu"><i class="ti ti-dots"></i></button>
 		<div :class="$style.mainFg">
@@ -48,15 +48,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.panel">
 		<XActiveUsersChart/>
 	</div>
-	<!--
 	<div :class="[$style.footer, $style.panel]">
+		<!--
 		<div :class="$style.sponsors">
 			<div><Mfm text="$[jelly ❤]"/> Sponsored by</div>
 			<a title="Skeb" href="https://skeb.jp/" target="_blank"><img src="https://media.misskeyusercontent.jp/misskey-io/sponsors/skeb.png" alt="Skeb" width="140"></a>
 		</div>
+		-->
 		<div :class="$style.legalNotice">
-			<div>© {{ new Date().getFullYear() }} MisskeyHQ Inc.</div>
-			<a href="https://go.misskey.io/legal-notice" target="_blank" rel="noopener"><u>特定商取引法に基づく表記</u></a>
+			<div>© {{ new Date().getFullYear() }} HotoUS LLC.</div>
 		</div>
 		<div :class="$style.links">
 			<a href="#" @click="os.pageWindow('/about')"><u>{{ instanceName }}</u></a>
@@ -67,7 +67,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<a v-if="instance.feedbackUrl" :href="instance.feedbackUrl" target="_blank" rel="noopener"><u>{{ i18n.ts.support }}</u></a>
 		</div>
 	</div>
-	-->
 </div>
 </template>
 
@@ -81,7 +80,7 @@ import MkTimeline from '@/components/MkTimeline.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import { instanceName } from '@/config.js';
 import * as os from '@/os.js';
-import { misskeyApi } from '@/scripts/misskey-api.js';
+import { misskeyApiGet } from '@/scripts/misskey-api.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import { miLocalStorage } from '@/local-storage.js';
@@ -89,9 +88,10 @@ import MkNumber from '@/components/MkNumber.vue';
 import XActiveUsersChart from '@/components/MkVisitorDashboard.ActiveUsersChart.vue';
 import { openInstanceMenu } from '@/ui/_common_/common.js';
 
+const kawaiiMode = miLocalStorage.getItem('kawaii') === 'true';
 const stats = ref<Misskey.entities.StatsResponse | null>(null);
 
-misskeyApi('stats', {}).then((res) => {
+misskeyApiGet('stats').then((res) => {
 	stats.value = res;
 });
 

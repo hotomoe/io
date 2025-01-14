@@ -3722,6 +3722,10 @@ export interface Locale extends ILocale {
      */
     "incorrectPassword": string;
     /**
+     * 認証に失敗しました。
+     */
+    "authenticationFailed": string;
+    /**
      * 「{choice}」に投票しますか？
      */
     "voteConfirm": ParameterizedString<"choice">;
@@ -5436,6 +5440,22 @@ export interface Locale extends ILocale {
      * 選択した項目のみ許可
      */
     "consentSelected": string;
+    /**
+     * メールアドレスでログイン
+     */
+    "emailAddressLogin": string;
+    /**
+     * ユーザー名でログイン
+     */
+    "usernameLogin": string;
+    /**
+     * 投稿フォームを開いたときに下書きを自動で読み込む
+     */
+    "autoloadDrafts": string;
+    /**
+     * 下書き
+     */
+    "drafts": string;
     "_bubbleGame": {
         /**
          * 遊び方

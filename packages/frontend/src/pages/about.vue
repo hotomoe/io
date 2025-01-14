@@ -11,9 +11,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div class="_gaps_m">
 				<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }">
 					<div style="overflow: clip;">
-						<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.bannerIconAlt"/>
+						<img v-if="kawaiiMode" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.bannerIconAlt"/>
 						<img v-else :src="instance.iconUrl ?? instance.faviconUrl ?? '/favicon.ico'" alt="" :class="$style.bannerIcon"/>
-						<Mfm v-if="miLocalStorage.getItem('kawaii')" text="Logo by @hcho3@hoto.moe" :class="$style.iconCredit"/>
+						<Mfm v-if="kawaiiMode" text="Logo by @hcho3@hoto.moe" :class="$style.iconCredit"/>
 						<div :class="$style.bannerName">
 							<b>{{ instance.name ?? host }}</b>
 						</div>
@@ -140,11 +140,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkSpacer v-else-if="tab === 'emojis'" :contentMax="1000" :marginMin="20">
 			<XEmojis/>
 		</MkSpacer>
-		<!--
-		<MkSpacer v-else-if="tab === 'federation'" :contentMax="1000" :marginMin="20">
-			<XFederation/>
-		</MkSpacer>
-		-->
 		<MkSpacer v-else-if="tab === 'charts'" :contentMax="1000" :marginMin="20">
 			<MkInstanceStats/>
 		</MkSpacer>
@@ -156,7 +151,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed, watch, ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import XEmojis from './about.emojis.vue';
-import XFederation from './about.federation.vue';
 import { version, host } from '@/config.js';
 import FormLink from '@/components/form/link.vue';
 import FormSection from '@/components/form/section.vue';
@@ -167,7 +161,7 @@ import MkKeyValue from '@/components/MkKeyValue.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkInstanceStats from '@/components/MkInstanceStats.vue';
 import MkHorizontalSwipe from '@/components/MkHorizontalSwipe.vue';
-import { misskeyApi } from '@/scripts/misskey-api.js';
+import { misskeyApiGet } from '@/scripts/misskey-api.js';
 import number from '@/filters/number.js';
 import { i18n } from '@/i18n.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
@@ -181,6 +175,7 @@ const props = withDefaults(defineProps<{
 	initialTab: 'overview',
 });
 
+const kawaiiMode = miLocalStorage.getItem('kawaii') === 'true';
 const stats = ref<Misskey.entities.StatsResponse | null>(null);
 const tab = ref(props.initialTab);
 
@@ -190,8 +185,7 @@ watch(tab, () => {
 	}
 });
 
-const initStats = () => misskeyApi('stats', {
-}).then((res) => {
+const initStats = () => misskeyApiGet('stats').then((res) => {
 	stats.value = res;
 });
 
@@ -204,11 +198,7 @@ const headerTabs = computed(() => [{
 	key: 'emojis',
 	title: i18n.ts.customEmojis,
 	icon: 'ti ti-icons',
-}, /* {
-	key: 'federation',
-	title: i18n.ts.federation,
-	icon: 'ti ti-whirl',
-}, */ {
+}, {
 	key: 'charts',
 	title: i18n.ts.charts,
 	icon: 'ti ti-chart-line',
