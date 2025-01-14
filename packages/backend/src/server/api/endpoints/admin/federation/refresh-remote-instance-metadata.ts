@@ -57,8 +57,8 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				throw new ApiError(meta.errors.instanceNotFound);
 			}
 
-			const followingCount = await this.followingsRepository.countBy({ followerHost: this.utilityService.toPuny(ps.host) });
-			const followersCount = await this.followingsRepository.countBy({ followeeHost: this.utilityService.toPuny(ps.host) });
+			const followingCount = await this.followingsRepository.countBy({ followerHost: this.utilityService.normalizeHost(ps.host) });
+			const followersCount = await this.followingsRepository.countBy({ followeeHost: this.utilityService.normalizeHost(ps.host) });
 
 			await this.federatedInstanceService.update(instance.id, {
 				followingCount: followingCount,
