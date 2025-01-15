@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div :class="$style.top">
 			<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }"></div>
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.instanceIconAlt"/>
+				<img v-if="kawaiiMode" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.instanceIconAlt"/>
 				<img v-else :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
 			</button>
 		</div>
@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</component>
 			</template>
 			<div :class="$style.divider"></div>
-			<MkA v-if="($i?.isAdmin || $i?.isModerator) && $i?.twoFactorEnabled" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
+			<MkA v-if="iAmModerator" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
 				<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
 				<span v-if="unresolvedReportAvailable" :class="$style.itemIndicator">
 					<i class="_indicatorCircle"></i>
@@ -68,7 +68,7 @@ import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { openInstanceMenu } from './common.js';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
-import { $i, openAccountMenu as openAccountMenu_ } from '@/account.js';
+import { $i, iAmModerator, openAccountMenu as openAccountMenu_ } from '@/account.js';
 import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
@@ -77,6 +77,7 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 
 const iconOnly = ref<boolean>(false);
 const unresolvedReportAvailable = ref<boolean>(false);
+const kawaiiMode = miLocalStorage.getItem('kawaii') === 'true';
 
 const menu = computed(() => defaultStore.state.menu);
 const otherMenuItemIndicated = computed(() => {
@@ -99,7 +100,7 @@ watch(defaultStore.reactiveState.menuDisplay, () => {
 	calcViewState();
 });
 
-if ($i?.isAdmin || $i?.isModerator) {
+if (iAmModerator) {
 	misskeyApi('admin/abuse-user-reports', {
 		state: 'unresolved',
 		limit: 1,

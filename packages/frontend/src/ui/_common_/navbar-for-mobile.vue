@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.top">
 		<div :class="$style.banner" :style="{ backgroundImage: `url(${ instance.bannerUrl })` }"></div>
 		<button class="_button" :class="$style.instance" @click="openInstanceMenu">
-			<img v-if="miLocalStorage.getItem('kawaii')" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.instanceIconAlt"/>
+			<img v-if="kawaiiMode" src="/client-assets/kawaii/hotomoe-kawaii.png" alt="" :class="$style.instanceIconAlt"/>
 			<img v-else :src="instance.iconUrl || instance.faviconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon"/>
 		</button>
 	</div>
@@ -64,6 +64,7 @@ import { instance } from '@/instance.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
 
+const kawaiiMode = miLocalStorage.getItem('kawaii') === 'true';
 const menu = toRef(defaultStore.state, 'menu');
 const unresolvedReportAvailable = ref<boolean>(false);
 const otherMenuItemIndicated = computed(() => {
