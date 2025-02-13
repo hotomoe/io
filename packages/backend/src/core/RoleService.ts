@@ -36,6 +36,9 @@ export type RolePolicies = {
 	gtlAvailable: boolean;
 	ltlAvailable: boolean;
 	canPublicNote: boolean;
+	canScheduleNote: boolean;
+	scheduleNoteLimit: number;
+	scheduleNoteMaxDays: number;
 	canInitiateConversation: boolean;
 	canCreateContent: boolean;
 	canUpdateContent: boolean;
@@ -78,6 +81,9 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	gtlAvailable: true,
 	ltlAvailable: true,
 	canPublicNote: true,
+	canScheduleNote: true,
+	scheduleNoteLimit: 10,
+	scheduleNoteMaxDays: 365,
 	canInitiateConversation: true,
 	canCreateContent: true,
 	canUpdateContent: true,
@@ -346,7 +352,7 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 	 * 指定ユーザーのバッジロール一覧取得
 	 */
 	@bindThis
-	public async getUserBadgeRoles(userId: MiUser['id']) {
+	public async getUserBadgeRoles(userId: MiUser['id'], publicOnly: boolean) {
 		const now = Date.now();
 		let assigns = await this.roleAssignmentByUserIdCache.fetch(userId, () => this.roleAssignmentsRepository.findBy({ userId }));
 		// 期限切れのロールを除外
@@ -358,10 +364,23 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 		if (badgeCondRoles.length > 0) {
 			const user = roles.some(r => r.target === 'conditional') ? await this.cacheService.findUserById(userId) : null;
 			const matchedBadgeCondRoles = badgeCondRoles.filter(r => this.evalCond(user!, assignedRoles, r.condFormula));
-			return [...assignedBadgeRoles, ...matchedBadgeCondRoles];
+			return this.sortAndMapBadgeRoles([...assignedBadgeRoles, ...matchedBadgeCondRoles], publicOnly);
 		} else {
-			return assignedBadgeRoles;
+			return this.sortAndMapBadgeRoles(assignedBadgeRoles, publicOnly);
 		}
+	}
+
+	@bindThis
+	private sortAndMapBadgeRoles(roles: MiRole[], publicOnly: boolean) {
+		return roles
+			.filter((r) => r.isPublic || !publicOnly)
+			.sort((a, b) => b.displayOrder - a.displayOrder)
+			.map((r) => ({
+				name: r.name,
+				iconUrl: r.iconUrl,
+				displayOrder: r.displayOrder,
+				behavior: r.badgeBehavior ?? undefined,
+			}));
 	}
 
 	@bindThis
@@ -391,6 +410,9 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 			gtlAvailable: calc('gtlAvailable', vs => vs.some(v => v === true)),
 			ltlAvailable: calc('ltlAvailable', vs => vs.some(v => v === true)),
 			canPublicNote: calc('canPublicNote', vs => vs.some(v => v === true)),
+			canScheduleNote: calc('canScheduleNote', vs => vs.some(v => v === true)),
+			scheduleNoteLimit: calc('scheduleNoteLimit', vs => Math.max(...vs)),
+			scheduleNoteMaxDays: calc('scheduleNoteMaxDays', vs => Math.max(...vs)),
 			canInitiateConversation: calc('canInitiateConversation', vs => vs.some(v => v === true)),
 			canCreateContent: calc('canCreateContent', vs => vs.some(v => v === true)),
 			canUpdateContent: calc('canUpdateContent', vs => vs.some(v => v === true)),

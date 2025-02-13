@@ -4,8 +4,9 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { bindThis } from '@/decorators.js';
+import { RoleService } from '@/core/RoleService.js';
+import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import type { GlobalEvents } from '@/core/GlobalEventService.js';
 import Channel, { type MiChannelService } from '../channel.js';
 
@@ -18,6 +19,7 @@ class AntennaChannel extends Channel {
 	private minimize: boolean;
 
 	constructor(
+		private roleService: RoleService,
 		private noteEntityService: NoteEntityService,
 
 		id: string,
@@ -51,15 +53,21 @@ class AntennaChannel extends Channel {
 
 			if (this.isNoteMutedOrBlocked(note)) return;
 
+			if (this.user && (note.visibleUserIds?.includes(this.user.id) ?? note.mentions?.includes(this.user.id))) {
+				this.connection.cacheNote(note);
+			}
+
 			if (this.minimize && ['public', 'home'].includes(note.visibility)) {
+				const badgeRoles = this.iAmModerator ? await this.roleService.getUserBadgeRoles(note.userId, false) : undefined;
+
 				this.send('note', {
 					id: note.id, myReaction: note.myReaction,
 					poll: note.poll?.choices ? { choices: note.poll.choices } : undefined,
 					reply: note.reply?.myReaction ? { myReaction: note.reply.myReaction } : undefined,
 					renote: note.renote?.myReaction ? { myReaction: note.renote.myReaction } : undefined,
+					...(badgeRoles?.length ? { user: { badgeRoles } } : {}),
 				});
 			} else {
-				this.connection.cacheNote(note);
 				this.send('note', note);
 			}
 		} else {
@@ -81,6 +89,7 @@ export class AntennaChannelService implements MiChannelService<true> {
 	public readonly kind = AntennaChannel.kind;
 
 	constructor(
+		private roleService: RoleService,
 		private noteEntityService: NoteEntityService,
 	) {
 	}
@@ -88,6 +97,7 @@ export class AntennaChannelService implements MiChannelService<true> {
 	@bindThis
 	public create(id: string, connection: Channel['connection']): AntennaChannel {
 		return new AntennaChannel(
+			this.roleService,
 			this.noteEntityService,
 			id,
 			connection,
