@@ -2731,6 +2731,24 @@ export type paths = {
      */
     post: operations['notes___delete'];
   };
+  '/notes/scheduled/cancel': {
+    /**
+     * notes/scheduled/cancel
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:notes*
+     */
+    post: operations['notes___scheduled___cancel'];
+  };
+  '/notes/scheduled/list': {
+    /**
+     * notes/scheduled/list
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:notes*
+     */
+    post: operations['notes___scheduled___list'];
+  };
   '/notes/favorites/create': {
     /**
      * notes/favorites/create
@@ -4296,6 +4314,58 @@ export type components = {
       clippedCount?: number;
       myReaction?: string | null;
     };
+    NoteDraft: {
+      /** Format: misskey:id */
+      id: string;
+      /** Format: date-time */
+      updatedAt: string;
+      /** Format: date-time */
+      scheduledAt: string | null;
+      reason?: string;
+      channel?: {
+        /** Format: misskey:id */
+        id: string;
+        name: string;
+      } | null;
+      renote?: ({
+        /** Format: misskey:id */
+        id: string;
+        text: string | null;
+        user: {
+          /** Format: misskey:id */
+          id: string;
+          username: string;
+          host: string | null;
+        };
+      }) | null;
+      reply?: ({
+        /** Format: misskey:id */
+        id: string;
+        text: string | null;
+        user: {
+          /** Format: misskey:id */
+          id: string;
+          username: string;
+          host: string | null;
+        };
+      }) | null;
+      data: {
+        text: string | null;
+        useCw: boolean;
+        cw: string | null;
+        /** @enum {string} */
+        visibility: 'public' | 'home' | 'followers' | 'specified';
+        localOnly: boolean;
+        files: components['schemas']['DriveFile'][];
+        poll: ({
+          choices: string[];
+          multiple: boolean;
+          expiresAt: number | null;
+          expiredAfter: number | null;
+        }) | null;
+        visibleUserIds?: string[];
+      };
+    };
     NoteReaction: {
       /**
        * Format: id
@@ -4443,6 +4513,30 @@ export type components = {
       /** @enum {string} */
       type: 'achievementEarned';
       achievement: string;
+    } | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'noteScheduled';
+      draft: components['schemas']['NoteDraft'];
+    } | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'scheduledNotePosted';
+      note: components['schemas']['Note'];
+    } | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'scheduledNoteError';
+      draft: components['schemas']['NoteDraft'];
     } | {
       /** Format: id */
       id: string;
@@ -5007,6 +5101,9 @@ export type components = {
       gtlAvailable: boolean;
       ltlAvailable: boolean;
       canPublicNote: boolean;
+      canScheduleNote: boolean;
+      scheduleNoteLimit: number;
+      scheduleNoteMaxDays: number;
       canInitiateConversation: boolean;
       canCreateContent: boolean;
       canUpdateContent: boolean;
@@ -9721,6 +9818,10 @@ export type operations = {
           movedFromId?: string | null;
           /** Format: misskey:id */
           movedToId?: string | null;
+          /** @enum {string|null} */
+          from?: 'local' | 'remote' | 'all';
+          /** @enum {string|null} */
+          to?: 'local' | 'remote' | 'all';
         };
       };
     };
@@ -20486,8 +20587,8 @@ export type operations = {
           untilId?: string;
           /** @default true */
           markAsRead?: boolean;
-          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
-          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
+          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'noteScheduled' | 'scheduledNotePosted' | 'scheduledNoteError' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
+          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'noteScheduled' | 'scheduledNotePosted' | 'scheduledNoteError' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
         };
       };
     };
@@ -20554,8 +20655,8 @@ export type operations = {
           untilId?: string;
           /** @default true */
           markAsRead?: boolean;
-          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
-          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
+          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'noteScheduled' | 'scheduledNotePosted' | 'scheduledNoteError' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
+          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'noteScheduled' | 'scheduledNotePosted' | 'scheduledNoteError' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
         };
       };
     };
@@ -23454,6 +23555,7 @@ export type operations = {
             expiresAt?: number | null;
             expiredAfter?: number | null;
           }) | null;
+          scheduledAt?: number | null;
           /** @default false */
           noCreatedNote?: boolean;
         };
@@ -23556,6 +23658,120 @@ export type operations = {
       };
       /** @description To many requests */
       429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * notes/scheduled/cancel
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:notes*
+   */
+  notes___scheduled___cancel: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** Format: misskey:id */
+          draftId: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * notes/scheduled/list
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:notes*
+   */
+  notes___scheduled___list: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @default 10 */
+          limit?: number;
+          /** @default 0 */
+          offset?: number;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (with results) */
+      200: {
+        content: {
+          'application/json': components['schemas']['NoteDraft'][];
+        };
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
         content: {
           'application/json': components['schemas']['Error'];
         };

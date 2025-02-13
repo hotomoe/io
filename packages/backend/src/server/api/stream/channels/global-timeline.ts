@@ -4,11 +4,11 @@
  */
 
 import { Injectable } from '@nestjs/common';
+import { bindThis } from '@/decorators.js';
 import type { Packed } from '@/misc/json-schema.js';
 import { MetaService } from '@/core/MetaService.js';
-import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
-import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
+import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { isRenotePacked, isQuotePacked } from '@/misc/is-renote.js';
 import Channel, { type MiChannelService } from '../channel.js';
 
@@ -87,15 +87,21 @@ class GlobalTimelineChannel extends Channel {
 			}
 		}
 
+		if (this.user && (note.visibleUserIds?.includes(this.user.id) ?? note.mentions?.includes(this.user.id))) {
+			this.connection.cacheNote(note);
+		}
+
 		if (this.minimize && ['public', 'home'].includes(note.visibility)) {
+			const badgeRoles = this.iAmModerator ? await this.roleService.getUserBadgeRoles(note.userId, false) : undefined;
+
 			this.send('note', {
 				id: note.id, myReaction: note.myReaction,
 				poll: note.poll?.choices ? { choices: note.poll.choices } : undefined,
 				reply: note.reply?.myReaction ? { myReaction: note.reply.myReaction } : undefined,
 				renote: note.renote?.myReaction ? { myReaction: note.renote.myReaction } : undefined,
+				...(badgeRoles?.length ? { user: { badgeRoles } } : {}),
 			});
 		} else {
-			this.connection.cacheNote(note);
 			this.send('note', note);
 		}
 	}
